@@ -763,23 +763,54 @@
 
         // Form submission
         const form = document.getElementById('helpdeskForm');
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Show success message
-            const successMsg = document.getElementById('successMessage');
-            successMsg.classList.remove('hidden');
-            
-            setTimeout(() => {
-                successMsg.classList.add('hidden');
-            }, 5000);
-            
-            // Log form data (for demonstration)
-            console.log('Form Data:', new FormData(form));
-            console.log('Uploaded Files:', uploadedFiles);
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Prepare form data
+            const formData = new FormData(form);
+
+            // Add uploaded files
+            uploadedFiles.forEach(file => {
+                formData.append('files[]', file);
+            });
+
+            try {
+                // Submit to backend
+                const response = await fetch('api/submit_complaint.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.querySelector('p.text-sm').textContent =
+                        `Aduan/Cadangan anda telah dihantar. No. Tiket: ${result.data.ticket_number}`;
+                    successMsg.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        successMsg.classList.add('hidden');
+                        // Reset form
+                        form.reset();
+                        uploadedFiles = [];
+                        fileList.innerHTML = '';
+                        // Redirect to status checking
+                        if (confirm('Aduan berjaya dihantar! Ingin semak status aduan?')) {
+                            window.location.href = 'semakan.html';
+                        }
+                    }, 3000);
+
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    alert(result.message || 'Gagal menghantar aduan. Sila cuba lagi.');
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
+            }
         });
 
         // Reset form

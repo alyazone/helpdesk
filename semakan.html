@@ -461,21 +461,99 @@
 
     <script>
         // Form submission
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('emailSearch').value;
-            
-            // Simulate loading and show status page
-            setTimeout(() => {
-                showStatusPage(email);
-            }, 500);
+
+            try {
+                // Fetch status from backend
+                const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatusPage(result.data);
+                } else {
+                    alert(result.message || 'Tiada rekod dijumpai untuk alamat emel ini');
+                }
+            } catch (error) {
+                console.error('Check status error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
+            }
         });
 
-        function showStatusPage(email) {
+        function showStatusPage(data) {
             document.getElementById('searchPage').classList.add('hidden');
             document.getElementById('statusPage').classList.remove('hidden');
-            document.getElementById('userEmail').textContent = email;
-            
+
+            // Update user info
+            document.getElementById('userName').textContent = data.user.nama || 'Pengguna';
+            document.getElementById('userEmail').textContent = data.user.email;
+
+            // Update statistics
+            const stats = data.statistics;
+            document.querySelectorAll('.stat-card')[0].querySelector('.text-3xl').textContent = stats.total;
+            document.querySelectorAll('.stat-card')[1].querySelector('.text-3xl').textContent =
+                (stats.pending || 0) + (stats.dalam_pemeriksaan || 0) + (stats.sedang_dibaiki || 0);
+            document.querySelectorAll('.stat-card')[2].querySelector('.text-3xl').textContent = stats.selesai || 0;
+            document.querySelectorAll('.stat-card')[3].querySelector('.text-3xl').textContent = stats.dibatalkan || 0;
+
+            // Clear and populate complaints list
+            const complaintsContainer = document.querySelector('.bg-white.rounded-2xl .space-y-4');
+            complaintsContainer.innerHTML = '';
+
+            data.complaints.forEach(complaint => {
+                const statusColors = {
+                    'pending': 'bg-gray-100 text-gray-800',
+                    'dalam_pemeriksaan': 'bg-blue-100 text-blue-800',
+                    'sedang_dibaiki': 'bg-yellow-100 text-yellow-800',
+                    'selesai': 'bg-green-100 text-green-800',
+                    'dibatalkan': 'bg-red-100 text-red-800'
+                };
+
+                const statusLabels = {
+                    'pending': 'Pending',
+                    'dalam_pemeriksaan': 'Dalam Pemeriksaan',
+                    'sedang_dibaiki': 'Sedang Dibaiki',
+                    'selesai': 'Selesai',
+                    'dibatalkan': 'Dibatalkan'
+                };
+
+                const complaintDiv = document.createElement('div');
+                complaintDiv.className = 'border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer';
+                complaintDiv.onclick = () => showComplaintDetails(complaint.id);
+
+                complaintDiv.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="px-3 py-1 ${statusColors[complaint.status]} rounded-full text-sm font-semibold">
+                                    ${statusLabels[complaint.status]}
+                                </span>
+                                <span class="text-sm text-gray-500">${complaint.ticket_number}</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">${complaint.perkara}</h4>
+                            <p class="text-gray-600 text-sm mb-3">${complaint.keterangan.substring(0, 100)}...</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <span><i class="fas fa-calendar mr-2"></i>${new Date(complaint.created_at).toLocaleDateString('ms-MY')}</span>
+                                <span><i class="fas fa-user-tie mr-2"></i>${complaint.officer_name || complaint.pegawai_penerima}</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-xs text-gray-600 mb-2">
+                            <span>Progress</span>
+                            <span>${complaint.progress}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="progress-bar bg-gradient-to-r from-${complaint.status === 'selesai' ? 'green' : 'yellow'}-400 to-${complaint.status === 'selesai' ? 'green' : 'yellow'}-600 h-2 rounded-full" style="width: ${complaint.progress}%"></div>
+                        </div>
+                    </div>
+                `;
+
+                complaintsContainer.appendChild(complaintDiv);
+            });
+
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -498,33 +576,56 @@
             document.body.style.overflow = 'auto';
         }
 
-        function selectRating(event, rating, complaintId) {
+        async function selectRating(event, rating, complaintId) {
             event.stopPropagation();
-            
-            // Remove selected class from all buttons in this group
-            const parent = event.currentTarget.parentElement;
-            parent.querySelectorAll('.rating-btn').forEach(btn => {
-                btn.classList.remove('selected', 'border-green-500', 'bg-green-50', 'border-blue-500', 'bg-blue-50', 'border-yellow-500', 'bg-yellow-50', 'border-red-500', 'bg-red-50');
-                btn.classList.add('border-gray-300');
-            });
-            
-            // Add selected class to clicked button
-            event.currentTarget.classList.add('selected');
-            event.currentTarget.classList.remove('border-gray-300');
-            
-            // Apply specific color based on rating
-            if (rating === 'cemerlang') {
-                event.currentTarget.classList.add('border-green-500', 'bg-green-50');
-            } else if (rating === 'baik') {
-                event.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
-            } else if (rating === 'memuaskan') {
-                event.currentTarget.classList.add('border-yellow-500', 'bg-yellow-50');
-            } else if (rating === 'tidak-memuaskan') {
-                event.currentTarget.classList.add('border-red-500', 'bg-red-50');
+
+            try {
+                // Submit rating to backend
+                const response = await fetch('api/submit_rating.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        complaint_id: complaintId,
+                        rating: rating
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Remove selected class from all buttons in this group
+                    const parent = event.currentTarget.parentElement;
+                    parent.querySelectorAll('.rating-btn').forEach(btn => {
+                        btn.classList.remove('selected', 'border-green-500', 'bg-green-50', 'border-blue-500', 'bg-blue-50', 'border-yellow-500', 'bg-yellow-50', 'border-red-500', 'bg-red-50');
+                        btn.classList.add('border-gray-300');
+                    });
+
+                    // Add selected class to clicked button
+                    event.currentTarget.classList.add('selected');
+                    event.currentTarget.classList.remove('border-gray-300');
+
+                    // Apply specific color based on rating
+                    if (rating === 'cemerlang') {
+                        event.currentTarget.classList.add('border-green-500', 'bg-green-50');
+                    } else if (rating === 'baik') {
+                        event.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
+                    } else if (rating === 'memuaskan') {
+                        event.currentTarget.classList.add('border-yellow-500', 'bg-yellow-50');
+                    } else if (rating === 'tidak-memuaskan') {
+                        event.currentTarget.classList.add('border-red-500', 'bg-red-50');
+                    }
+
+                    // Show success message
+                    alert(result.message);
+                } else {
+                    alert(result.message || 'Gagal menghantar penilaian');
+                }
+            } catch (error) {
+                console.error('Rating error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
             }
-            
-            // Show success message
-            alert(`Terima kasih! Penilaian "${rating.charAt(0).toUpperCase() + rating.slice(1).replace('-', ' ')}" telah direkodkan untuk aduan #ADU-2025-00${complaintId}`);
         }
 
         // Close modal when clicking outside

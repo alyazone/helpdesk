@@ -363,9 +363,9 @@
         }
 
         // Form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -375,19 +375,38 @@
                 return;
             }
 
-            // Show success message
-            const successMsg = document.getElementById('successMessage');
-            successMsg.classList.remove('hidden');
-            
-            setTimeout(() => {
-                successMsg.classList.add('hidden');
-                // Redirect to dashboard or home page
-                console.log('Login successful for:', email);
-                alert('Log masuk berjaya! Mengalihkan ke dashboard...');
-            }, 2000);
+            try {
+                // Send login request to backend
+                const response = await fetch('api/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-            // In real application, send data to server
-            console.log('Login attempt:', { email, password: '***' });
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        // Redirect based on user role
+                        if (result.data.user.role === 'admin') {
+                            window.location.href = 'admin/index.php';
+                        } else {
+                            window.location.href = 'v1.html';
+                        }
+                    }, 1500);
+                } else {
+                    alert(result.message || 'Log masuk gagal. Sila cuba lagi.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
+            }
         });
 
         // Email validation
