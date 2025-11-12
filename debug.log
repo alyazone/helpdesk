@@ -1,0 +1,8 @@
+2025-11-12 14:32:42 - Complaint submission started
+2025-11-12 14:32:42 - Request method: POST
+2025-11-12 14:32:42 - Validation passed. Data received: {"jenis":"aduan","perkara":"test","nama":"test","email":"test@jpbdselangor.gov.my"}
+2025-11-12 14:32:42 - Database connection successful
+2025-11-12 14:32:42 - Attempting to insert complaint with ticket: ADU-2025-750
+2025-11-12 14:32:42 - Complaint insert executed successfully
+2025-11-12 14:32:42 - Complaint ID: 1
+2025-11-12 14:32:42 - Complaint submitted successfully. ID: 1, Ticket: ADU-2025-750
