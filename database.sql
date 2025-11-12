@@ -144,8 +144,8 @@ INSERT INTO officers (nama, email, status) VALUES
 
 -- Insert default admin user (password: admin123)
 INSERT INTO users (nama_penuh, email, password, jawatan, bahagian, role, status) VALUES
-('Administrator', 'admin@jpbdselangor.gov.my', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Pentadbir Sistem', 'Bahagian IT', 'admin', 'active');
+('Administrator', 'admin@jpbdselangor.gov.my', '$2y$12$8Wos13KhnYKoWOttGDI28OSaxxrS/oAIhtcczMKtMY5rm0EytQF7i', 'Pentadbir Sistem', 'Bahagian IT', 'admin', 'active');
 
 -- Insert sample user (password: user123)
 INSERT INTO users (nama_penuh, email, password, jawatan, bahagian, no_sambungan, role, status) VALUES
-('Ahmad Bin Abdullah', 'ahmad.user@jpbdselangor.gov.my', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Pegawai Perancang', 'Bahagian Perancangan', '1234', 'user', 'active');
+('Ahmad Bin Abdullah', 'ahmad.user@jpbdselangor.gov.my', '$2y$12$0ploemIfcfDq/W/calvyx.oQLVsv12pG8sNr2U4Ci3EDgWroPKJyK', 'Pegawai Perancang', 'Bahagian Perancangan', '1234', 'user', 'active');

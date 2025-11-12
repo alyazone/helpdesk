@@ -4,10 +4,25 @@
  * Handles complaint/suggestion submission
  */
 
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../config/config.php';
+
+// Log file for debugging (optional)
+$log_file = __DIR__ . '/../debug.log';
+function debug_log($message) {
+    global $log_file;
+    file_put_contents($log_file, date('Y-m-d H:i:s') . " - " . $message . "\n", FILE_APPEND);
+}
+
+debug_log("Complaint submission started");
+debug_log("Request method: " . $_SERVER['REQUEST_METHOD']);
 
 // Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    debug_log("ERROR: Invalid request method");
     jsonResponse(false, 'Invalid request method');
 }
 
@@ -63,11 +78,20 @@ if (!empty($email) && !validateEmailDomain($email)) {
 }
 
 if (!empty($errors)) {
+    debug_log("Validation errors: " . implode(', ', $errors));
     jsonResponse(false, implode(', ', $errors));
 }
 
+debug_log("Validation passed. Data received: " . json_encode([
+    'jenis' => $jenis,
+    'perkara' => $perkara,
+    'nama' => $nama_pengadu,
+    'email' => $email
+]));
+
 try {
     $db = getDB();
+    debug_log("Database connection successful");
 
     // Generate unique ticket number
     do {
@@ -100,14 +124,21 @@ try {
         )
     ");
 
-    $stmt->execute([
+    debug_log("Attempting to insert complaint with ticket: $ticket_number");
+
+    $params = [
         $ticket_number, $jenis, $perkara, $keterangan,
         $user_id, $nama_pengadu, $alamat, $no_telefon, $poskod, $jawatan, $bahagian, $tingkat, $email, $no_sambungan,
         $jenis_aset, $no_pendaftaran_aset, $pengguna_akhir, $tarikh_kerosakan, $perihal_kerosakan, $perihal_kerosakan_value,
         $officer_id, $pegawai_penerima
-    ]);
+    ];
+
+    $stmt->execute($params);
+
+    debug_log("Complaint insert executed successfully");
 
     $complaint_id = $db->lastInsertId();
+    debug_log("Complaint ID: $complaint_id");
 
     // Add initial status history
     $stmt = $db->prepare("
@@ -166,6 +197,8 @@ try {
         }
     }
 
+    debug_log("Complaint submitted successfully. ID: $complaint_id, Ticket: $ticket_number");
+
     jsonResponse(true, 'Aduan/Cadangan telah berjaya dihantar', [
         'ticket_number' => $ticket_number,
         'complaint_id' => $complaint_id,
@@ -173,5 +206,7 @@ try {
     ]);
 
 } catch (PDOException $e) {
+    debug_log("ERROR: " . $e->getMessage());
+    debug_log("Stack trace: " . $e->getTraceAsString());
     jsonResponse(false, 'Ralat sistem: ' . $e->getMessage());
 }
