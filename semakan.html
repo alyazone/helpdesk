@@ -267,92 +267,11 @@
                         Senarai Aduan/Cadangan
                     </h3>
 
-                    <div class="space-y-4">
-                        <!-- Complaint Item 1 -->
-                        <div class="border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer" onclick="showComplaintDetails(1)">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
-                                            Dalam Proses
-                                        </span>
-                                        <span class="text-sm text-gray-500">#ADU-2025-001</span>
-                                    </div>
-                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Komputer Hang - Laptop Rosak</h4>
-                                    <p class="text-gray-600 text-sm mb-3">Laptop di bilik mesyuarat sering hang dan slow...</p>
-                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                        <span><i class="fas fa-calendar mr-2"></i>15 Jan 2025</span>
-                                        <span><i class="fas fa-user-tie mr-2"></i>En. Ahmad Bin Abdullah</span>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
-                            </div>
-                            
-                            <!-- Progress Bar -->
-                            <div class="mt-4">
-                                <div class="flex justify-between text-xs text-gray-600 mb-2">
-                                    <span>Progress</span>
-                                    <span>60%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-gradient-to-r from-yellow-400 to-yellow-600 h-2 rounded-full" style="width: 60%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Complaint Item 2 - Completed -->
-                        <div class="border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer" onclick="showComplaintDetails(2)">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
-                                            Selesai
-                                        </span>
-                                        <span class="text-sm text-gray-500">#ADU-2025-002</span>
-                                    </div>
-                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Masalah Printer - Printer Sangkut Kertas</h4>
-                                    <p class="text-gray-600 text-sm mb-3">Printer di pejabat sering sangkut kertas...</p>
-                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                        <span><i class="fas fa-calendar mr-2"></i>10 Jan 2025</span>
-                                        <span><i class="fas fa-user-tie mr-2"></i>Pn. Siti Aminah</span>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
-                            </div>
-                            
-                            <!-- Progress Bar -->
-                            <div class="mt-4">
-                                <div class="flex justify-between text-xs text-gray-600 mb-2">
-                                    <span>Progress</span>
-                                    <span>100%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style="width: 100%"></div>
-                                </div>
-                            </div>
-
-                            <!-- Rating Section for Completed Complaint -->
-                            <div class="mt-6 pt-6 border-t border-gray-200">
-                                <p class="text-sm font-semibold text-gray-700 mb-3">Berikan Penilaian Anda:</p>
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    <button onclick="selectRating(event, 'cemerlang', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 transition text-center">
-                                        <i class="fas fa-star text-yellow-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Cemerlang</p>
-                                    </button>
-                                    <button onclick="selectRating(event, 'baik', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition text-center">
-                                        <i class="fas fa-thumbs-up text-blue-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Baik</p>
-                                    </button>
-                                    <button onclick="selectRating(event, 'memuaskan', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 transition text-center">
-                                        <i class="fas fa-smile text-yellow-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Memuaskan</p>
-                                    </button>
-                                    <button onclick="selectRating(event, 'tidak-memuaskan', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-red-500 hover:bg-red-50 transition text-center">
-                                        <i class="fas fa-frown text-red-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Tidak Memuaskan</p>
-                                    </button>
-                                </div>
-                            </div>
+                    <div id="complaintsContainer" class="space-y-4">
+                        <!-- Complaints will be loaded dynamically from database -->
+                        <div class="text-center py-12 text-gray-500">
+                            <i class="fas fa-search text-5xl mb-4"></i>
+                            <p>Masukkan alamat emel untuk melihat aduan anda</p>
                         </div>
                     </div>
                 </div>
@@ -498,8 +417,22 @@
             document.querySelectorAll('.stat-card')[3].querySelector('.text-3xl').textContent = stats.dibatalkan || 0;
 
             // Clear and populate complaints list
-            const complaintsContainer = document.querySelector('.bg-white.rounded-2xl .space-y-4');
+            const complaintsContainer = document.getElementById('complaintsContainer');
+            if (!complaintsContainer) {
+                console.error('complaintsContainer not found!');
+                return;
+            }
             complaintsContainer.innerHTML = '';
+
+            if (data.complaints.length === 0) {
+                complaintsContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-inbox text-5xl mb-4"></i>
+                        <p>Tiada aduan dijumpai untuk alamat emel ini</p>
+                    </div>
+                `;
+                return;
+            }
 
             data.complaints.forEach(complaint => {
                 const statusColors = {
@@ -522,7 +455,7 @@
                 complaintDiv.className = 'border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer';
                 complaintDiv.onclick = () => showComplaintDetails(complaint.id);
 
-                complaintDiv.innerHTML = `
+                let complaintHTML = `
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex-1">
                             <div class="flex items-center space-x-3 mb-2">
@@ -551,6 +484,46 @@
                     </div>
                 `;
 
+                // Add rating section for completed complaints
+                if (complaint.status === 'selesai' && !complaint.rating) {
+                    complaintHTML += `
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <p class="text-sm font-semibold text-gray-700 mb-3">Berikan Penilaian Anda:</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <button onclick="selectRating(event, 'cemerlang', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 transition text-center">
+                                    <i class="fas fa-star text-yellow-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Cemerlang</p>
+                                </button>
+                                <button onclick="selectRating(event, 'baik', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition text-center">
+                                    <i class="fas fa-thumbs-up text-blue-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Baik</p>
+                                </button>
+                                <button onclick="selectRating(event, 'memuaskan', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 transition text-center">
+                                    <i class="fas fa-smile text-yellow-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Memuaskan</p>
+                                </button>
+                                <button onclick="selectRating(event, 'tidak_memuaskan', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-red-500 hover:bg-red-50 transition text-center">
+                                    <i class="fas fa-frown text-red-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Tidak Memuaskan</p>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else if (complaint.rating) {
+                    const ratingLabels = {
+                        'cemerlang': 'Cemerlang',
+                        'baik': 'Baik',
+                        'memuaskan': 'Memuaskan',
+                        'tidak_memuaskan': 'Tidak Memuaskan'
+                    };
+                    complaintHTML += `
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <p class="text-sm text-gray-600">Penilaian anda: <span class="font-semibold text-purple-600">${ratingLabels[complaint.rating] || complaint.rating}</span></p>
+                        </div>
+                    `;
+                }
+
+                complaintDiv.innerHTML = complaintHTML;
                 complaintsContainer.appendChild(complaintDiv);
             });
 
