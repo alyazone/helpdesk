@@ -794,16 +794,28 @@
 
                 const result = await response.json();
                 console.log('API result:', result);
+                console.log('Result success:', result.success);
+                console.log('Result data:', result.data);
 
                 if (result.success) {
+                    console.log('Success block reached');
                     // Show success message
                     const successMsg = document.getElementById('successMessage');
-                    successMsg.querySelector('p.text-sm').textContent =
-                        `Aduan/Cadangan anda telah dihantar. No. Tiket: ${result.data.ticket_number}`;
-                    successMsg.classList.remove('hidden');
+                    if (successMsg) {
+                        const textElement = successMsg.querySelector('p.text-sm');
+                        if (textElement) {
+                            textElement.textContent = `Aduan/Cadangan anda telah dihantar. No. Tiket: ${result.data.ticket_number}`;
+                        }
+                        successMsg.classList.remove('hidden');
+                    } else {
+                        // Fallback if element not found
+                        alert('Aduan berjaya dihantar!\nNo. Tiket: ' + result.data.ticket_number);
+                    }
 
                     setTimeout(() => {
-                        successMsg.classList.add('hidden');
+                        if (successMsg) {
+                            successMsg.classList.add('hidden');
+                        }
                         // Reset form
                         form.reset();
                         uploadedFiles = [];
