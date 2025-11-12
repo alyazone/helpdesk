@@ -35,12 +35,12 @@ try {
     $user = $stmt->fetch();
 
     if (!$user) {
-        jsonResponse(false, 'Alamat emel atau kata laluan tidak sah');
+        jsonResponse(false, 'Alamat emel tidak sah');
     }
 
     // Verify password
     if (!password_verify($password, $user['password'])) {
-        jsonResponse(false, 'Alamat emel atau kata laluan tidak sah');
+        jsonResponse(false, 'kata laluan tidak sah');
     }
 
     // Set session
