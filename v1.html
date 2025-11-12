@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAN Malaysia Selangor- Sistem Helpdesk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .input-focus:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .file-upload-zone {
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-zone.drag-over {
+            border-color: #667eea;
+            background-color: #f0f4ff;
+            transform: scale(1.02);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .radio-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .radio-custom:checked {
+            border-color: #667eea;
+            background-color: #667eea;
+        }
+        
+        .radio-custom:checked::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .success-message {
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dropdown-search {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            max-height: 420px;
+            overflow: hidden;
+            z-index: 50;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: dropdownSlide 0.3s ease-out;
+        }
+        
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .dropdown-menu #searchInput {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+            border: none;
+            border-bottom: 2px solid #e5e7eb;
+            padding: 1rem 1.25rem;
+            font-size: 0.95rem;
+            z-index: 20;
+        }
+        
+        .dropdown-menu #searchInput:focus {
+            border-bottom-color: #667eea;
+            outline: none;
+        }
+        
+        .dropdown-menu #optionsContainer {
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 0.5rem 0;
+        }
+        
+        .dropdown-menu #optionsContainer::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .dropdown-menu #optionsContainer::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        .dropdown-menu #optionsContainer::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        .dropdown-menu #optionsContainer::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .dropdown-group {
+            margin-bottom: 0.5rem;
+        }
+        
+        .dropdown-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .dropdown-group-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+        
+        .dropdown-group-title i {
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .dropdown-option {
+            padding: 0.875rem 1.25rem 0.875rem 2.5rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+            position: relative;
+            color: #334155;
+            font-size: 0.925rem;
+        }
+        
+        .dropdown-option::before {
+            content: '•';
+            position: absolute;
+            left: 1.25rem;
+            color: #cbd5e1;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-option:hover {
+            background: linear-gradient(90deg, #f0f4ff 0%, #faf5ff 100%);
+            border-left-color: #667eea;
+            padding-left: 2.75rem;
+            color: #1e293b;
+        }
+        
+        .dropdown-option:hover::before {
+            color: #667eea;
+            left: 1.5rem;
+        }
+        
+        .dropdown-option.selected {
+            background: linear-gradient(90deg, #e0e7ff 0%, #ede9fe 100%);
+            border-left-color: #667eea;
+            font-weight: 600;
+            color: #4338ca;
+            padding-left: 2.75rem;
+        }
+        
+        .dropdown-option.selected::before {
+            content: '✓';
+            color: #667eea;
+            font-size: 1rem;
+            left: 1.5rem;
+        }
+        
+        #perihalKerosakan {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        #perihalKerosakan.has-value {
+            color: #1e293b;
+            font-weight: 500;
+        }
+        
+        .dropdown-search .fa-chevron-down {
+            transition: transform 0.3s ease;
+        }
+        
+        .dropdown-search.active .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-headset text-2xl"></i>
+                    <span class="font-semibold text-lg">Sistem Helpdesk</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                        <i class="fas fa-search"></i>
+                        <a href="semakan.html" class="hidden sm:inline hover:text-purple-200 transition">Semak Status</a>
+                    </button>
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                        <i class="fas fa-user-circle"></i>
+                        <a href="login.html" class="hidden sm:inline hover:text-purple-200 transition">Log Masuk</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="gradient-bg text-white py-12 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex justify-center mb-6">
+                        <img src="logoheader1.png" alt="Logo" class="mx-auto object-contain" style="width:1275px;height:183px;" />
+                </div>
+                <p class="text-xl font-light">Borang Aduan & Cadangan</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Success Message (Hidden by default) -->
+    <div id="successMessage" class="hidden fixed top-20 right-4 z-50">
+        <div class="bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl success-message flex items-center space-x-3">
+            <i class="fas fa-check-circle text-2xl"></i>
+            <div>
+                <p class="font-semibold">Berjaya!</p>
+                <p class="text-sm">Aduan/Cadangan anda telah dihantar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-12">
+        <div class="bg-white rounded-2xl card-shadow fade-in">
+            <form id="helpdeskForm">
+                <!-- Section 1: Type & Details -->
+                <div class="p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                            <i class="fas fa-edit text-white"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Butiran Aduan/Cadangan</h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Type Selection -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                Jenis <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex space-x-6">
+                                <label class="flex items-center space-x-3 cursor-pointer group">
+                                    <input type="radio" name="jenis" value="aduan" class="radio-custom">
+                                    <span class="text-gray-700 group-hover:text-purple-600 transition">Aduan</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer group">
+                                    <input type="radio" name="jenis" value="cadangan" checked class="radio-custom">
+                                    <span class="text-gray-700 group-hover:text-purple-600 transition">Cadangan</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Subject -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="perkara">
+                                Perkara <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="perkara" name="perkara" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="Nyatakan perkara yang ingin diadukan atau dicadangkan">
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="keterangan">
+                                Keterangan <span class="text-red-500">*</span>
+                            </label>
+                            <textarea id="keterangan" name="keterangan" rows="5" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition resize-none"
+                                placeholder="Berikan keterangan terperinci mengenai aduan atau cadangan anda..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Personal Information -->
+                <div class="p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Butiran Pengadu/Pencadang</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="nama">
+                                Nama Penuh <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="nama" name="nama" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="Masukkan nama penuh anda">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="sambungan">
+                                No. Sambungan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="sambungan" name="sambungan" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="Contoh: 1234">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="emel">
+                                Alamat Emel <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" id="emel" name="emel" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="nama@jpbdselangor.gov.my">
+                            <p class="mt-2 text-sm text-red-500 flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Hanya alamat emel jabatan sahaja yang dibenarkan
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="jawatan">
+                                Jawatan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="jawatan" name="jawatan" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="Masukkan jawatan anda">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="bahagian">
+                                Bahagian <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="bahagian" name="bahagian" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="Masukkan bahagian anda">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="tingkat">
+                                Poskod <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="tingkat" name="tingkat" required maxlength="5"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="Contoh: 4">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                Pegawai Penerima Aduan
+                            </label>
+                            <div class="flex items-center space-x-3 bg-gradient-to-r from-purple-50 to-indigo-50 px-4 py-3 rounded-lg border border-purple-200">
+                                <i class="fas fa-user-tie text-purple-600 text-lg"></i>
+                                <span class="font-semibold text-gray-800">En. Ahmad Bin Abdullah</span>
+                                <span class="ml-auto bg-purple-600 text-white text-xs px-3 py-1 rounded-full">Bertugas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Asset Information -->
+                <div class="p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                            <i class="fas fa-laptop text-white"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Butiran Aset</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="jenisAset">
+                                Jenis Aset <span class="text-red-500">*</span>
+                            </label>
+                            <select id="jenisAset" name="jenisAset" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition">
+                                <option value="">Pilih jenis aset</option>
+                                <option value="komputer">Komputer Desktop</option>
+                                <option value="laptop">Laptop</option>
+                                <option value="printer">Printer</option>
+                                <option value="monitor">Monitor</option>
+                                <option value="projector">Projector</option>
+                                <option value="scanner">Scanner</option>
+                                <option value="network">Peralatan Rangkaian</option>
+                                <option value="lain-lain">Lain-lain</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="noPendaftaran">
+                                No. Pendaftaran Aset <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="noPendaftaran" name="noPendaftaran" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                placeholder="Contoh: ICT-2024-001">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="tarikhKerosakan">
+                                Tarikh Kerosakan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" id="tarikhKerosakan" name="tarikhKerosakan" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" for="perihalKerosakan">
+                                Perihal Kerosakan <span class="text-red-500">*</span>
+                            </label>
+                            <div class="dropdown-search relative">
+                                <input type="text" 
+                                    id="perihalKerosakan" 
+                                    name="perihalKerosakan" 
+                                    required
+                                    autocomplete="off"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition"
+                                    placeholder="Cari atau pilih jenis kerosakan..."
+                                    readonly
+                                    onclick="toggleDropdown()">
+                                <i class="fas fa-chevron-down absolute right-4 top-4 text-gray-400 pointer-events-none"></i>
+                                <input type="hidden" id="perihalKerosakanValue" name="perihalKerosakanValue" required>
+                                
+                                <div id="dropdownMenu" class="dropdown-menu hidden">
+                                    <input type="text" 
+                                        id="searchInput" 
+                                        class="w-full px-4 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-purple-400 sticky top-0 bg-white z-10"
+                                        placeholder="Taip untuk cari..."
+                                        onkeyup="filterOptions()">
+                                    
+                                    <div id="optionsContainer">
+                                        <!-- Group 1: Kerosakan Perkakasan ICT -->
+                                        <div class="dropdown-group" data-group="ict">
+                                            <div class="dropdown-group-title">
+                                                <i class="fas fa-laptop mr-2"></i>Kerosakan Perkakasan ICT
+                                            </div>
+                                            <div class="dropdown-option" data-value="hdd_ssd" data-text="HDD/SSD Rosak">HDD/SSD Rosak</div>
+                                            <div class="dropdown-option" data-value="komputer_hang" data-text="Komputer Hang">Komputer Hang</div>
+                                            <div class="dropdown-option" data-value="sharing_printer" data-text="Masalah Sharing Printer">Masalah Sharing Printer</div>
+                                            <div class="dropdown-option" data-value="printer" data-text="Masalah Printer">Masalah Printer</div>
+                                            <div class="dropdown-option" data-value="bluescreen" data-text="Blue Screen Error">Blue Screen Error</div>
+                                            <div class="dropdown-option" data-value="password" data-text="Masalah Password">Masalah Password</div>
+                                            <div class="dropdown-option" data-value="specs_problem" data-text="Masalah SPECS">Masalah SPECS</div>
+                                            <div class="dropdown-option" data-value="hrmis" data-text="Masalah HRMIS">Masalah HRMIS</div>
+                                            <div class="dropdown-option" data-value="masalah_login" data-text="Masalah Login Sistem">Masalah Login Sistem</div>
+                                            <div class="dropdown-option" data-value="printer_sangkut" data-text="Printer Sangkut Kertas">Printer Sangkut Kertas</div>
+                                            <div class="dropdown-option" data-value="internet_problem" data-text="Masalah Internet">Masalah Internet</div>
+                                            <div class="dropdown-option" data-value="wifi_problem" data-text="Masalah WiFi">Masalah WiFi</div>
+                                            <div class="dropdown-option" data-value="virus" data-text="Serangan Virus/Malware">Serangan Virus/Malware</div>
+                                            <div class="dropdown-option" data-value="monitor" data-text="Masalah Monitor">Masalah Monitor</div>
+                                            <div class="dropdown-option" data-value="emel" data-text="Masalah Emel">Masalah Emel</div>
+                                            <div class="dropdown-option" data-value="pc_tidak_boleh_on" data-text="PC Tidak Boleh Dihidupkan">PC Tidak Boleh Dihidupkan</div>
+                                            <div class="dropdown-option" data-value="tidak_boleh_akses_windows" data-text="Tidak Boleh Akses Windows">Tidak Boleh Akses Windows</div>
+                                            <div class="dropdown-option" data-value="tidak_boleh_boot_windows" data-text="Tidak Boleh Boot Windows">Tidak Boleh Boot Windows</div>
+                                            <div class="dropdown-option" data-value="ict_lain_lain" data-text="Lain-lain (ICT)">Lain-lain</div>
+                                        </div>
+                                        
+                                        <!-- Group 2: Kerosakan Bangunan -->
+                                        <div class="dropdown-group" data-group="bangunan">
+                                            <div class="dropdown-group-title">
+                                                <i class="fas fa-building mr-2"></i>Kerosakan Bangunan
+                                            </div>
+                                            <div class="dropdown-option" data-value="lampu_bangunan" data-text="Lampu">Lampu</div>
+                                            <div class="dropdown-option" data-value="tandas" data-text="Tandas">Tandas</div>
+                                            <div class="dropdown-option" data-value="bangunan_lain_lain" data-text="Lain-lain (Bangunan)">Lain-lain</div>
+                                        </div>
+                                        
+                                        <!-- Group 3: Kerosakan Kenderaan Jabatan -->
+                                        <div class="dropdown-group" data-group="kenderaan">
+                                            <div class="dropdown-group-title">
+                                                <i class="fas fa-car mr-2"></i>Kerosakan Kenderaan Jabatan
+                                            </div>
+                                            <div class="dropdown-option" data-value="tayar" data-text="Tayar">Tayar</div>
+                                            <div class="dropdown-option" data-value="servis" data-text="Servis">Servis</div>
+                                            <div class="dropdown-option" data-value="lampu_kenderaan" data-text="Lampu">Lampu</div>
+                                            <div class="dropdown-option" data-value="kenderaan_lain_lain" data-text="Lain-lain (Kenderaan)">Lain-lain</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: File Upload -->
+                <div class="p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                            <i class="fas fa-paperclip text-white"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Lampiran</h2>
+                    </div>
+
+                    <div id="fileUploadZone" class="file-upload-zone border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer hover:border-purple-400 transition">
+                        <i class="fas fa-cloud-upload-alt text-6xl text-purple-500 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Seret fail ke sini atau klik untuk pilih</h3>
+                        <p class="text-gray-500">Format yang disokong: JPG, PNG, PDF, DOC, DOCX (Maksimum 5MB)</p>
+                        <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" class="hidden">
+                    </div>
+
+                    <div id="fileList" class="mt-6 space-y-3"></div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="p-8 bg-gray-50 rounded-b-2xl">
+                    <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                        <button type="submit" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 shadow-lg">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Hantar Aduan</span>
+                        </button>
+                        <button type="reset" class="bg-gray-200 text-gray-700 px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:bg-gray-300 transition">
+                            <i class="fas fa-undo"></i>
+                            <span>Reset Borang</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Searchable Dropdown functionality
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            const container = document.querySelector('.dropdown-search');
+            dropdown.classList.toggle('hidden');
+            container.classList.toggle('active');
+            
+            if (!dropdown.classList.contains('hidden')) {
+                document.getElementById('searchInput').focus();
+            }
+        }
+
+        function filterOptions() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const groups = document.querySelectorAll('.dropdown-group');
+            
+            groups.forEach(group => {
+                const options = group.querySelectorAll('.dropdown-option');
+                let hasVisibleOption = false;
+                
+                options.forEach(option => {
+                    const text = option.getAttribute('data-text').toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        option.style.display = 'block';
+                        hasVisibleOption = true;
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+                
+                // Hide group title if no options are visible
+                const groupTitle = group.querySelector('.dropdown-group-title');
+                if (hasVisibleOption) {
+                    group.style.display = 'block';
+                } else {
+                    group.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle option selection
+        document.addEventListener('DOMContentLoaded', () => {
+            const options = document.querySelectorAll('.dropdown-option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const text = this.getAttribute('data-text');
+                    const value = this.getAttribute('data-value');
+                    
+                    const inputField = document.getElementById('perihalKerosakan');
+                    inputField.value = text;
+                    inputField.classList.add('has-value');
+                    document.getElementById('perihalKerosakanValue').value = value;
+                    
+                    // Remove selected class from all options
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Hide dropdown
+                    document.getElementById('dropdownMenu').classList.add('hidden');
+                    document.querySelector('.dropdown-search').classList.remove('active');
+                    document.getElementById('searchInput').value = '';
+                    filterOptions();
+                });
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const input = document.getElementById('perihalKerosakan');
+            const searchInput = document.getElementById('searchInput');
+            const container = document.querySelector('.dropdown-search');
+            
+            if (!dropdown.contains(event.target) && event.target !== input && event.target !== searchInput) {
+                dropdown.classList.add('hidden');
+                container.classList.remove('active');
+            }
+        });
+
+        // File upload functionality
+        const fileUploadZone = document.getElementById('fileUploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        let uploadedFiles = [];
+
+        fileUploadZone.addEventListener('click', () => fileInput.click());
+
+        fileUploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadZone.classList.add('drag-over');
+        });
+
+        fileUploadZone.addEventListener('dragleave', () => {
+            fileUploadZone.classList.remove('drag-over');
+        });
+
+        fileUploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadZone.classList.remove('drag-over');
+            handleFiles(Array.from(e.dataTransfer.files));
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(Array.from(e.target.files));
+        });
+
+        function handleFiles(files) {
+            files.forEach(file => {
+                if (file.size <= 5 * 1024 * 1024) {
+                    uploadedFiles.push(file);
+                    displayFile(file);
+                } else {
+                    alert(`Fail ${file.name} melebihi saiz maksimum 5MB`);
+                }
+            });
+        }
+
+        function displayFile(file) {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-200';
+            fileItem.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-file-alt text-purple-600 text-xl"></i>
+                    <div>
+                        <p class="font-medium text-gray-800">${file.name}</p>
+                        <p class="text-sm text-gray-500">${formatFileSize(file.size)}</p>
+                    </div>
+                </div>
+                <button type="button" onclick="removeFile('${file.name}')" class="text-red-500 hover:text-red-700 transition">
+                    <i class="fas fa-times-circle text-xl"></i>
+                </button>
+            `;
+            fileList.appendChild(fileItem);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        window.removeFile = (fileName) => {
+            uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
+            const fileItems = fileList.querySelectorAll('div');
+            fileItems.forEach(item => {
+                if (item.textContent.includes(fileName)) {
+                    item.remove();
+                }
+            });
+        };
+
+        // Email validation
+        const emailInput = document.getElementById('emel');
+        emailInput.addEventListener('blur', function() {
+            if (this.value && !this.value.includes('jpbdselangor.gov.my')) {
+                this.classList.add('border-red-500');
+                alert('Hanya alamat emel jabatan sahaja yang dibenarkan.');
+            } else {
+                this.classList.remove('border-red-500');
+            }
+        });
+
+        // Form submission
+        const form = document.getElementById('helpdeskForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Show success message
+            const successMsg = document.getElementById('successMessage');
+            successMsg.classList.remove('hidden');
+            
+            setTimeout(() => {
+                successMsg.classList.add('hidden');
+            }, 5000);
+            
+            // Log form data (for demonstration)
+            console.log('Form Data:', new FormData(form));
+            console.log('Uploaded Files:', uploadedFiles);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Reset form
+        form.addEventListener('reset', () => {
+            uploadedFiles = [];
+            fileList.innerHTML = '';
+        });
+    </script>
+</body>
+</html>

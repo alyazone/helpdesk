@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia@Selangor - Semakan Status Aduan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .input-focus:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .rating-btn {
+            transition: all 0.3s ease;
+        }
+
+        .rating-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .rating-btn.selected {
+            transform: scale(1.1);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.625rem;
+            top: 2.5rem;
+            bottom: -1rem;
+            width: 2px;
+            background: linear-gradient(to bottom, #667eea, #e5e7eb);
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-bar {
+            transition: width 1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-headset text-2xl"></i>
+                    <span class="font-semibold text-lg">Sistem Helpdesk</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                        <i class="fas fa-search"></i>
+                        <a href="v1.html" class="hidden sm:inline hover:text-purple-200 transition">Borang Aduan</a>
+                    </button>
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="hidden sm:inline">Log Masuk</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page 1: Semakan Status Search -->
+    <div id="searchPage" class="min-h-screen">
+        <!-- Header Section -->
+        <!-- Header Section -->
+        <header class="gradient-bg text-white py-12 shadow-xl">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <div class="flex justify-center mb-6">
+                            <img src="logoheader1.png" alt="Logo" class="mx-auto object-contain" style="width:1275px;height:183px;" />
+                    </div>
+                    <p class="text-xl font-light">Semakan Status Aduan/Cadangan</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-12">
+            <div class="bg-white rounded-2xl card-shadow fade-in p-8 sm:p-12">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Semak Status Aduan Anda</h2>
+                    <p class="text-gray-600">Masukkan alamat emel yang digunakan semasa membuat aduan</p>
+                </div>
+
+                <form id="searchForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2" for="emailSearch">
+                            Alamat Emel <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="email" id="emailSearch" required
+                                class="w-full px-4 py-4 pl-12 border-2 border-gray-300 rounded-lg input-focus transition text-lg"
+                                placeholder="nama@jpbdselangor.gov.my">
+                            <i class="fas fa-envelope absolute left-4 top-5 text-gray-400 text-lg"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full btn-primary text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-3 shadow-lg text-lg">
+                        <i class="fas fa-search"></i>
+                        <span>Semak Status</span>
+                    </button>
+                </form>
+
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <div class="flex items-start space-x-3 text-sm text-gray-600">
+                        <i class="fas fa-info-circle text-purple-600 mt-1"></i>
+                        <p>
+                            Anda akan menerima maklumat terperinci mengenai status aduan/cadangan anda termasuk statistik dan pilihan untuk memberikan maklum balas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Page 2: Status Details & Feedback -->
+    <div id="statusPage" class="hidden min-h-screen">
+        <!-- Header Section -->
+        <header class="gradient-bg text-white py-12 shadow-xl">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <button onclick="showSearchPage()" class="flex items-center space-x-2 text-white hover:text-purple-200 transition">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Kembali</span>
+                    </button>
+                    <div class="text-center flex-1">
+                        <h1 class="text-3xl font-bold">Status Aduan Anda</h1>
+                    </div>
+                    <div class="w-20"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Status Content -->
+        <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-12">
+            <div class="space-y-6 fade-in">
+                <!-- User Info Card -->
+                <div class="bg-white rounded-2xl card-shadow p-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800" id="userName">Ahmad Bin Abdullah</h3>
+                            <p class="text-gray-600" id="userEmail">ahmad@jpbdselangor.gov.my</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm font-medium mb-1">Jumlah Aduan</p>
+                        <p class="text-3xl font-bold text-gray-800">12</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm font-medium mb-1">Dalam Proses</p>
+                        <p class="text-3xl font-bold text-gray-800">3</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm font-medium mb-1">Selesai</p>
+                        <p class="text-3xl font-bold text-gray-800">8</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm font-medium mb-1">Dibatalkan</p>
+                        <p class="text-3xl font-bold text-gray-800">1</p>
+                    </div>
+                </div>
+
+                <!-- Complaint List -->
+                <div class="bg-white rounded-2xl card-shadow p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-list-ul text-purple-600 mr-3"></i>
+                        Senarai Aduan/Cadangan
+                    </h3>
+
+                    <div class="space-y-4">
+                        <!-- Complaint Item 1 -->
+                        <div class="border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer" onclick="showComplaintDetails(1)">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
+                                            Dalam Proses
+                                        </span>
+                                        <span class="text-sm text-gray-500">#ADU-2025-001</span>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Komputer Hang - Laptop Rosak</h4>
+                                    <p class="text-gray-600 text-sm mb-3">Laptop di bilik mesyuarat sering hang dan slow...</p>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span><i class="fas fa-calendar mr-2"></i>15 Jan 2025</span>
+                                        <span><i class="fas fa-user-tie mr-2"></i>En. Ahmad Bin Abdullah</span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-gray-600 mb-2">
+                                    <span>Progress</span>
+                                    <span>60%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="progress-bar bg-gradient-to-r from-yellow-400 to-yellow-600 h-2 rounded-full" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Complaint Item 2 - Completed -->
+                        <div class="border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer" onclick="showComplaintDetails(2)">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                                            Selesai
+                                        </span>
+                                        <span class="text-sm text-gray-500">#ADU-2025-002</span>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Masalah Printer - Printer Sangkut Kertas</h4>
+                                    <p class="text-gray-600 text-sm mb-3">Printer di pejabat sering sangkut kertas...</p>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span><i class="fas fa-calendar mr-2"></i>10 Jan 2025</span>
+                                        <span><i class="fas fa-user-tie mr-2"></i>Pn. Siti Aminah</span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-gray-600 mb-2">
+                                    <span>Progress</span>
+                                    <span>100%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="progress-bar bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style="width: 100%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Rating Section for Completed Complaint -->
+                            <div class="mt-6 pt-6 border-t border-gray-200">
+                                <p class="text-sm font-semibold text-gray-700 mb-3">Berikan Penilaian Anda:</p>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <button onclick="selectRating(event, 'cemerlang', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 transition text-center">
+                                        <i class="fas fa-star text-yellow-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-semibold text-gray-700">Cemerlang</p>
+                                    </button>
+                                    <button onclick="selectRating(event, 'baik', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition text-center">
+                                        <i class="fas fa-thumbs-up text-blue-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-semibold text-gray-700">Baik</p>
+                                    </button>
+                                    <button onclick="selectRating(event, 'memuaskan', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 transition text-center">
+                                        <i class="fas fa-smile text-yellow-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-semibold text-gray-700">Memuaskan</p>
+                                    </button>
+                                    <button onclick="selectRating(event, 'tidak-memuaskan', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-red-500 hover:bg-red-50 transition text-center">
+                                        <i class="fas fa-frown text-red-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-semibold text-gray-700">Tidak Memuaskan</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Complaint Details Modal -->
+    <div id="complaintModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto card-shadow">
+            <div class="gradient-bg text-white p-6 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-bold">Butiran Aduan</h3>
+                    <button onclick="closeComplaintDetails()" class="text-white hover:text-gray-200">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <!-- Complaint Header -->
+                <div class="mb-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
+                            Dalam Proses
+                        </span>
+                        <span class="text-gray-500">#ADU-2025-001</span>
+                    </div>
+                    <h4 class="text-2xl font-bold text-gray-800 mb-2">Komputer Hang - Laptop Rosak</h4>
+                    <p class="text-gray-600">Laptop di bilik mesyuarat sering hang dan slow. Memerlukan pemeriksaan segera.</p>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 mb-1">Tarikh Aduan</p>
+                        <p class="text-gray-800 font-medium">15 Januari 2025</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 mb-1">Pegawai Bertugas</p>
+                        <p class="text-gray-800 font-medium">En. Ahmad Bin Abdullah</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 mb-1">Jenis Aset</p>
+                        <p class="text-gray-800 font-medium">Laptop</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 mb-1">No. Pendaftaran</p>
+                        <p class="text-gray-800 font-medium">ICT-2024-089</p>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="mb-8">
+                    <h5 class="text-lg font-bold text-gray-800 mb-4">Status Terkini</h5>
+                    <div class="space-y-6">
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-green-500 text-white">
+                                <i class="fas fa-check text-xs"></i>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="font-semibold text-gray-800">Aduan Diterima</p>
+                                <p class="text-sm text-gray-600">15 Jan 2025, 09:30 AM</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-green-500 text-white">
+                                <i class="fas fa-check text-xs"></i>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="font-semibold text-gray-800">Dalam Pemeriksaan</p>
+                                <p class="text-sm text-gray-600">15 Jan 2025, 02:00 PM</p>
+                                <p class="text-sm text-gray-600 mt-1">Pegawai IT sedang memeriksa peralatan</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-blue-500 text-white">
+                                <i class="fas fa-cog fa-spin text-xs"></i>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
+                                <p class="font-semibold text-gray-800">Sedang Dibaiki</p>
+                                <p class="text-sm text-gray-600">16 Jan 2025, 10:00 AM</p>
+                                <p class="text-sm text-gray-600 mt-1">Proses pembaikan dijangka selesai dalam 2 hari</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-gray-300 text-gray-600">
+                                <i class="fas fa-circle text-xs"></i>
+                            </div>
+                            <div class="bg-gray-100 rounded-lg p-4 opacity-50">
+                                <p class="font-semibold text-gray-600">Selesai</p>
+                                <p class="text-sm text-gray-500">Menunggu penyelesaian</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button onclick="closeComplaintDetails()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form submission
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailSearch').value;
+            
+            // Simulate loading and show status page
+            setTimeout(() => {
+                showStatusPage(email);
+            }, 500);
+        });
+
+        function showStatusPage(email) {
+            document.getElementById('searchPage').classList.add('hidden');
+            document.getElementById('statusPage').classList.remove('hidden');
+            document.getElementById('userEmail').textContent = email;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSearchPage() {
+            document.getElementById('statusPage').classList.add('hidden');
+            document.getElementById('searchPage').classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showComplaintDetails(id) {
+            document.getElementById('complaintModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeComplaintDetails() {
+            document.getElementById('complaintModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function selectRating(event, rating, complaintId) {
+            event.stopPropagation();
+            
+            // Remove selected class from all buttons in this group
+            const parent = event.currentTarget.parentElement;
+            parent.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.classList.remove('selected', 'border-green-500', 'bg-green-50', 'border-blue-500', 'bg-blue-50', 'border-yellow-500', 'bg-yellow-50', 'border-red-500', 'bg-red-50');
+                btn.classList.add('border-gray-300');
+            });
+            
+            // Add selected class to clicked button
+            event.currentTarget.classList.add('selected');
+            event.currentTarget.classList.remove('border-gray-300');
+            
+            // Apply specific color based on rating
+            if (rating === 'cemerlang') {
+                event.currentTarget.classList.add('border-green-500', 'bg-green-50');
+            } else if (rating === 'baik') {
+                event.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
+            } else if (rating === 'memuaskan') {
+                event.currentTarget.classList.add('border-yellow-500', 'bg-yellow-50');
+            } else if (rating === 'tidak-memuaskan') {
+                event.currentTarget.classList.add('border-red-500', 'bg-red-50');
+            }
+            
+            // Show success message
+            alert(`Terima kasih! Penilaian "${rating.charAt(0).toUpperCase() + rating.slice(1).replace('-', ' ')}" telah direkodkan untuk aduan #ADU-2025-00${complaintId}`);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('complaintModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeComplaintDetails();
+            }
+        });
+    </script>
+</body>
+</html>
