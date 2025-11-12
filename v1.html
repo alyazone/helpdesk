@@ -776,12 +776,24 @@
 
             try {
                 // Submit to backend
+                console.log('Submitting to: api/submit_complaint.php');
                 const response = await fetch('api/submit_complaint.php', {
                     method: 'POST',
                     body: formData
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+
+                // Check if response is OK (status 200-299)
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error(`Server returned ${response.status}: ${errorText.substring(0, 100)}`);
+                }
+
                 const result = await response.json();
+                console.log('API result:', result);
 
                 if (result.success) {
                     // Show success message
@@ -805,11 +817,12 @@
                     // Scroll to top
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
-                    alert(result.message || 'Gagal menghantar aduan. Sila cuba lagi.');
+                    console.error('API returned error:', result.message);
+                    alert('Gagal menghantar aduan:\n' + (result.message || 'Sila cuba lagi.'));
                 }
             } catch (error) {
                 console.error('Submit error:', error);
-                alert('Ralat sambungan. Sila cuba lagi.');
+                alert('Ralat: ' + error.message + '\n\nSila buka Browser Console (F12) untuk maklumat lanjut.');
             }
         });
 
