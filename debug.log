@@ -54,3 +54,11 @@
 2025-11-12 15:34:51 - Complaint insert executed successfully
 2025-11-12 15:34:51 - Complaint ID: 7
 2025-11-12 15:34:51 - Complaint submitted successfully. ID: 7, Ticket: ADU-2025-408
+2025-11-12 16:14:05 - Complaint submission started
+2025-11-12 16:14:05 - Request method: POST
+2025-11-12 16:14:05 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEHILANGAN DAN KEROSAKAN LAPTOP","nama":"AHMAD ALI","email":"ahmad.user@jpbdselangor.gov.my"}
+2025-11-12 16:14:05 - Database connection successful
+2025-11-12 16:14:05 - Attempting to insert complaint with ticket: ADU-2025-973
+2025-11-12 16:14:05 - Complaint insert executed successfully
+2025-11-12 16:14:05 - Complaint ID: 8
+2025-11-12 16:14:05 - Complaint submitted successfully. ID: 8, Ticket: ADU-2025-973
