@@ -558,7 +558,7 @@
             formData.append('password', password);
 
             // Send to backend (register.php)
-            fetch('register.php', {
+            fetch('api/register.php', {
                 method: 'POST',
                 body: formData
             })
