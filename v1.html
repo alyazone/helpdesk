@@ -763,23 +763,79 @@
 
         // Form submission
         const form = document.getElementById('helpdeskForm');
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Show success message
-            const successMsg = document.getElementById('successMessage');
-            successMsg.classList.remove('hidden');
-            
-            setTimeout(() => {
-                successMsg.classList.add('hidden');
-            }, 5000);
-            
-            // Log form data (for demonstration)
-            console.log('Form Data:', new FormData(form));
-            console.log('Uploaded Files:', uploadedFiles);
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Prepare form data
+            const formData = new FormData(form);
+
+            // Add uploaded files
+            uploadedFiles.forEach(file => {
+                formData.append('files[]', file);
+            });
+
+            try {
+                // Submit to backend
+                console.log('Submitting to: api/submit_complaint.php');
+                const response = await fetch('api/submit_complaint.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+
+                // Check if response is OK (status 200-299)
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error(`Server returned ${response.status}: ${errorText.substring(0, 100)}`);
+                }
+
+                const result = await response.json();
+                console.log('API result:', result);
+                console.log('Result success:', result.success);
+                console.log('Result data:', result.data);
+
+                if (result.success) {
+                    console.log('Success block reached');
+                    // Show success message
+                    const successMsg = document.getElementById('successMessage');
+                    if (successMsg) {
+                        const textElement = successMsg.querySelector('p.text-sm');
+                        if (textElement) {
+                            textElement.textContent = `Aduan/Cadangan anda telah dihantar. No. Tiket: ${result.data.ticket_number}`;
+                        }
+                        successMsg.classList.remove('hidden');
+                    } else {
+                        // Fallback if element not found
+                        alert('Aduan berjaya dihantar!\nNo. Tiket: ' + result.data.ticket_number);
+                    }
+
+                    setTimeout(() => {
+                        if (successMsg) {
+                            successMsg.classList.add('hidden');
+                        }
+                        // Reset form
+                        form.reset();
+                        uploadedFiles = [];
+                        fileList.innerHTML = '';
+                        // Redirect to status checking
+                        if (confirm('Aduan berjaya dihantar! Ingin semak status aduan?')) {
+                            window.location.href = 'semakan.html';
+                        }
+                    }, 3000);
+
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    console.error('API returned error:', result.message);
+                    alert('Gagal menghantar aduan:\n' + (result.message || 'Sila cuba lagi.'));
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                alert('Ralat: ' + error.message + '\n\nSila buka Browser Console (F12) untuk maklumat lanjut.');
+            }
         });
 
         // Reset form

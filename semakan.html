@@ -119,7 +119,7 @@
                     </button>
                     <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
                         <i class="fas fa-user-circle"></i>
-                        <span class="hidden sm:inline">Log Masuk</span>
+                        <a href="login.html" class="hidden sm:inline hover:text-purple-200 transition">Log Masuk</a>
                     </button>
                 </div>
             </div>
@@ -267,92 +267,11 @@
                         Senarai Aduan/Cadangan
                     </h3>
 
-                    <div class="space-y-4">
-                        <!-- Complaint Item 1 -->
-                        <div class="border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer" onclick="showComplaintDetails(1)">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
-                                            Dalam Proses
-                                        </span>
-                                        <span class="text-sm text-gray-500">#ADU-2025-001</span>
-                                    </div>
-                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Komputer Hang - Laptop Rosak</h4>
-                                    <p class="text-gray-600 text-sm mb-3">Laptop di bilik mesyuarat sering hang dan slow...</p>
-                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                        <span><i class="fas fa-calendar mr-2"></i>15 Jan 2025</span>
-                                        <span><i class="fas fa-user-tie mr-2"></i>En. Ahmad Bin Abdullah</span>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
-                            </div>
-                            
-                            <!-- Progress Bar -->
-                            <div class="mt-4">
-                                <div class="flex justify-between text-xs text-gray-600 mb-2">
-                                    <span>Progress</span>
-                                    <span>60%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-gradient-to-r from-yellow-400 to-yellow-600 h-2 rounded-full" style="width: 60%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Complaint Item 2 - Completed -->
-                        <div class="border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer" onclick="showComplaintDetails(2)">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
-                                            Selesai
-                                        </span>
-                                        <span class="text-sm text-gray-500">#ADU-2025-002</span>
-                                    </div>
-                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Masalah Printer - Printer Sangkut Kertas</h4>
-                                    <p class="text-gray-600 text-sm mb-3">Printer di pejabat sering sangkut kertas...</p>
-                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                        <span><i class="fas fa-calendar mr-2"></i>10 Jan 2025</span>
-                                        <span><i class="fas fa-user-tie mr-2"></i>Pn. Siti Aminah</span>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
-                            </div>
-                            
-                            <!-- Progress Bar -->
-                            <div class="mt-4">
-                                <div class="flex justify-between text-xs text-gray-600 mb-2">
-                                    <span>Progress</span>
-                                    <span>100%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style="width: 100%"></div>
-                                </div>
-                            </div>
-
-                            <!-- Rating Section for Completed Complaint -->
-                            <div class="mt-6 pt-6 border-t border-gray-200">
-                                <p class="text-sm font-semibold text-gray-700 mb-3">Berikan Penilaian Anda:</p>
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    <button onclick="selectRating(event, 'cemerlang', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 transition text-center">
-                                        <i class="fas fa-star text-yellow-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Cemerlang</p>
-                                    </button>
-                                    <button onclick="selectRating(event, 'baik', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition text-center">
-                                        <i class="fas fa-thumbs-up text-blue-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Baik</p>
-                                    </button>
-                                    <button onclick="selectRating(event, 'memuaskan', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 transition text-center">
-                                        <i class="fas fa-smile text-yellow-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Memuaskan</p>
-                                    </button>
-                                    <button onclick="selectRating(event, 'tidak-memuaskan', 2)" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-red-500 hover:bg-red-50 transition text-center">
-                                        <i class="fas fa-frown text-red-500 text-xl mb-1"></i>
-                                        <p class="text-sm font-semibold text-gray-700">Tidak Memuaskan</p>
-                                    </button>
-                                </div>
-                            </div>
+                    <div id="complaintsContainer" class="space-y-4">
+                        <!-- Complaints will be loaded dynamically from database -->
+                        <div class="text-center py-12 text-gray-500">
+                            <i class="fas fa-search text-5xl mb-4"></i>
+                            <p>Masukkan alamat emel untuk melihat aduan anda</p>
                         </div>
                     </div>
                 </div>
@@ -372,88 +291,11 @@
                 </div>
             </div>
 
-            <div class="p-8">
-                <!-- Complaint Header -->
-                <div class="mb-6">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
-                            Dalam Proses
-                        </span>
-                        <span class="text-gray-500">#ADU-2025-001</span>
-                    </div>
-                    <h4 class="text-2xl font-bold text-gray-800 mb-2">Komputer Hang - Laptop Rosak</h4>
-                    <p class="text-gray-600">Laptop di bilik mesyuarat sering hang dan slow. Memerlukan pemeriksaan segera.</p>
-                </div>
-
-                <!-- Details Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">Tarikh Aduan</p>
-                        <p class="text-gray-800 font-medium">15 Januari 2025</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">Pegawai Bertugas</p>
-                        <p class="text-gray-800 font-medium">En. Ahmad Bin Abdullah</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">Jenis Aset</p>
-                        <p class="text-gray-800 font-medium">Laptop</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">No. Pendaftaran</p>
-                        <p class="text-gray-800 font-medium">ICT-2024-089</p>
-                    </div>
-                </div>
-
-                <!-- Timeline -->
-                <div class="mb-8">
-                    <h5 class="text-lg font-bold text-gray-800 mb-4">Status Terkini</h5>
-                    <div class="space-y-6">
-                        <div class="timeline-item">
-                            <div class="timeline-dot bg-green-500 text-white">
-                                <i class="fas fa-check text-xs"></i>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <p class="font-semibold text-gray-800">Aduan Diterima</p>
-                                <p class="text-sm text-gray-600">15 Jan 2025, 09:30 AM</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot bg-green-500 text-white">
-                                <i class="fas fa-check text-xs"></i>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <p class="font-semibold text-gray-800">Dalam Pemeriksaan</p>
-                                <p class="text-sm text-gray-600">15 Jan 2025, 02:00 PM</p>
-                                <p class="text-sm text-gray-600 mt-1">Pegawai IT sedang memeriksa peralatan</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot bg-blue-500 text-white">
-                                <i class="fas fa-cog fa-spin text-xs"></i>
-                            </div>
-                            <div class="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
-                                <p class="font-semibold text-gray-800">Sedang Dibaiki</p>
-                                <p class="text-sm text-gray-600">16 Jan 2025, 10:00 AM</p>
-                                <p class="text-sm text-gray-600 mt-1">Proses pembaikan dijangka selesai dalam 2 hari</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot bg-gray-300 text-gray-600">
-                                <i class="fas fa-circle text-xs"></i>
-                            </div>
-                            <div class="bg-gray-100 rounded-lg p-4 opacity-50">
-                                <p class="font-semibold text-gray-600">Selesai</p>
-                                <p class="text-sm text-gray-500">Menunggu penyelesaian</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex justify-end">
-                    <button onclick="closeComplaintDetails()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">
-                        Tutup
-                    </button>
+            <div id="modalContent" class="p-8">
+                <!-- Content will be loaded dynamically -->
+                <div class="text-center py-12">
+                    <i class="fas fa-spinner fa-spin text-4xl text-purple-600 mb-4"></i>
+                    <p class="text-gray-600">Memuatkan butiran aduan...</p>
                 </div>
             </div>
         </div>
@@ -461,21 +303,153 @@
 
     <script>
         // Form submission
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('emailSearch').value;
-            
-            // Simulate loading and show status page
-            setTimeout(() => {
-                showStatusPage(email);
-            }, 500);
+
+            try {
+                // Fetch status from backend
+                const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatusPage(result.data);
+                } else {
+                    alert(result.message || 'Tiada rekod dijumpai untuk alamat emel ini');
+                }
+            } catch (error) {
+                console.error('Check status error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
+            }
         });
 
-        function showStatusPage(email) {
+        function showStatusPage(data) {
             document.getElementById('searchPage').classList.add('hidden');
             document.getElementById('statusPage').classList.remove('hidden');
-            document.getElementById('userEmail').textContent = email;
-            
+
+            // Update user info
+            document.getElementById('userName').textContent = data.user.nama || 'Pengguna';
+            document.getElementById('userEmail').textContent = data.user.email;
+
+            // Update statistics
+            const stats = data.statistics;
+            document.querySelectorAll('.stat-card')[0].querySelector('.text-3xl').textContent = stats.total;
+            document.querySelectorAll('.stat-card')[1].querySelector('.text-3xl').textContent =
+                (stats.pending || 0) + (stats.dalam_pemeriksaan || 0) + (stats.sedang_dibaiki || 0);
+            document.querySelectorAll('.stat-card')[2].querySelector('.text-3xl').textContent = stats.selesai || 0;
+            document.querySelectorAll('.stat-card')[3].querySelector('.text-3xl').textContent = stats.dibatalkan || 0;
+
+            // Clear and populate complaints list
+            const complaintsContainer = document.getElementById('complaintsContainer');
+            if (!complaintsContainer) {
+                console.error('complaintsContainer not found!');
+                return;
+            }
+            complaintsContainer.innerHTML = '';
+
+            if (data.complaints.length === 0) {
+                complaintsContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-inbox text-5xl mb-4"></i>
+                        <p>Tiada aduan dijumpai untuk alamat emel ini</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.complaints.forEach(complaint => {
+                const statusColors = {
+                    'pending': 'bg-gray-100 text-gray-800',
+                    'dalam_pemeriksaan': 'bg-blue-100 text-blue-800',
+                    'sedang_dibaiki': 'bg-yellow-100 text-yellow-800',
+                    'selesai': 'bg-green-100 text-green-800',
+                    'dibatalkan': 'bg-red-100 text-red-800'
+                };
+
+                const statusLabels = {
+                    'pending': 'Pending',
+                    'dalam_pemeriksaan': 'Dalam Pemeriksaan',
+                    'sedang_dibaiki': 'Sedang Dibaiki',
+                    'selesai': 'Selesai',
+                    'dibatalkan': 'Dibatalkan'
+                };
+
+                const complaintDiv = document.createElement('div');
+                complaintDiv.className = 'border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer';
+                complaintDiv.onclick = () => showComplaintDetails(complaint.id);
+
+                let complaintHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="px-3 py-1 ${statusColors[complaint.status]} rounded-full text-sm font-semibold">
+                                    ${statusLabels[complaint.status]}
+                                </span>
+                                <span class="text-sm text-gray-500">${complaint.ticket_number}</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">${complaint.perkara}</h4>
+                            <p class="text-gray-600 text-sm mb-3">${complaint.keterangan.substring(0, 100)}...</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <span><i class="fas fa-calendar mr-2"></i>${new Date(complaint.created_at).toLocaleDateString('ms-MY')}</span>
+                                <span><i class="fas fa-user-tie mr-2"></i>${complaint.officer_name || complaint.pegawai_penerima}</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400 text-xl"></i>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-xs text-gray-600 mb-2">
+                            <span>Progress</span>
+                            <span>${complaint.progress}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="progress-bar bg-gradient-to-r from-${complaint.status === 'selesai' ? 'green' : 'yellow'}-400 to-${complaint.status === 'selesai' ? 'green' : 'yellow'}-600 h-2 rounded-full" style="width: ${complaint.progress}%"></div>
+                        </div>
+                    </div>
+                `;
+
+                // Add rating section for completed complaints
+                if (complaint.status === 'selesai' && !complaint.rating) {
+                    complaintHTML += `
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <p class="text-sm font-semibold text-gray-700 mb-3">Berikan Penilaian Anda:</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <button onclick="selectRating(event, 'cemerlang', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 transition text-center">
+                                    <i class="fas fa-star text-yellow-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Cemerlang</p>
+                                </button>
+                                <button onclick="selectRating(event, 'baik', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition text-center">
+                                    <i class="fas fa-thumbs-up text-blue-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Baik</p>
+                                </button>
+                                <button onclick="selectRating(event, 'memuaskan', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 transition text-center">
+                                    <i class="fas fa-smile text-yellow-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Memuaskan</p>
+                                </button>
+                                <button onclick="selectRating(event, 'tidak_memuaskan', ${complaint.id})" class="rating-btn px-4 py-3 rounded-lg border-2 border-gray-300 hover:border-red-500 hover:bg-red-50 transition text-center">
+                                    <i class="fas fa-frown text-red-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Tidak Memuaskan</p>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else if (complaint.rating) {
+                    const ratingLabels = {
+                        'cemerlang': 'Cemerlang',
+                        'baik': 'Baik',
+                        'memuaskan': 'Memuaskan',
+                        'tidak_memuaskan': 'Tidak Memuaskan'
+                    };
+                    complaintHTML += `
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <p class="text-sm text-gray-600">Penilaian anda: <span class="font-semibold text-purple-600">${ratingLabels[complaint.rating] || complaint.rating}</span></p>
+                        </div>
+                    `;
+                }
+
+                complaintDiv.innerHTML = complaintHTML;
+                complaintsContainer.appendChild(complaintDiv);
+            });
+
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -488,9 +462,190 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function showComplaintDetails(id) {
-            document.getElementById('complaintModal').classList.remove('hidden');
+        async function showComplaintDetails(id) {
+            const modal = document.getElementById('complaintModal');
+            const modalContent = document.getElementById('modalContent');
+
+            // Show modal with loading state
+            modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+
+            modalContent.innerHTML = `
+                <div class="text-center py-12">
+                    <i class="fas fa-spinner fa-spin text-4xl text-purple-600 mb-4"></i>
+                    <p class="text-gray-600">Memuatkan butiran aduan...</p>
+                </div>
+            `;
+
+            try {
+                // Fetch complaint details from API
+                const response = await fetch(`api/get_complaint_details.php?complaint_id=${id}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const complaint = result.data.complaint;
+                    const statusHistory = complaint.status_history || [];
+
+                    const statusColors = {
+                        'pending': 'bg-gray-100 text-gray-800',
+                        'dalam_pemeriksaan': 'bg-blue-100 text-blue-800',
+                        'sedang_dibaiki': 'bg-yellow-100 text-yellow-800',
+                        'selesai': 'bg-green-100 text-green-800',
+                        'dibatalkan': 'bg-red-100 text-red-800'
+                    };
+
+                    const statusLabels = {
+                        'pending': 'Pending',
+                        'dalam_pemeriksaan': 'Dalam Pemeriksaan',
+                        'sedang_dibaiki': 'Sedang Dibaiki',
+                        'selesai': 'Selesai',
+                        'dibatalkan': 'Dibatalkan'
+                    };
+
+                    // Build timeline HTML
+                    let timelineHTML = '';
+                    statusHistory.forEach((history, index) => {
+                        const isLast = index === statusHistory.length - 1;
+                        const dotColor = isLast ? 'bg-blue-500' : 'bg-green-500';
+                        const bgColor = isLast ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50';
+
+                        timelineHTML += `
+                            <div class="timeline-item">
+                                <div class="timeline-dot ${dotColor} text-white">
+                                    <i class="fas ${isLast ? 'fa-cog fa-spin' : 'fa-check'} text-xs"></i>
+                                </div>
+                                <div class="${bgColor} rounded-lg p-4">
+                                    <p class="font-semibold text-gray-800">${history.status}</p>
+                                    <p class="text-sm text-gray-600">${new Date(history.created_at).toLocaleString('ms-MY', {
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}</p>
+                                    ${history.keterangan ? `<p class="text-sm text-gray-600 mt-1">${history.keterangan}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    // Populate modal with dynamic data
+                    modalContent.innerHTML = `
+                        <!-- Complaint Header -->
+                        <div class="mb-6">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <span class="px-4 py-2 ${statusColors[complaint.status]} rounded-full text-sm font-semibold">
+                                    ${statusLabels[complaint.status]}
+                                </span>
+                                <span class="text-gray-500">${complaint.ticket_number}</span>
+                            </div>
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">${complaint.perkara}</h4>
+                            <p class="text-gray-600">${complaint.keterangan}</p>
+                        </div>
+
+                        <!-- Details Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Jenis</p>
+                                <p class="text-gray-800 font-medium">${complaint.jenis === 'aduan' ? 'Aduan' : 'Cadangan'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Tarikh Aduan</p>
+                                <p class="text-gray-800 font-medium">${new Date(complaint.created_at).toLocaleDateString('ms-MY', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                })}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Nama Pengadu</p>
+                                <p class="text-gray-800 font-medium">${complaint.nama_pengadu}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Email</p>
+                                <p class="text-gray-800 font-medium">${complaint.email}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Jawatan</p>
+                                <p class="text-gray-800 font-medium">${complaint.jawatan || '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Bahagian</p>
+                                <p class="text-gray-800 font-medium">${complaint.bahagian || '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Pegawai Bertugas</p>
+                                <p class="text-gray-800 font-medium">${complaint.officer_name || complaint.pegawai_penerima}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Progress</p>
+                                <p class="text-gray-800 font-medium">${complaint.progress}%</p>
+                            </div>
+                            ${complaint.jenis_aset ? `
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Jenis Aset</p>
+                                <p class="text-gray-800 font-medium">${complaint.jenis_aset}</p>
+                            </div>
+                            ` : ''}
+                            ${complaint.no_pendaftaran_aset ? `
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">No. Pendaftaran Aset</p>
+                                <p class="text-gray-800 font-medium">${complaint.no_pendaftaran_aset}</p>
+                            </div>
+                            ` : ''}
+                            ${complaint.tarikh_kerosakan ? `
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Tarikh Kerosakan</p>
+                                <p class="text-gray-800 font-medium">${new Date(complaint.tarikh_kerosakan).toLocaleDateString('ms-MY')}</p>
+                            </div>
+                            ` : ''}
+                            ${complaint.perihal_kerosakan ? `
+                            <div>
+                                <p class="text-sm font-semibold text-gray-500 mb-1">Perihal Kerosakan</p>
+                                <p class="text-gray-800 font-medium">${complaint.perihal_kerosakan}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Timeline -->
+                        ${statusHistory.length > 0 ? `
+                        <div class="mb-8">
+                            <h5 class="text-lg font-bold text-gray-800 mb-4">Status Terkini</h5>
+                            <div class="space-y-6">
+                                ${timelineHTML}
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        <div class="flex justify-end">
+                            <button onclick="closeComplaintDetails()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">
+                                Tutup
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    modalContent.innerHTML = `
+                        <div class="text-center py-12">
+                            <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
+                            <p class="text-gray-600">${result.message || 'Gagal memuatkan butiran aduan'}</p>
+                            <button onclick="closeComplaintDetails()" class="mt-4 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">
+                                Tutup
+                            </button>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading complaint details:', error);
+                modalContent.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-5xl text-yellow-500 mb-4"></i>
+                        <p class="text-gray-600">Ralat sambungan. Sila cuba lagi.</p>
+                        <button onclick="closeComplaintDetails()" class="mt-4 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">
+                            Tutup
+                        </button>
+                    </div>
+                `;
+            }
         }
 
         function closeComplaintDetails() {
@@ -498,33 +653,56 @@
             document.body.style.overflow = 'auto';
         }
 
-        function selectRating(event, rating, complaintId) {
+        async function selectRating(event, rating, complaintId) {
             event.stopPropagation();
-            
-            // Remove selected class from all buttons in this group
-            const parent = event.currentTarget.parentElement;
-            parent.querySelectorAll('.rating-btn').forEach(btn => {
-                btn.classList.remove('selected', 'border-green-500', 'bg-green-50', 'border-blue-500', 'bg-blue-50', 'border-yellow-500', 'bg-yellow-50', 'border-red-500', 'bg-red-50');
-                btn.classList.add('border-gray-300');
-            });
-            
-            // Add selected class to clicked button
-            event.currentTarget.classList.add('selected');
-            event.currentTarget.classList.remove('border-gray-300');
-            
-            // Apply specific color based on rating
-            if (rating === 'cemerlang') {
-                event.currentTarget.classList.add('border-green-500', 'bg-green-50');
-            } else if (rating === 'baik') {
-                event.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
-            } else if (rating === 'memuaskan') {
-                event.currentTarget.classList.add('border-yellow-500', 'bg-yellow-50');
-            } else if (rating === 'tidak-memuaskan') {
-                event.currentTarget.classList.add('border-red-500', 'bg-red-50');
+
+            try {
+                // Submit rating to backend
+                const response = await fetch('api/submit_rating.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        complaint_id: complaintId,
+                        rating: rating
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Remove selected class from all buttons in this group
+                    const parent = event.currentTarget.parentElement;
+                    parent.querySelectorAll('.rating-btn').forEach(btn => {
+                        btn.classList.remove('selected', 'border-green-500', 'bg-green-50', 'border-blue-500', 'bg-blue-50', 'border-yellow-500', 'bg-yellow-50', 'border-red-500', 'bg-red-50');
+                        btn.classList.add('border-gray-300');
+                    });
+
+                    // Add selected class to clicked button
+                    event.currentTarget.classList.add('selected');
+                    event.currentTarget.classList.remove('border-gray-300');
+
+                    // Apply specific color based on rating
+                    if (rating === 'cemerlang') {
+                        event.currentTarget.classList.add('border-green-500', 'bg-green-50');
+                    } else if (rating === 'baik') {
+                        event.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
+                    } else if (rating === 'memuaskan') {
+                        event.currentTarget.classList.add('border-yellow-500', 'bg-yellow-50');
+                    } else if (rating === 'tidak-memuaskan') {
+                        event.currentTarget.classList.add('border-red-500', 'bg-red-50');
+                    }
+
+                    // Show success message
+                    alert(result.message);
+                } else {
+                    alert(result.message || 'Gagal menghantar penilaian');
+                }
+            } catch (error) {
+                console.error('Rating error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
             }
-            
-            // Show success message
-            alert(`Terima kasih! Penilaian "${rating.charAt(0).toUpperCase() + rating.slice(1).replace('-', ' ')}" telah direkodkan untuk aduan #ADU-2025-00${complaintId}`);
         }
 
         // Close modal when clicking outside

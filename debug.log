@@ -1,0 +1,72 @@
+2025-11-12 14:32:42 - Complaint submission started
+2025-11-12 14:32:42 - Request method: POST
+2025-11-12 14:32:42 - Validation passed. Data received: {"jenis":"aduan","perkara":"test","nama":"test","email":"test@jpbdselangor.gov.my"}
+2025-11-12 14:32:42 - Database connection successful
+2025-11-12 14:32:42 - Attempting to insert complaint with ticket: ADU-2025-750
+2025-11-12 14:32:42 - Complaint insert executed successfully
+2025-11-12 14:32:42 - Complaint ID: 1
+2025-11-12 14:32:42 - Complaint submitted successfully. ID: 1, Ticket: ADU-2025-750
+2025-11-12 14:41:38 - Complaint submission started
+2025-11-12 14:41:38 - Request method: POST
+2025-11-12 14:41:38 - Validation passed. Data received: {"jenis":"aduan","perkara":"Test Complaint from Direct PHP","nama":"Direct Test User","email":"directtest@jpbdselangor.gov.my"}
+2025-11-12 14:41:38 - Database connection successful
+2025-11-12 14:41:38 - Attempting to insert complaint with ticket: ADU-2025-841
+2025-11-12 14:41:38 - Complaint insert executed successfully
+2025-11-12 14:41:38 - Complaint ID: 2
+2025-11-12 14:41:38 - Complaint submitted successfully. ID: 2, Ticket: ADU-2025-841
+2025-11-12 14:44:33 - Complaint submission started
+2025-11-12 14:44:33 - Request method: POST
+2025-11-12 14:44:33 - Validation passed. Data received: {"jenis":"aduan","perkara":"Test Complaint","nama":"Test User","email":"test@jpbdselangor.gov.my"}
+2025-11-12 14:44:33 - Database connection successful
+2025-11-12 14:44:33 - Attempting to insert complaint with ticket: ADU-2025-198
+2025-11-12 14:44:33 - Complaint insert executed successfully
+2025-11-12 14:44:33 - Complaint ID: 3
+2025-11-12 14:44:33 - Complaint submitted successfully. ID: 3, Ticket: ADU-2025-198
+2025-11-12 14:47:18 - Complaint submission started
+2025-11-12 14:47:18 - Request method: POST
+2025-11-12 14:47:18 - Validation passed. Data received: {"jenis":"aduan","perkara":"test","nama":"TEST","email":"test@jpbdselangor.gov.my"}
+2025-11-12 14:47:18 - Database connection successful
+2025-11-12 14:47:18 - Attempting to insert complaint with ticket: ADU-2025-491
+2025-11-12 14:47:18 - Complaint insert executed successfully
+2025-11-12 14:47:18 - Complaint ID: 4
+2025-11-12 14:47:18 - Complaint submitted successfully. ID: 4, Ticket: ADU-2025-491
+2025-11-12 15:04:23 - Complaint submission started
+2025-11-12 15:04:23 - Request method: POST
+2025-11-12 15:04:23 - Validation passed. Data received: {"jenis":"aduan","perkara":"test","nama":"test","email":"test@jpbdselangor.gov.my"}
+2025-11-12 15:04:23 - Database connection successful
+2025-11-12 15:04:23 - Attempting to insert complaint with ticket: ADU-2025-485
+2025-11-12 15:04:23 - Complaint insert executed successfully
+2025-11-12 15:04:23 - Complaint ID: 5
+2025-11-12 15:04:23 - Complaint submitted successfully. ID: 5, Ticket: ADU-2025-485
+2025-11-12 15:06:50 - Complaint submission started
+2025-11-12 15:06:50 - Request method: POST
+2025-11-12 15:06:50 - Validation passed. Data received: {"jenis":"aduan","perkara":"Test Complaint from Direct PHP","nama":"Direct Test User","email":"directtest@jpbdselangor.gov.my"}
+2025-11-12 15:06:50 - Database connection successful
+2025-11-12 15:06:50 - Attempting to insert complaint with ticket: ADU-2025-883
+2025-11-12 15:06:50 - Complaint insert executed successfully
+2025-11-12 15:06:50 - Complaint ID: 6
+2025-11-12 15:06:50 - Complaint submitted successfully. ID: 6, Ticket: ADU-2025-883
+2025-11-12 15:34:51 - Complaint submission started
+2025-11-12 15:34:51 - Request method: POST
+2025-11-12 15:34:51 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEHILANGAN LAPTOP","nama":"Ahmad Ali","email":"ahmad.user@jpbdselangor.gov.my"}
+2025-11-12 15:34:51 - Database connection successful
+2025-11-12 15:34:51 - Attempting to insert complaint with ticket: ADU-2025-408
+2025-11-12 15:34:51 - Complaint insert executed successfully
+2025-11-12 15:34:51 - Complaint ID: 7
+2025-11-12 15:34:51 - Complaint submitted successfully. ID: 7, Ticket: ADU-2025-408
+2025-11-12 16:14:05 - Complaint submission started
+2025-11-12 16:14:05 - Request method: POST
+2025-11-12 16:14:05 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEHILANGAN DAN KEROSAKAN LAPTOP","nama":"AHMAD ALI","email":"ahmad.user@jpbdselangor.gov.my"}
+2025-11-12 16:14:05 - Database connection successful
+2025-11-12 16:14:05 - Attempting to insert complaint with ticket: ADU-2025-973
+2025-11-12 16:14:05 - Complaint insert executed successfully
+2025-11-12 16:14:05 - Complaint ID: 8
+2025-11-12 16:14:05 - Complaint submitted successfully. ID: 8, Ticket: ADU-2025-973
+2025-11-13 09:15:53 - Complaint submission started
+2025-11-13 09:15:53 - Request method: POST
+2025-11-13 09:15:53 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEROSAKAN PRINTER","nama":"ALYA MAISARAH","email":"alya@jpbdselangor.gov.my"}
+2025-11-13 09:15:53 - Database connection successful
+2025-11-13 09:15:53 - Attempting to insert complaint with ticket: ADU-2025-144
+2025-11-13 09:15:53 - Complaint insert executed successfully
+2025-11-13 09:15:53 - Complaint ID: 9
+2025-11-13 09:15:53 - Complaint submitted successfully. ID: 9, Ticket: ADU-2025-144
