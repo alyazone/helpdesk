@@ -548,39 +548,23 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Memproses...</span>';
 
-            // Prepare form data
-            const formData = new FormData();
-            formData.append('fullName', fullName);
-            formData.append('email', email);
-            formData.append('phone', phone);
-            formData.append('position', position);
-            formData.append('department', department);
-            formData.append('password', password);
-
-            // Send to backend (register.php)
-            fetch('register.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccess();
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-                } else {
-                    showError(data.message || 'Pendaftaran gagal. Sila cuba lagi.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-user-plus"></i><span>Daftar Akaun</span>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError('Ralat sambungan. Sila cuba lagi.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i><span>Daftar Akaun</span>';
+            // Log registration data (for demo purposes)
+            console.log('Registration data:', {
+                fullName,
+                email,
+                phone,
+                position,
+                department,
+                password: '***'
             });
+
+            // Show success message
+            showSuccess();
+
+            // Redirect to login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
         });
 
         // Show success message
