@@ -62,3 +62,11 @@
 2025-11-12 16:14:05 - Complaint insert executed successfully
 2025-11-12 16:14:05 - Complaint ID: 8
 2025-11-12 16:14:05 - Complaint submitted successfully. ID: 8, Ticket: ADU-2025-973
+2025-11-13 09:15:53 - Complaint submission started
+2025-11-13 09:15:53 - Request method: POST
+2025-11-13 09:15:53 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEROSAKAN PRINTER","nama":"ALYA MAISARAH","email":"alya@jpbdselangor.gov.my"}
+2025-11-13 09:15:53 - Database connection successful
+2025-11-13 09:15:53 - Attempting to insert complaint with ticket: ADU-2025-144
+2025-11-13 09:15:53 - Complaint insert executed successfully
+2025-11-13 09:15:53 - Complaint ID: 9
+2025-11-13 09:15:53 - Complaint submitted successfully. ID: 9, Ticket: ADU-2025-144
