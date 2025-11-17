@@ -42,8 +42,8 @@ if ($password !== $password_confirm) {
 }
 
 // Password strength validation
-if (strlen($password) < 6) {
-    jsonResponse(false, 'Kata laluan mestilah sekurang-kurangnya 6 aksara');
+if (strlen($password) < 8) {
+    jsonResponse(false, 'Kata laluan mestilah sekurang-kurangnya 8 aksara');
 }
 
 try {
