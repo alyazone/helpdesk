@@ -74,6 +74,15 @@ $user = getUser();
                     <span class="font-semibold text-lg">Senarai Aduan</span>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <a href="users.php" class="hover:opacity-80">
+                        <i class="fas fa-users mr-2"></i>Pengguna
+                    </a>
+                    <a href="officers.php" class="hover:opacity-80">
+                        <i class="fas fa-user-tie mr-2"></i>Pegawai
+                    </a>
+                    <a href="reports.php" class="hover:opacity-80">
+                        <i class="fas fa-chart-bar mr-2"></i>Laporan
+                    </a>
                     <span class="text-sm"><?php echo htmlspecialchars($user['nama']); ?></span>
                     <a href="../api/logout.php" class="px-4 py-2 bg-white bg-opacity-20 rounded-lg hover:bg-opacity-30 transition">
                         <i class="fas fa-sign-out-alt mr-2"></i>Log Keluar
