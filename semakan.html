@@ -413,8 +413,11 @@
             }
 
             try {
+                //const response = await fetch(`api/check_status.php?email=${encodeURIComponent(currentUser.email)}`);
                 const response = await fetch(`api/check_status.php?email=${encodeURIComponent(currentUser.email)}`, {
+                    
                     credentials: 'same-origin'
+
                 });
                 const result = await response.json();
 
@@ -467,8 +470,11 @@
 
             try {
                 // Fetch status from backend
+                //const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`);
                 const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`, {
+
                     credentials: 'same-origin'
+
                 });
                 const result = await response.json();
 
@@ -639,8 +645,11 @@
 
             try {
                 // Fetch complaint details from API
+                //const response = await fetch(`api/get_complaint_details.php?complaint_id=${id}`);
                 const response = await fetch(`api/get_complaint_details.php?complaint_id=${id}`, {
+
                     credentials: 'same-origin'
+
                 });
                 const result = await response.json();
 

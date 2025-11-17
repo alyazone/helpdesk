@@ -49,10 +49,11 @@ try {
     $_SESSION['email'] = $user['email'];
     $_SESSION['role'] = $user['role'];
 
-    // Debug logging
-    error_log('Login successful. User ID: ' . $user['id']);
-    error_log('Session ID after login: ' . session_id());
-    error_log('Session data after login: ' . print_r($_SESSION, true));
+    // Force write session data before response
+    session_write_close();
+
+    // Restart session for this request
+    session_start();
 
     jsonResponse(true, 'Log masuk berjaya', [
         'user' => [

@@ -70,3 +70,11 @@
 2025-11-13 09:15:53 - Complaint insert executed successfully
 2025-11-13 09:15:53 - Complaint ID: 9
 2025-11-13 09:15:53 - Complaint submitted successfully. ID: 9, Ticket: ADU-2025-144
+2025-11-17 12:34:30 - Complaint submission started
+2025-11-17 12:34:30 - Request method: POST
+2025-11-17 12:34:30 - Validation passed. Data received: {"jenis":"aduan","perkara":"COMPLAINT LAPTOP TERLAMPAU ROSAK","nama":"Adlin Nabila","email":"linlin@jpbdselangor.gov.my"}
+2025-11-17 12:34:30 - Database connection successful
+2025-11-17 12:34:30 - Attempting to insert complaint with ticket: ADU-2025-421
+2025-11-17 12:34:30 - Complaint insert executed successfully
+2025-11-17 12:34:30 - Complaint ID: 10
+2025-11-17 12:34:30 - Complaint submitted successfully. ID: 10, Ticket: ADU-2025-421
