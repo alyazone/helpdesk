@@ -347,17 +347,23 @@
 
         // Check session on page load
         async function checkSession() {
+            console.log('Starting session check...');
             try {
                 const response = await fetch('api/check_session.php', {
-                    credentials: 'same-origin'
+                    credentials: 'same-origin',
+                    cache: 'no-cache'
                 });
+                console.log('Session check response status:', response.status);
+
                 const result = await response.json();
 
                 // Debug: Log the response
                 console.log('Session check response:', result);
+                console.log('Logged in?', result.success && result.data.logged_in);
 
                 if (result.success && result.data.logged_in) {
                     // User is logged in
+                    console.log('User is logged in:', result.data.user);
                     currentUser = result.data.user;
                     updateUIForLoggedInUser();
 
@@ -365,6 +371,7 @@
                     await autoLoadComplaints();
                 } else {
                     // User is not logged in
+                    console.log('User is NOT logged in, showing search form');
                     updateUIForGuestUser();
                 }
             } catch (error) {

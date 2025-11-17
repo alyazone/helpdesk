@@ -388,10 +388,15 @@
 
                 const result = await response.json();
 
+                console.log('Login response:', result);
+                console.log('Session ID from login:', result.data?.session_id);
+
                 if (result.success) {
                     // Show success message
                     const successMsg = document.getElementById('successMessage');
                     successMsg.classList.remove('hidden');
+
+                    console.log('Login successful, redirecting to semakan.html in 1.5s');
 
                     setTimeout(() => {
                         // Redirect based on user role

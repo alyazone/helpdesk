@@ -49,11 +49,10 @@ try {
     $_SESSION['email'] = $user['email'];
     $_SESSION['role'] = $user['role'];
 
-    // Force write session data before response
-    session_write_close();
-
-    // Restart session for this request
-    session_start();
+    // Debug logging
+    error_log('Login successful. User ID: ' . $user['id']);
+    error_log('Session ID after login: ' . session_id());
+    error_log('Session data after login: ' . print_r($_SESSION, true));
 
     jsonResponse(true, 'Log masuk berjaya', [
         'user' => [
@@ -61,7 +60,8 @@ try {
             'nama' => $user['nama_penuh'],
             'email' => $user['email'],
             'role' => $user['role']
-        ]
+        ],
+        'session_id' => session_id() // For debugging
     ]);
 
 } catch (PDOException $e) {
