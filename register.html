@@ -548,19 +548,24 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Memproses...</span>';
 
-            // Prepare form data
-            const formData = new FormData();
-            formData.append('fullName', fullName);
-            formData.append('email', email);
-            formData.append('phone', phone);
-            formData.append('position', position);
-            formData.append('department', department);
-            formData.append('password', password);
+            // Prepare JSON data with correct field names matching backend
+            const requestData = {
+                nama_penuh: fullName,
+                email: email,
+                no_sambungan: phone,
+                jawatan: position,
+                bahagian: department,
+                password: password,
+                password_confirm: confirmPassword
+            };
 
             // Send to backend (register.php)
             fetch('api/register.php', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
             })
             .then(response => response.json())
             .then(data => {
