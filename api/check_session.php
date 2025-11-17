@@ -19,6 +19,11 @@ if (!isLoggedIn()) {
 // Get user data from session
 $user = getUser();
 
+// Debug: Log session data
+error_log('Session ID: ' . session_id());
+error_log('Session data: ' . print_r($_SESSION, true));
+error_log('Is logged in: ' . (isLoggedIn() ? 'yes' : 'no'));
+
 jsonResponse(true, 'User is logged in', [
     'logged_in' => true,
     'user' => $user

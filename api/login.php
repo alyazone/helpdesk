@@ -49,6 +49,12 @@ try {
     $_SESSION['email'] = $user['email'];
     $_SESSION['role'] = $user['role'];
 
+    // Force write session data before response
+    session_write_close();
+
+    // Restart session for this request
+    session_start();
+
     jsonResponse(true, 'Log masuk berjaya', [
         'user' => [
             'id' => $user['id'],
