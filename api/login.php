@@ -61,7 +61,8 @@ try {
             'nama' => $user['nama_penuh'],
             'email' => $user['email'],
             'role' => $user['role']
-        ]
+        ],
+        'session_id' => session_id() // For debugging
     ]);
 
 } catch (PDOException $e) {

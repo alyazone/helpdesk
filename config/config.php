@@ -6,7 +6,26 @@
 
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
+    // Configure session cookie parameters for better compatibility
+    ini_set('session.cookie_httponly', '1');
+    ini_set('session.use_only_cookies', '1');
+    ini_set('session.cookie_samesite', 'Lax');
+
+    // Set session cookie parameters
+    session_set_cookie_params([
+        'lifetime' => 0, // Until browser closes
+        'path' => '/',
+        'domain' => '',
+        'secure' => false, // Set to true if using HTTPS
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+
     session_start();
+
+    // Debug logging
+    error_log('Session started. Session ID: ' . session_id());
+    error_log('Session data after start: ' . print_r($_SESSION, true));
 }
 
 // Database Configuration
