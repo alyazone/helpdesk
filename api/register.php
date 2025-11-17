@@ -21,7 +21,7 @@ $jawatan = sanitize($data['jawatan'] ?? '');
 $bahagian = sanitize($data['bahagian'] ?? '');
 $no_sambungan = sanitize($data['no_sambungan'] ?? '');
 
-// Validation
+/* Validation */
 if (empty($nama_penuh) || empty($email) || empty($password) || empty($password_confirm)) {
     jsonResponse(false, 'Sila lengkapkan semua medan yang diperlukan');
 }
