@@ -348,8 +348,13 @@
         // Check session on page load
         async function checkSession() {
             try {
-                const response = await fetch('api/check_session.php');
+                const response = await fetch('api/check_session.php', {
+                    credentials: 'same-origin'
+                });
                 const result = await response.json();
+
+                // Debug: Log the response
+                console.log('Session check response:', result);
 
                 if (result.success && result.data.logged_in) {
                     // User is logged in
@@ -401,7 +406,9 @@
             }
 
             try {
-                const response = await fetch(`api/check_status.php?email=${encodeURIComponent(currentUser.email)}`);
+                const response = await fetch(`api/check_status.php?email=${encodeURIComponent(currentUser.email)}`, {
+                    credentials: 'same-origin'
+                });
                 const result = await response.json();
 
                 if (result.success) {
@@ -421,7 +428,8 @@
         async function logout() {
             try {
                 const response = await fetch('api/logout.php', {
-                    method: 'POST'
+                    method: 'POST',
+                    credentials: 'same-origin'
                 });
                 const result = await response.json();
 
@@ -452,7 +460,9 @@
 
             try {
                 // Fetch status from backend
-                const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`);
+                const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`, {
+                    credentials: 'same-origin'
+                });
                 const result = await response.json();
 
                 if (result.success) {
@@ -622,7 +632,9 @@
 
             try {
                 // Fetch complaint details from API
-                const response = await fetch(`api/get_complaint_details.php?complaint_id=${id}`);
+                const response = await fetch(`api/get_complaint_details.php?complaint_id=${id}`, {
+                    credentials: 'same-origin'
+                });
                 const result = await response.json();
 
                 if (result.success) {
@@ -803,6 +815,7 @@
                 // Submit rating to backend
                 const response = await fetch('api/submit_rating.php', {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json',
                     },
