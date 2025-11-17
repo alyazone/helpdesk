@@ -6,14 +6,17 @@
 
 require_once __DIR__ . '/../config/config.php';
 
+// Only accept POST requests
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    // For GET requests, just redirect
+    session_unset();
+    session_destroy();
+    redirect('../login.html');
+}
+
 // Destroy session
 session_unset();
 session_destroy();
 
-// If it's an AJAX request, return JSON
-if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-    jsonResponse(true, 'Log keluar berjaya');
-} else {
-    // Otherwise redirect to login page
-    redirect('../login.html');
-}
+// Return JSON response
+jsonResponse(true, 'Log keluar berjaya');

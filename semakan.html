@@ -113,13 +113,25 @@
                     <span class="font-semibold text-lg">Sistem Helpdesk</span>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
-                        <i class="fas fa-search"></i>
-                        <a href="v1.html" class="hidden sm:inline hover:text-purple-200 transition">Borang Aduan</a>
+                    <button onclick="window.location.href='v1.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                        <i class="fas fa-file-alt"></i>
+                        <span class="hidden sm:inline">Borang Aduan</span>
                     </button>
-                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                    <div id="userMenu" class="hidden">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-right hidden sm:block">
+                                <p class="text-sm font-semibold" id="navUserName"></p>
+                                <p class="text-xs opacity-90" id="navUserEmail"></p>
+                            </div>
+                            <button onclick="logout()" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="hidden sm:inline">Log Keluar</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="loginButton" onclick="window.location.href='login.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
                         <i class="fas fa-user-circle"></i>
-                        <a href="login.html" class="hidden sm:inline hover:text-purple-200 transition">Log Masuk</a>
+                        <span class="hidden sm:inline">Log Masuk</span>
                     </button>
                 </div>
             </div>
@@ -143,7 +155,35 @@
 
         <!-- Search Section -->
         <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-12">
-            <div class="bg-white rounded-2xl card-shadow fade-in p-8 sm:p-12">
+            <!-- Logged In Welcome Card -->
+            <div id="welcomeCard" class="hidden bg-white rounded-2xl card-shadow fade-in p-8 sm:p-12">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-check text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Kembali!</h2>
+                    <p class="text-gray-600">Berikut adalah senarai aduan anda</p>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="viewMyComplaints()" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center space-x-3 shadow-lg text-lg">
+                        <i class="fas fa-list"></i>
+                        <span>Lihat Aduan Saya</span>
+                    </button>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <div class="flex items-start space-x-3 text-sm text-gray-600">
+                        <i class="fas fa-info-circle text-purple-600 mt-1"></i>
+                        <p>
+                            Anda boleh melihat semua aduan yang telah dihantar menggunakan akaun anda, termasuk statistik dan status terkini.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Form (for non-logged in users) -->
+            <div id="searchCard" class="bg-white rounded-2xl card-shadow fade-in p-8 sm:p-12">
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-search text-white text-2xl"></i>
@@ -302,6 +342,109 @@
     </div>
 
     <script>
+        // Global variable to store current user
+        let currentUser = null;
+
+        // Check session on page load
+        async function checkSession() {
+            try {
+                const response = await fetch('api/check_session.php');
+                const result = await response.json();
+
+                if (result.success && result.data.logged_in) {
+                    // User is logged in
+                    currentUser = result.data.user;
+                    updateUIForLoggedInUser();
+
+                    // Auto-load complaints
+                    await autoLoadComplaints();
+                } else {
+                    // User is not logged in
+                    updateUIForGuestUser();
+                }
+            } catch (error) {
+                console.error('Session check error:', error);
+                updateUIForGuestUser();
+            }
+        }
+
+        // Update UI for logged-in user
+        function updateUIForLoggedInUser() {
+            // Hide login button, show user menu
+            document.getElementById('loginButton').classList.add('hidden');
+            document.getElementById('userMenu').classList.remove('hidden');
+
+            // Update user info in nav
+            document.getElementById('navUserName').textContent = currentUser.nama || 'Pengguna';
+            document.getElementById('navUserEmail').textContent = currentUser.email || '';
+
+            // Show welcome card, hide search card
+            document.getElementById('welcomeCard').classList.remove('hidden');
+            document.getElementById('searchCard').classList.add('hidden');
+        }
+
+        // Update UI for guest user
+        function updateUIForGuestUser() {
+            // Show login button, hide user menu
+            document.getElementById('loginButton').classList.remove('hidden');
+            document.getElementById('userMenu').classList.add('hidden');
+
+            // Show search card, hide welcome card
+            document.getElementById('searchCard').classList.remove('hidden');
+            document.getElementById('welcomeCard').classList.add('hidden');
+        }
+
+        // Auto-load complaints for logged-in user
+        async function autoLoadComplaints() {
+            if (!currentUser || !currentUser.email) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`api/check_status.php?email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatusPage(result.data);
+                }
+            } catch (error) {
+                console.error('Auto-load complaints error:', error);
+            }
+        }
+
+        // View my complaints button handler
+        function viewMyComplaints() {
+            autoLoadComplaints();
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                const response = await fetch('api/logout.php', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    // Clear current user
+                    currentUser = null;
+
+                    // Redirect to login page
+                    window.location.href = 'login.html';
+                } else {
+                    alert('Gagal log keluar. Sila cuba lagi.');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSession();
+        });
+
         // Form submission
         document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
