@@ -827,7 +827,16 @@
         async function selectRating(event, rating, complaintId) {
             event.stopPropagation();
 
+            // Validate inputs
+            if (!complaintId || !rating) {
+                console.error('Invalid complaint ID or rating:', complaintId, rating);
+                alert('Ralat: Maklumat tidak lengkap');
+                return;
+            }
+
             try {
+                console.log('Submitting rating:', rating, 'for complaint:', complaintId);
+
                 // Submit rating to backend
                 const response = await fetch('api/submit_rating.php', {
                     method: 'POST',
@@ -841,7 +850,29 @@
                     })
                 });
 
-                const result = await response.json();
+                console.log('Response status:', response.status);
+
+                // Check if response is OK
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP error:', response.status, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Get the raw response text first to check if it's valid JSON
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    console.error('Response was:', responseText);
+                    throw new Error('Ralat: Respons tidak sah dari server');
+                }
+
+                console.log('Parsed result:', result);
 
                 if (result.success) {
                     // Remove selected class from all buttons in this group
@@ -862,18 +893,25 @@
                         event.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
                     } else if (rating === 'memuaskan') {
                         event.currentTarget.classList.add('border-yellow-500', 'bg-yellow-50');
-                    } else if (rating === 'tidak-memuaskan') {
+                    } else if (rating === 'tidak_memuaskan') {
                         event.currentTarget.classList.add('border-red-500', 'bg-red-50');
                     }
 
                     // Show success message
-                    alert(result.message);
+                    alert(result.message || 'Terima kasih atas penilaian anda');
+
+                    // Reload the complaints list to show the updated rating
+                    if (currentUser && currentUser.email) {
+                        await autoLoadComplaints();
+                    }
                 } else {
+                    console.error('API error:', result.message);
                     alert(result.message || 'Gagal menghantar penilaian');
                 }
             } catch (error) {
-                console.error('Rating error:', error);
-                alert('Ralat sambungan. Sila cuba lagi.');
+                console.error('Rating submission error:', error);
+                console.error('Error details:', error.message, error.stack);
+                alert('Ralat sambungan. Sila cuba lagi.\n\nButiran: ' + error.message);
             }
         }
 
