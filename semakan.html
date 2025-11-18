@@ -827,6 +827,10 @@
         async function selectRating(event, rating, complaintId) {
             event.stopPropagation();
 
+            // Store reference to the button BEFORE any async operations
+            // (event.currentTarget becomes null after async operations complete)
+            const button = event.currentTarget;
+
             // Validate inputs
             if (!complaintId || !rating) {
                 console.error('Invalid complaint ID or rating:', complaintId, rating);
@@ -876,25 +880,25 @@
 
                 if (result.success) {
                     // Remove selected class from all buttons in this group
-                    const parent = event.currentTarget.parentElement;
+                    const parent = button.parentElement;
                     parent.querySelectorAll('.rating-btn').forEach(btn => {
                         btn.classList.remove('selected', 'border-green-500', 'bg-green-50', 'border-blue-500', 'bg-blue-50', 'border-yellow-500', 'bg-yellow-50', 'border-red-500', 'bg-red-50');
                         btn.classList.add('border-gray-300');
                     });
 
                     // Add selected class to clicked button
-                    event.currentTarget.classList.add('selected');
-                    event.currentTarget.classList.remove('border-gray-300');
+                    button.classList.add('selected');
+                    button.classList.remove('border-gray-300');
 
                     // Apply specific color based on rating
                     if (rating === 'cemerlang') {
-                        event.currentTarget.classList.add('border-green-500', 'bg-green-50');
+                        button.classList.add('border-green-500', 'bg-green-50');
                     } else if (rating === 'baik') {
-                        event.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
+                        button.classList.add('border-blue-500', 'bg-blue-50');
                     } else if (rating === 'memuaskan') {
-                        event.currentTarget.classList.add('border-yellow-500', 'bg-yellow-50');
+                        button.classList.add('border-yellow-500', 'bg-yellow-50');
                     } else if (rating === 'tidak_memuaskan') {
-                        event.currentTarget.classList.add('border-red-500', 'bg-red-50');
+                        button.classList.add('border-red-500', 'bg-red-50');
                     }
 
                     // Show success message
