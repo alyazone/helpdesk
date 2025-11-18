@@ -86,3 +86,19 @@
 2025-11-17 15:17:58 - Complaint insert executed successfully
 2025-11-17 15:17:58 - Complaint ID: 11
 2025-11-17 15:17:58 - Complaint submitted successfully. ID: 11, Ticket: ADU-2025-465
+2025-11-18 09:42:31 - Complaint submission started
+2025-11-18 09:42:31 - Request method: POST
+2025-11-18 09:42:31 - Validation passed. Data received: {"jenis":"cadangan","perkara":"CADANGAN PENAMBAHBAIKAN KERUSI","nama":"Syazwani Ili","email":"ili@jpbdselangor.gov.my"}
+2025-11-18 09:42:31 - Database connection successful
+2025-11-18 09:42:31 - Attempting to insert complaint with ticket: ADU-2025-184
+2025-11-18 09:42:31 - Complaint insert executed successfully
+2025-11-18 09:42:31 - Complaint ID: 12
+2025-11-18 09:42:31 - Complaint submitted successfully. ID: 12, Ticket: ADU-2025-184
+2025-11-18 09:49:42 - Complaint submission started
+2025-11-18 09:49:42 - Request method: POST
+2025-11-18 09:49:42 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN PERKAKASAN TIDAK BERFUNGSI","nama":"SYAZWANI ILI","email":"ili@jpbdselangor.gov.my"}
+2025-11-18 09:49:42 - Database connection successful
+2025-11-18 09:49:42 - Attempting to insert complaint with ticket: ADU-2025-151
+2025-11-18 09:49:42 - Complaint insert executed successfully
+2025-11-18 09:49:42 - Complaint ID: 13
+2025-11-18 09:49:42 - Complaint submitted successfully. ID: 13, Ticket: ADU-2025-151
