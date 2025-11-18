@@ -59,8 +59,9 @@ $tarikh_kerosakan = sanitize($data['tarikhKerosakan'] ?? '');
 $perihal_kerosakan = sanitize($data['perihalKerosakan'] ?? '');
 $perihal_kerosakan_value = sanitize($data['perihalKerosakanValue'] ?? '');
 
-// Officer
-$pegawai_penerima = sanitize($data['pegawai'] ?? 'En. Ahmad Bin Abdullah');
+// Officer - get from pegawaiPenerima dropdown (ID) or legacy 'pegawai' field (name)
+$officer_id_from_form = intval($data['pegawaiPenerima'] ?? 0);
+$pegawai_penerima = sanitize($data['pegawai'] ?? '');
 
 // Validation
 $errors = [];
@@ -71,6 +72,7 @@ if (empty($keterangan)) $errors[] = 'Keterangan diperlukan';
 if (empty($nama_pengadu)) $errors[] = 'Nama penuh diperlukan';
 if (empty($email)) $errors[] = 'Alamat emel diperlukan';
 if (empty($jawatan)) $errors[] = 'Jawatan diperlukan';
+if ($officer_id_from_form <= 0 && empty($pegawai_penerima)) $errors[] = 'Pegawai penerima aduan diperlukan';
 
 // Validate email domain
 if (!empty($email) && !validateEmailDomain($email)) {
@@ -100,11 +102,23 @@ try {
         $stmt->execute([$ticket_number]);
     } while ($stmt->fetch());
 
-    // Get officer ID
-    $stmt = $db->prepare("SELECT id FROM officers WHERE nama = ? LIMIT 1");
-    $stmt->execute([$pegawai_penerima]);
-    $officer = $stmt->fetch();
-    $officer_id = $officer['id'] ?? null;
+    // Get officer ID and name
+    if ($officer_id_from_form > 0) {
+        // Officer ID provided from dropdown
+        $stmt = $db->prepare("SELECT id, nama FROM officers WHERE id = ? LIMIT 1");
+        $stmt->execute([$officer_id_from_form]);
+        $officer = $stmt->fetch();
+        $officer_id = $officer['id'] ?? null;
+        $pegawai_penerima = $officer['nama'] ?? '';
+    } else if (!empty($pegawai_penerima)) {
+        // Legacy: Officer name provided
+        $stmt = $db->prepare("SELECT id, nama FROM officers WHERE nama = ? LIMIT 1");
+        $stmt->execute([$pegawai_penerima]);
+        $officer = $stmt->fetch();
+        $officer_id = $officer['id'] ?? null;
+    } else {
+        $officer_id = null;
+    }
 
     // Get user ID if logged in
     $user_id = $_SESSION['user_id'] ?? null;
