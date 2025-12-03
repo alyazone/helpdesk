@@ -20,6 +20,7 @@ $password_confirm = $data['password_confirm'] ?? '';
 $jawatan = sanitize($data['jawatan'] ?? '');
 $bahagian = sanitize($data['bahagian'] ?? '');
 $no_sambungan = sanitize($data['no_sambungan'] ?? '');
+$tingkat = sanitize($data['tingkat'] ?? '');
 
 /* Validation */
 if (empty($nama_penuh) || empty($email) || empty($password) || empty($password_confirm)) {
@@ -62,8 +63,8 @@ try {
 
     // Insert new user
     $stmt = $db->prepare("
-        INSERT INTO users (nama_penuh, email, password, jawatan, bahagian, no_sambungan, role, status)
-        VALUES (?, ?, ?, ?, ?, ?, 'user', 'active')
+        INSERT INTO users (nama_penuh, email, password, jawatan, bahagian, no_sambungan, tingkat, role, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'user', 'active')
     ");
 
     $stmt->execute([
@@ -72,7 +73,8 @@ try {
         $hashed_password,
         $jawatan,
         $bahagian,
-        $no_sambungan
+        $no_sambungan,
+        $tingkat
     ]);
 
     $user_id = $db->lastInsertId();
