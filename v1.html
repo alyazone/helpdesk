@@ -632,11 +632,17 @@
         // Load user details and auto-fill form
         async function loadUserDetails() {
             try {
-                const response = await fetch('api/get_user_details.php');
+                const response = await fetch('api/get_user_details.php', {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
                 const result = await response.json();
+
+                console.log('User details API response:', result);
 
                 if (result.success && result.data.user) {
                     const user = result.data.user;
+                    console.log('Auto-filling form with user data:', user);
 
                     // Auto-fill the form fields
                     const namaField = document.getElementById('nama');
@@ -668,6 +674,10 @@
                             field.style.cursor = 'not-allowed';
                         }
                     });
+
+                    console.log('Form auto-fill completed successfully');
+                } else {
+                    console.log('User not logged in or no user data available:', result.message);
                 }
             } catch (error) {
                 console.log('User not logged in or error loading user details:', error);
