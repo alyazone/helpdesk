@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     jawatan VARCHAR(255),
     bahagian VARCHAR(255),
     no_sambungan VARCHAR(50),
+    tingkat VARCHAR(50),
     role ENUM('user', 'admin', 'staff') DEFAULT 'user',
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
