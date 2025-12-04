@@ -629,9 +629,56 @@
             }
         }
 
+        // Load user details and auto-fill form
+        async function loadUserDetails() {
+            try {
+                const response = await fetch('api/get_user_details.php');
+                const result = await response.json();
+
+                if (result.success && result.data.user) {
+                    const user = result.data.user;
+
+                    // Auto-fill the form fields
+                    const namaField = document.getElementById('nama');
+                    const sambunganField = document.getElementById('sambungan');
+                    const emelField = document.getElementById('emel');
+                    const jawatanField = document.getElementById('jawatan');
+                    const bahagianField = document.getElementById('bahagian');
+                    const tingkatField = document.getElementById('tingkat');
+
+                    if (namaField) namaField.value = user.nama_penuh || '';
+                    if (sambunganField) sambunganField.value = user.no_sambungan || '';
+                    if (emelField) emelField.value = user.email || '';
+                    if (jawatanField) jawatanField.value = user.jawatan || '';
+                    if (bahagianField) bahagianField.value = user.bahagian || '';
+                    if (tingkatField) tingkatField.value = user.tingkat || '';
+
+                    // Make fields readonly to prevent editing
+                    if (namaField) namaField.readOnly = true;
+                    if (sambunganField) sambunganField.readOnly = true;
+                    if (emelField) emelField.readOnly = true;
+                    if (jawatanField) jawatanField.readOnly = true;
+                    if (bahagianField) bahagianField.readOnly = true;
+                    if (tingkatField) tingkatField.readOnly = true;
+
+                    // Add visual indicator that fields are auto-filled
+                    [namaField, sambunganField, emelField, jawatanField, bahagianField, tingkatField].forEach(field => {
+                        if (field && field.value) {
+                            field.classList.add('bg-gray-100');
+                            field.style.cursor = 'not-allowed';
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log('User not logged in or error loading user details:', error);
+                // If user is not logged in, form remains editable
+            }
+        }
+
         // Load officers when page loads
         document.addEventListener('DOMContentLoaded', function() {
             loadActiveOfficers();
+            loadUserDetails();
         });
 
         // Searchable Dropdown functionality
@@ -880,6 +927,10 @@
         form.addEventListener('reset', () => {
             uploadedFiles = [];
             fileList.innerHTML = '';
+            // Reload user details after reset to re-fill the form
+            setTimeout(() => {
+                loadUserDetails();
+            }, 100);
         });
     </script>
 </body>
