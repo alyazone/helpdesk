@@ -6,3 +6,11 @@
 2025-12-02 13:48:04 - Complaint insert executed successfully
 2025-12-02 13:48:04 - Complaint ID: 15
 2025-12-02 13:48:04 - Complaint submitted successfully. ID: 15, Ticket: ADU-2025-787
+2025-12-07 09:50:48 - Complaint submission started
+2025-12-07 09:50:48 - Request method: POST
+2025-12-07 09:50:48 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN LAPTOP ROSAK","nama":"Naquib Haziq","email":"naquib@jpbdselangor.gov.my"}
+2025-12-07 09:50:48 - Database connection successful
+2025-12-07 09:50:48 - Attempting to insert complaint with ticket: ADU-2025-463
+2025-12-07 09:50:48 - Complaint insert executed successfully
+2025-12-07 09:50:48 - Complaint ID: 16
+2025-12-07 09:50:48 - Complaint submitted successfully. ID: 16, Ticket: ADU-2025-463
