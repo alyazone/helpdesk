@@ -56,6 +56,17 @@ define('ALLOWED_FILE_EXTENSIONS', ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']);
 // Email domain restriction
 define('ALLOWED_EMAIL_DOMAIN', 'jpbdselangor.gov.my');
 
+// Email Configuration (SMTP)
+define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
+define('SMTP_PORT', getenv('SMTP_PORT') ?: 587);
+define('SMTP_USERNAME', getenv('SMTP_USERNAME') ?: '');
+define('SMTP_PASSWORD', getenv('SMTP_PASSWORD') ?: '');
+define('SMTP_FROM_EMAIL', getenv('SMTP_FROM_EMAIL') ?: 'noreply@jpbdselangor.gov.my');
+define('SMTP_FROM_NAME', getenv('SMTP_FROM_NAME') ?: 'PLAN Malaysia Selangor Helpdesk');
+
+// Password Reset Configuration
+define('RESET_TOKEN_EXPIRY_HOURS', 1); // Token expires in 1 hour
+
 // Timezone
 date_default_timezone_set('Asia/Kuala_Lumpur');
 
@@ -183,4 +194,176 @@ function getUser() {
 // Create upload directory if it doesn't exist
 if (!file_exists(UPLOAD_DIR)) {
     mkdir(UPLOAD_DIR, 0755, true);
+}
+
+/**
+ * Email Functions
+ */
+
+// Load PHPMailer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+/**
+ * Send email using PHPMailer
+ *
+ * @param string $to Recipient email address
+ * @param string $subject Email subject
+ * @param string $body Email body (HTML)
+ * @param string $altBody Plain text alternative body
+ * @return bool Success status
+ */
+function sendEmail($to, $subject, $body, $altBody = '') {
+    $mail = new PHPMailer(true);
+
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USERNAME;
+        $mail->Password   = SMTP_PASSWORD;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+
+        // Recipients
+        $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
+        $mail->addAddress($to);
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+        $mail->AltBody = $altBody ?: strip_tags($body);
+        $mail->CharSet = 'UTF-8';
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Email sending failed: {$mail->ErrorInfo}");
+        return false;
+    }
+}
+
+/**
+ * Generate secure random token
+ *
+ * @param int $length Token length
+ * @return string Random token
+ */
+function generateSecureToken($length = 64) {
+    return bin2hex(random_bytes($length));
+}
+
+/**
+ * Send password reset email
+ *
+ * @param string $email User email address
+ * @param string $token Reset token
+ * @param string $nama_penuh User's full name
+ * @return bool Success status
+ */
+function sendPasswordResetEmail($email, $token, $nama_penuh) {
+    $resetLink = APP_URL . "/reset-password.html?token=" . urlencode($token);
+    $expiryHours = RESET_TOKEN_EXPIRY_HOURS;
+
+    $subject = "Reset Kata Laluan - " . APP_NAME;
+
+    $body = "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .container {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .content {
+                background: white;
+                padding: 30px;
+                border-radius: 8px;
+            }
+            h2 {
+                color: #667eea;
+                margin-top: 0;
+            }
+            .button {
+                display: inline-block;
+                padding: 12px 30px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white !important;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 20px 0;
+                font-weight: bold;
+            }
+            .warning {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 12px;
+                margin: 20px 0;
+                border-radius: 4px;
+            }
+            .footer {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #eee;
+                font-size: 12px;
+                color: #666;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='content'>
+                <h2>Reset Kata Laluan Anda</h2>
+                <p>Salam {$nama_penuh},</p>
+                <p>Kami menerima permintaan untuk menetapkan semula kata laluan akaun anda untuk Sistem Helpdesk PLAN Malaysia Selangor.</p>
+                <p>Klik butang di bawah untuk menetapkan semula kata laluan anda:</p>
+                <p style='text-align: center;'>
+                    <a href='{$resetLink}' class='button'>Reset Kata Laluan</a>
+                </p>
+                <p>Atau salin dan tampal pautan ini ke dalam pelayar anda:</p>
+                <p style='word-break: break-all; background: #f5f5f5; padding: 10px; border-radius: 4px; font-size: 12px;'>
+                    {$resetLink}
+                </p>
+                <div class='warning'>
+                    <strong>⚠️ Penting:</strong> Pautan ini akan tamat tempoh dalam <strong>{$expiryHours} jam</strong> atas sebab keselamatan.
+                </div>
+                <p><strong>Jika anda tidak membuat permintaan ini, sila abaikan emel ini.</strong> Kata laluan anda tidak akan berubah.</p>
+                <div class='footer'>
+                    <p>Emel ini dihantar secara automatik. Sila jangan balas emel ini.</p>
+                    <p>&copy; " . date('Y') . " PLAN Malaysia Selangor. Hak Cipta Terpelihara.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    ";
+
+    $altBody = "Salam {$nama_penuh},\n\n"
+        . "Kami menerima permintaan untuk menetapkan semula kata laluan akaun anda.\n\n"
+        . "Sila lawati pautan berikut untuk menetapkan semula kata laluan anda:\n"
+        . "{$resetLink}\n\n"
+        . "Pautan ini akan tamat tempoh dalam {$expiryHours} jam.\n\n"
+        . "Jika anda tidak membuat permintaan ini, sila abaikan emel ini.\n\n"
+        . "Terima kasih,\n"
+        . "PLAN Malaysia Selangor Helpdesk";
+
+    return sendEmail($email, $subject, $body, $altBody);
 }

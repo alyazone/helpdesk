@@ -1,0 +1,29 @@
+# Dependencies
+/vendor/
+composer.phar
+
+# Environment configuration
+.env
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Upload directory (user-generated content)
+/uploads/*
+!/uploads/.gitkeep
+
+# Cache
+cache/
+temp/
+tmp/
