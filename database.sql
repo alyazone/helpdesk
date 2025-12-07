@@ -17,11 +17,14 @@ CREATE TABLE IF NOT EXISTS users (
     tingkat VARCHAR(50),
     role ENUM('user', 'admin', 'staff') DEFAULT 'user',
     status ENUM('active', 'inactive') DEFAULT 'active',
+    reset_token VARCHAR(255) DEFAULT NULL,
+    reset_token_expires DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_email (email),
     INDEX idx_role (role),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_reset_token (reset_token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Table: officers (pegawai penerima aduan)
