@@ -364,6 +364,12 @@
                         // Redirect based on user role
                         if (result.data.user.role === 'admin') {
                             window.location.href = 'admin/index.php';
+                        } else if (result.data.user.role === 'unit_aduan_dalaman') {
+                            window.location.href = 'admin/unit-aduan-dalaman/index.php';
+                        } else if (result.data.user.role === 'unit_aset') {
+                            window.location.href = 'admin/unit-aset/index.php';
+                        } else if (result.data.user.role === 'bahagian_pentadbiran_kewangan') {
+                            window.location.href = 'admin/bahagian-pentadbiran-kewangan/index.php';
                         } else {
                             window.location.href = 'semakan.html';
                         }

@@ -134,6 +134,31 @@ function isAdmin() {
     return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 }
 
+// Check if user is Unit Aduan Dalaman
+function isUnitAduanDalaman() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'unit_aduan_dalaman';
+}
+
+// Check if user is Unit Aset
+function isUnitAset() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'unit_aset';
+}
+
+// Check if user is Bahagian Pentadbiran & Kewangan
+function isBahagianPentadbiranKewangan() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'bahagian_pentadbiran_kewangan';
+}
+
+// Check if user has any admin role (including unit roles)
+function hasAdminRole() {
+    return isset($_SESSION['role']) && in_array($_SESSION['role'], [
+        'admin',
+        'unit_aduan_dalaman',
+        'unit_aset',
+        'bahagian_pentadbiran_kewangan'
+    ]);
+}
+
 // Redirect function
 function redirect($url) {
     header("Location: " . $url);
