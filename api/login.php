@@ -48,6 +48,7 @@ try {
     $_SESSION['nama'] = $user['nama_penuh'];
     $_SESSION['email'] = $user['email'];
     $_SESSION['role'] = $user['role'];
+    $_SESSION['jawatan'] = $user['jawatan'] ?? '';
 
     // Force write session data before response
     session_write_close();
