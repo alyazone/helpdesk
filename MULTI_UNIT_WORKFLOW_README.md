@@ -74,15 +74,16 @@ admin/
 ├── unit-aset/
 │   ├── index.php (Dashboard)
 │   ├── complaints.php (Complaint list)
-│   ├── view_complaint.php (View and fill borang) [TO BE COMPLETED]
-│   ├── process_borang.php (Backend processing) [TO BE COMPLETED]
-│   └── generate_borang.php (Generate PDF) [TO BE COMPLETED]
+│   ├── view_complaint.php (View and fill Borang Bahagian II)
+│   ├── process_borang.php (Backend processing)
+│   └── generate_borang.php (Generate borang PDF)
 │
 └── bahagian-pentadbiran-kewangan/
-    ├── index.php (Dashboard) [TO BE COMPLETED]
-    ├── complaints.php (Complaint list) [TO BE COMPLETED]
-    ├── view_complaint.php (View and approve) [TO BE COMPLETED]
-    └── process_approval.php (Backend processing) [TO BE COMPLETED]
+    ├── index.php (Dashboard)
+    ├── complaints.php (Complaint list with filters)
+    ├── view_complaint.php (View and approve - fill Bahagian III)
+    ├── process_approval.php (Backend approval processing)
+    └── generate_borang_final.php (Generate final PDF with all sections)
 ```
 
 ## Installation Steps
@@ -131,18 +132,18 @@ All test accounts use password: **admin123**
   - Dashboard with statistics
   - Complaint list page
 
-### 🚧 To Be Completed
-- Unit Aset:
+### ✅ Recently Completed
+- Unit Aset (Complete):
   - View complaint and fill Borang Kerosakan Aset Alih
   - Process borang backend
   - Generate borang PDF
   - Forward to Pegawai Pelulus
-- Bahagian Pentadbiran & Kewangan:
-  - Dashboard
-  - Complaint list
+- Bahagian Pentadbiran & Kewangan (Complete):
+  - Dashboard with statistics
+  - Complaint list with filters
   - View and approve page (fill Bahagian III)
   - Process approval backend
-  - Final PDF generation
+  - Final PDF generation with all sections
 
 ## Notes
 
