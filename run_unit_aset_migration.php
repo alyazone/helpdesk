@@ -62,7 +62,6 @@ try {
             $preview = substr(trim($statement), 0, 100);
             echo "✓ " . htmlspecialchars($preview) . "...\n";
         } catch (PDOException $e) {
-            $errorCount++;
             $errorMsg = $e->getMessage();
 
             // Ignore "Duplicate column" and "Duplicate key" errors
@@ -70,8 +69,11 @@ try {
                 strpos($errorMsg, 'Duplicate key name') !== false ||
                 strpos($errorMsg, "Can't DROP") !== false) {
                 echo "⊙ Skipped (already exists): " . htmlspecialchars(substr($statement, 0, 100)) . "...\n";
+                $successCount++; // Count as success since column exists
             } else {
+                $errorCount++;
                 echo "✗ Error: " . htmlspecialchars($errorMsg) . "\n";
+                echo "   Statement: " . htmlspecialchars(substr($statement, 0, 200)) . "...\n\n";
             }
         }
     }
@@ -104,9 +106,18 @@ try {
     }
     echo "</ul>";
 
-    echo "<h2 class='success'>Migration Complete!</h2>";
-    echo "<p>The Unit Aset workflow columns have been successfully added.</p>";
-    echo "<p><a href='admin/unit-aset/'>Go to Unit Aset Dashboard</a></p>";
+    // Only show success if all columns exist
+    if ($col1 && $col2) {
+        echo "<h2 class='success'>Migration Complete!</h2>";
+        echo "<p>The Unit Aset workflow columns have been successfully added.</p>";
+        echo "<p><a href='admin/unit-aset/'>Go to Unit Aset Dashboard</a></p>";
+    } else {
+        echo "<h2 class='error'>Migration Failed!</h2>";
+        echo "<p>Some columns were not created. Please check the errors above and try again.</p>";
+        if ($errorCount > 0) {
+            echo "<p><strong>Tip:</strong> The migration encountered SQL syntax errors. Please review the error messages above.</p>";
+        }
+    }
 
 } catch (Exception $e) {
     echo "<h2 class='error'>Migration Failed!</h2>";
