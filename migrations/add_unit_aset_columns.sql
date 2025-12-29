@@ -4,14 +4,19 @@
 
 USE helpdesk_db;
 
--- Add columns if they don't exist
--- Unit Aset processing tracking
+-- Add columns for Unit Aset processing tracking
 ALTER TABLE complaints
-ADD COLUMN IF NOT EXISTS unit_aset_processed_by INT DEFAULT NULL COMMENT 'User ID who processed in Unit Aset',
-ADD COLUMN IF NOT EXISTS unit_aset_processed_at DATETIME DEFAULT NULL COMMENT 'When Unit Aset processed',
-ADD COLUMN IF NOT EXISTS approval_officer_id INT DEFAULT NULL COMMENT 'Approval officer for this complaint';
+ADD COLUMN unit_aset_processed_by INT DEFAULT NULL COMMENT 'User ID who processed in Unit Aset';
 
--- Add foreign keys if they don't exist
 ALTER TABLE complaints
-ADD CONSTRAINT IF NOT EXISTS fk_unit_aset_processed_by FOREIGN KEY (unit_aset_processed_by) REFERENCES users(id) ON DELETE SET NULL,
-ADD CONSTRAINT IF NOT EXISTS fk_approval_officer FOREIGN KEY (approval_officer_id) REFERENCES users(id) ON DELETE SET NULL;
+ADD COLUMN unit_aset_processed_at DATETIME DEFAULT NULL COMMENT 'When Unit Aset processed';
+
+ALTER TABLE complaints
+ADD COLUMN approval_officer_id INT DEFAULT NULL COMMENT 'Approval officer for this complaint';
+
+-- Add foreign key constraints
+ALTER TABLE complaints
+ADD CONSTRAINT fk_unit_aset_processed_by FOREIGN KEY (unit_aset_processed_by) REFERENCES users(id) ON DELETE SET NULL;
+
+ALTER TABLE complaints
+ADD CONSTRAINT fk_approval_officer FOREIGN KEY (approval_officer_id) REFERENCES users(id) ON DELETE SET NULL;
