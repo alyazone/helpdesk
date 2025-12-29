@@ -225,7 +225,7 @@ if (!file_exists(UPLOAD_DIR)) {
  * Email Functions
  */
 
-// Load PHPMailer
+/* Load PHPMailer
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
