@@ -29,10 +29,10 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Database Configuration
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'db');
 define('DB_NAME', 'helpdesk_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_USER', 'appuser');
+define('DB_PASS', 'apppass');
 define('DB_CHARSET', 'utf8mb4');
 
 // Application Configuration
