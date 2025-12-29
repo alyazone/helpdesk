@@ -132,13 +132,15 @@ try {
             // Log workflow action
             $stmt = $db->prepare("
                 INSERT INTO workflow_actions (
-                    complaint_id, user_id, action, details
-                ) VALUES (?, ?, ?, ?)
+                    complaint_id, action_type, from_status, to_status, performed_by, remarks
+                ) VALUES (?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $complaint_id,
-                $user['id'],
                 'dalam_semakan_unit_aset',
+                $complaint['workflow_status'],
+                'dalam_semakan_unit_aset',
+                $user['id'],
                 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih'
             ]);
         }
@@ -176,13 +178,15 @@ try {
         // Log workflow action
         $stmt = $db->prepare("
             INSERT INTO workflow_actions (
-                complaint_id, user_id, action, details
-            ) VALUES (?, ?, ?, ?)
+                complaint_id, action_type, from_status, to_status, performed_by, remarks
+            ) VALUES (?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             $complaint_id,
-            $user['id'],
             'dimajukan_pegawai_pelulus',
+            $complaint['workflow_status'],
+            'dimajukan_pegawai_pelulus',
+            $user['id'],
             'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan'
         ]);
 
