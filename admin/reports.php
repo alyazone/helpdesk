@@ -52,47 +52,33 @@ foreach ($stmt->fetchAll() as $row) {
     $jenis_stats[$row['jenis']] = $row['count'];
 }
 
-// Statistics by priority
+// Top users by complaints submitted
 $stmt = $db->prepare("
-    SELECT priority, COUNT(*) as count
-    FROM complaints
-    WHERE DATE(created_at) BETWEEN ? AND ?
-    GROUP BY priority
-");
-$stmt->execute([$date_from, $date_to]);
-$priority_stats = [];
-foreach ($stmt->fetchAll() as $row) {
-    $priority_stats[$row['priority']] = $row['count'];
-}
-
-// Average resolution time by priority
-$stmt = $db->prepare("
-    SELECT priority, AVG(TIMESTAMPDIFF(HOUR, created_at, completed_at)) as avg_hours
-    FROM complaints
-    WHERE status = 'selesai'
-    AND completed_at IS NOT NULL
-    AND DATE(created_at) BETWEEN ? AND ?
-    GROUP BY priority
-");
-$stmt->execute([$date_from, $date_to]);
-$priority_resolution_time = [];
-foreach ($stmt->fetchAll() as $row) {
-    $priority_resolution_time[$row['priority']] = round($row['avg_hours'] ?? 0, 1);
-}
-
-// Top officers by complaints handled
-$stmt = $db->prepare("
-    SELECT o.nama, COUNT(c.id) as total_complaints,
-           SUM(CASE WHEN c.status = 'selesai' THEN 1 ELSE 0 END) as completed_complaints
-    FROM officers o
-    LEFT JOIN complaints c ON o.id = c.officer_id AND DATE(c.created_at) BETWEEN ? AND ?
-    GROUP BY o.id, o.nama
+    SELECT u.nama, COUNT(c.id) as total_complaints
+    FROM users u
+    LEFT JOIN complaints c ON u.id = c.user_id AND DATE(c.created_at) BETWEEN ? AND ?
+    GROUP BY u.id, u.nama
     HAVING total_complaints > 0
     ORDER BY total_complaints DESC
     LIMIT 10
 ");
 $stmt->execute([$date_from, $date_to]);
-$top_officers = $stmt->fetchAll();
+$top_users = $stmt->fetchAll();
+
+// Completion rate trend (weekly)
+$stmt = $db->prepare("
+    SELECT
+        YEARWEEK(created_at, 1) as week_key,
+        DATE(DATE_SUB(created_at, INTERVAL WEEKDAY(created_at) DAY)) as week_start,
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) as completed
+    FROM complaints
+    WHERE DATE(created_at) BETWEEN ? AND ?
+    GROUP BY week_key, week_start
+    ORDER BY week_start ASC
+");
+$stmt->execute([$date_from, $date_to]);
+$completion_trend = $stmt->fetchAll();
 
 // Average resolution time (for completed complaints)
 $stmt = $db->prepare("
@@ -423,10 +409,10 @@ $user = getUser();
                 <canvas id="jenisChart"></canvas>
             </div>
 
-            <!-- Priority Resolution Time Chart -->
+            <!-- Top Users Chart -->
             <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Masa Penyelesaian Mengikut Keutamaan</h3>
-                <canvas id="priorityChart"></canvas>
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Pengguna Teraktif</h3>
+                <canvas id="topUsersChart"></canvas>
             </div>
 
             <!-- Feedback Chart -->
@@ -435,10 +421,10 @@ $user = getUser();
                 <canvas id="feedbackChart"></canvas>
             </div>
 
-            <!-- Officer Completion Rate -->
+            <!-- Completion Rate Trend -->
             <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Kadar Penyiapan Pegawai</h3>
-                <canvas id="officerCompletionChart"></canvas>
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Trend Kadar Penyiapan</h3>
+                <canvas id="completionTrendChart"></canvas>
             </div>
         </div>
 
@@ -491,40 +477,47 @@ $user = getUser();
             }
         });
 
-        // Priority Resolution Time Chart
-        new Chart(document.getElementById('priorityChart'), {
+        // Top Users Chart
+        new Chart(document.getElementById('topUsersChart'), {
             type: 'bar',
             data: {
-                labels: ['Rendah', 'Sederhana', 'Tinggi', 'Kritikal'],
+                labels: [
+                    <?php foreach ($top_users as $user): ?>
+                        '<?php echo htmlspecialchars($user['nama']); ?>',
+                    <?php endforeach; ?>
+                ],
                 datasets: [{
-                    label: 'Purata Masa (Jam)',
+                    label: 'Jumlah Aduan',
                     data: [
-                        <?php echo $priority_resolution_time['rendah'] ?? 0; ?>,
-                        <?php echo $priority_resolution_time['sederhana'] ?? 0; ?>,
-                        <?php echo $priority_resolution_time['tinggi'] ?? 0; ?>,
-                        <?php echo $priority_resolution_time['kritikal'] ?? 0; ?>
+                        <?php foreach ($top_users as $user): ?>
+                            <?php echo $user['total_complaints']; ?>,
+                        <?php endforeach; ?>
                     ],
-                    backgroundColor: ['#9CA3AF', '#3B82F6', '#F59E0B', '#EF4444']
+                    backgroundColor: '#3B82F6',
+                    borderColor: '#2563EB',
+                    borderWidth: 1
                 }]
             },
             options: {
+                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: true,
                 scales: {
-                    y: {
+                    x: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function(value) {
-                                return value + 'h';
-                            }
+                            stepSize: 1
                         }
                     }
                 },
                 plugins: {
+                    legend: {
+                        display: false
+                    },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return 'Purata Masa: ' + context.parsed.y + ' jam';
+                                return 'Jumlah Aduan: ' + context.parsed.x;
                             }
                         }
                     }
@@ -609,38 +602,38 @@ $user = getUser();
             }
         });
 
-        // Officer Completion Rate Chart
-        new Chart(document.getElementById('officerCompletionChart'), {
-            type: 'bar',
+        // Completion Rate Trend Chart
+        new Chart(document.getElementById('completionTrendChart'), {
+            type: 'line',
             data: {
                 labels: [
-                    <?php foreach ($top_officers as $officer): ?>
-                        '<?php echo htmlspecialchars($officer['nama']); ?>',
+                    <?php foreach ($completion_trend as $week): ?>
+                        '<?php echo date('d/m', strtotime($week['week_start'])); ?>',
                     <?php endforeach; ?>
                 ],
                 datasets: [{
                     label: 'Kadar Penyiapan (%)',
                     data: [
-                        <?php foreach ($top_officers as $officer): ?>
+                        <?php foreach ($completion_trend as $week): ?>
                             <?php
-                                $completion_rate = $officer['total_complaints'] > 0
-                                    ? round(($officer['completed_complaints'] / $officer['total_complaints']) * 100, 1)
+                                $completion_rate = $week['total'] > 0
+                                    ? round(($week['completed'] / $week['total']) * 100, 1)
                                     : 0;
                                 echo $completion_rate;
                             ?>,
                         <?php endforeach; ?>
                     ],
-                    backgroundColor: '#667eea',
-                    borderColor: '#764ba2',
-                    borderWidth: 1
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
                 }]
             },
             options: {
-                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: true,
                 scales: {
-                    x: {
+                    y: {
                         beginAtZero: true,
                         max: 100,
                         ticks: {
@@ -651,13 +644,10 @@ $user = getUser();
                     }
                 },
                 plugins: {
-                    legend: {
-                        display: false
-                    },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return 'Kadar Penyiapan: ' + context.parsed.x + '%';
+                                return 'Kadar Penyiapan: ' + context.parsed.y + '%';
                             }
                         }
                     }
