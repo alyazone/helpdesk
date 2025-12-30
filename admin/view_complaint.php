@@ -509,7 +509,14 @@ $user = getUser();
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <a href="<?php echo htmlspecialchars($attachment['file_path']); ?>"
+                                                    <a href="<?php
+                                                        // Convert absolute path to web path
+                                                        $web_path = str_replace('\\', '/', $attachment['file_path']);
+                                                        if (strpos($web_path, '/uploads/') !== false) {
+                                                            $web_path = '../' . substr($web_path, strpos($web_path, 'uploads/'));
+                                                        }
+                                                        echo htmlspecialchars($web_path);
+                                                    ?>"
                                                        target="_blank"
                                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                                                         <i class="fas fa-download mr-2"></i>Muat Turun
@@ -549,7 +556,7 @@ $user = getUser();
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <a href="../unit-aduan-dalaman/generate_dokumen.php?id=<?php echo $complaint_id; ?>"
+                                                    <a href="unit-aduan-dalaman/generate_dokumen.php?id=<?php echo $complaint_id; ?>"
                                                        target="_blank"
                                                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
                                                         <i class="fas fa-eye mr-2"></i>Papar
@@ -584,7 +591,7 @@ $user = getUser();
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <a href="../unit-aset/generate_borang.php?id=<?php echo $complaint_id; ?>"
+                                                <a href="unit-aset/generate_borang.php?id=<?php echo $complaint_id; ?>"
                                                    target="_blank"
                                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                                                     <i class="fas fa-eye mr-2"></i>Papar
