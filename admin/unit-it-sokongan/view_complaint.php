@@ -19,7 +19,8 @@ if ($complaint_id <= 0) {
 // Get complaint details
 $stmt = $db->prepare("
     SELECT c.*,
-           bka.* as borang_data,
+           bka.anggaran_kos_penyelenggaraan,
+           bka.keputusan_ulasan,
            uito.nama as assigned_officer_name,
            u_pelulus.nama_penuh as pelulus_name,
            u_completed.nama_penuh as completed_by_name
