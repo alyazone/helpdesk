@@ -52,6 +52,22 @@ try {
         throw new Exception('Sila lengkapkan semua maklumat yang diperlukan');
     }
 
+    // Validate Unit IT officer if approved
+    $unit_it_officer_id = null;
+    if ($keputusan_status === 'diluluskan') {
+        $unit_it_officer_id = intval($_POST['unit_it_officer_id'] ?? 0);
+        if ($unit_it_officer_id <= 0) {
+            throw new Exception('Sila pilih pegawai Unit IT / Sokongan untuk melaksanakan tindakan');
+        }
+
+        // Validate officer exists and is active
+        $stmt = $db->prepare("SELECT id FROM unit_it_sokongan_officers WHERE id = ? AND status = 'aktif'");
+        $stmt->execute([$unit_it_officer_id]);
+        if (!$stmt->fetch()) {
+            throw new Exception('Pegawai Unit IT / Sokongan tidak sah atau tidak aktif');
+        }
+    }
+
     // Get borang kerosakan aset
     $stmt = $db->prepare("SELECT id FROM borang_kerosakan_aset WHERE complaint_id = ?");
     $stmt->execute([$complaint_id]);
@@ -86,7 +102,8 @@ try {
     ]);
 
     // Update complaint workflow status
-    $new_workflow_status = $keputusan_status; // 'diluluskan' or 'ditolak'
+    // If approved, forward to Unit IT; if rejected, mark as rejected
+    $new_workflow_status = $keputusan_status === 'diluluskan' ? 'dimajukan_unit_it' : 'ditolak';
 
     $stmt = $db->prepare("
         UPDATE complaints SET
@@ -94,10 +111,12 @@ try {
             pegawai_pelulus_id = ?,
             pegawai_pelulus_reviewed_at = CURRENT_TIMESTAMP,
             pegawai_pelulus_status = ?,
+            unit_it_officer_id = ?,
+            unit_it_assigned_at = " . ($keputusan_status === 'diluluskan' ? 'CURRENT_TIMESTAMP' : 'NULL') . ",
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
     ");
-    $stmt->execute([$new_workflow_status, $user['id'], $keputusan_status, $complaint_id]);
+    $stmt->execute([$new_workflow_status, $user['id'], $keputusan_status, $unit_it_officer_id, $complaint_id]);
 
     // Log workflow action
     $action_label = $keputusan_status === 'diluluskan' ? 'Diluluskan' : 'Ditolak';
@@ -116,19 +135,31 @@ try {
     ]);
 
     // Add to complaint status history for public viewing
-    $status_message = $keputusan_status === 'diluluskan'
-        ? 'Diluluskan oleh Pegawai Pelulus'
-        : 'Ditolak oleh Pegawai Pelulus';
-    $stmt = $db->prepare("
-        INSERT INTO complaint_status_history (complaint_id, status, keterangan, created_by)
-        VALUES (?, ?, ?, ?)
-    ");
-    $stmt->execute([
-        $complaint_id,
-        $status_message,
-        $action_label . ' oleh ' . $keputusan_nama . '. Ulasan: ' . $keputusan_ulasan,
-        $user['id']
-    ]);
+    if ($keputusan_status === 'diluluskan') {
+        $status_message = 'Diluluskan oleh Pegawai Pelulus';
+        $keterangan = $action_label . ' oleh ' . $keputusan_nama . '. Ulasan: ' . $keputusan_ulasan;
+
+        $stmt = $db->prepare("
+            INSERT INTO complaint_status_history (complaint_id, status, keterangan, created_by)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$complaint_id, $status_message, $keterangan, $user['id']]);
+
+        // Add another entry for forwarding to Unit IT
+        $status_message = 'Dimajukan ke Unit IT / Sokongan';
+        $keterangan = 'Aduan telah dimajukan ke Unit IT / Sokongan untuk pelaksanaan tindakan';
+
+        $stmt->execute([$complaint_id, $status_message, $keterangan, $user['id']]);
+    } else {
+        $status_message = 'Ditolak oleh Pegawai Pelulus';
+        $keterangan = $action_label . ' oleh ' . $keputusan_nama . '. Ulasan: ' . $keputusan_ulasan;
+
+        $stmt = $db->prepare("
+            INSERT INTO complaint_status_history (complaint_id, status, keterangan, created_by)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$complaint_id, $status_message, $keterangan, $user['id']]);
+    }
 
     $db->commit();
 
