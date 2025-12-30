@@ -54,10 +54,10 @@ foreach ($stmt->fetchAll() as $row) {
 
 // Top users by complaints submitted
 $stmt = $db->prepare("
-    SELECT u.nama, COUNT(c.id) as total_complaints
+    SELECT u.nama_penuh as nama, COUNT(c.id) as total_complaints
     FROM users u
     LEFT JOIN complaints c ON u.id = c.user_id AND DATE(c.created_at) BETWEEN ? AND ?
-    GROUP BY u.id, u.nama
+    GROUP BY u.id, u.nama_penuh
     HAVING total_complaints > 0
     ORDER BY total_complaints DESC
     LIMIT 10
