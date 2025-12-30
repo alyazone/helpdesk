@@ -160,9 +160,6 @@ $user = getUser();
                         <button class="tab-button" onclick="switchTab(event, 'tab-lampiran')">
                             Lampiran
                         </button>
-                        <button class="tab-button" onclick="switchTab(event, 'tab-sejarah')">
-                            Sejarah Status
-                        </button>
                         <button class="tab-button" onclick="switchTab(event, 'tab-dokumen')">
                             Dokumen/Laporan
                         </button>
@@ -175,6 +172,13 @@ $user = getUser();
                             <h3 class="text-xl font-bold text-gray-800 mb-6">Maklumat Aduan</h3>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">No. Tiket</label>
+                                    <div class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border-l-4 border-purple-600">
+                                        <p class="text-3xl font-bold text-purple-900"><?php echo htmlspecialchars($complaint['ticket_number']); ?></p>
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Perkara</label>
                                     <p class="text-gray-900"><?php echo htmlspecialchars($complaint['perkara']); ?></p>
@@ -443,42 +447,6 @@ $user = getUser();
                             <div class="text-center py-8 text-gray-500">
                                 <i class="fas fa-paperclip text-4xl mb-2"></i>
                                 <p>Tiada lampiran untuk aduan ini</p>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Sejarah Status -->
-                        <div id="tab-sejarah" class="tab-content">
-                            <h3 class="text-xl font-bold text-gray-800 mb-6">Sejarah Status</h3>
-
-                            <?php if (!empty($status_history)): ?>
-                            <div class="space-y-4">
-                                <?php foreach ($status_history as $history): ?>
-                                <div class="flex gap-4 p-4 bg-gray-50 rounded-lg">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                                            <i class="fas fa-history text-purple-600"></i>
-                                        </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-semibold text-gray-800"><?php echo ucfirst(str_replace('_', ' ', $history['status'])); ?></p>
-                                        <?php if (!empty($history['keterangan'])): ?>
-                                        <p class="text-gray-700 text-sm mt-1"><?php echo htmlspecialchars($history['keterangan']); ?></p>
-                                        <?php endif; ?>
-                                        <p class="text-xs text-gray-500 mt-1">
-                                            <?php echo date('d F Y, H:i', strtotime($history['created_at'])); ?>
-                                            <?php if (!empty($history['changed_by_name'])): ?>
-                                                oleh <?php echo htmlspecialchars($history['changed_by_name']); ?>
-                                            <?php endif; ?>
-                                        </p>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                            </div>
-                            <?php else: ?>
-                            <div class="text-center py-8 text-gray-500">
-                                <i class="fas fa-clock text-4xl mb-2"></i>
-                                <p>Tiada sejarah status</p>
                             </div>
                             <?php endif; ?>
                         </div>
