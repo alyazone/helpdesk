@@ -130,19 +130,20 @@ $user = getUser();
                 <table class="w-full">
                     <thead>
                         <tr class="border-b-2 border-gray-200">
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">No. Tiket</th>
                             <th class="text-left py-3 px-4 font-semibold text-gray-700">Jenis</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Perkara</th>
                             <th class="text-left py-3 px-4 font-semibold text-gray-700">Pengadu</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Perkara</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Pegawai Terima</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Tarikh Dihantar</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Tarikh Selesai</th>
                             <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Tarikh</th>
                             <th class="text-left py-3 px-4 font-semibold text-gray-700">Tindakan</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($complaints)): ?>
                         <tr>
-                            <td colspan="7" class="text-center py-8 text-gray-500">
+                            <td colspan="8" class="text-center py-8 text-gray-500">
                                 <i class="fas fa-inbox text-4xl mb-2"></i>
                                 <p>Tiada aduan dijumpai</p>
                             </td>
@@ -150,21 +151,57 @@ $user = getUser();
                         <?php else: ?>
                             <?php foreach ($complaints as $complaint): ?>
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <!-- Jenis -->
                                 <td class="py-3 px-4">
-                                    <span class="font-semibold text-purple-600"><?php echo htmlspecialchars($complaint['ticket_number']); ?></span>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <span class="px-2 py-1 rounded text-xs font-semibold <?php echo $complaint['jenis'] === 'aduan' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'; ?>">
-                                        <?php echo ucfirst($complaint['jenis']); ?>
-                                    </span>
-                                </td>
-                                <td class="py-3 px-4"><?php echo htmlspecialchars(substr($complaint['perkara'], 0, 40)); ?>...</td>
-                                <td class="py-3 px-4">
-                                    <div class="text-sm">
-                                        <div class="font-medium"><?php echo htmlspecialchars($complaint['nama_pengadu']); ?></div>
-                                        <div class="text-gray-500"><?php echo htmlspecialchars($complaint['email']); ?></div>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="px-2 py-1 rounded text-xs font-semibold <?php echo $complaint['jenis'] === 'aduan' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'; ?>">
+                                            <?php echo ucfirst($complaint['jenis']); ?>
+                                        </span>
+                                        <span class="text-xs text-purple-600 font-semibold"><?php echo htmlspecialchars($complaint['ticket_number']); ?></span>
                                     </div>
                                 </td>
+
+                                <!-- Pengadu -->
+                                <td class="py-3 px-4">
+                                    <div class="text-sm">
+                                        <div class="font-medium text-gray-900"><?php echo htmlspecialchars($complaint['nama_pengadu']); ?></div>
+                                        <div class="text-gray-500 text-xs"><?php echo htmlspecialchars($complaint['email']); ?></div>
+                                    </div>
+                                </td>
+
+                                <!-- Perkara -->
+                                <td class="py-3 px-4">
+                                    <div class="max-w-md">
+                                        <a href="view_complaint.php?id=<?php echo $complaint['id']; ?>" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                            <?php echo htmlspecialchars(substr($complaint['perkara'], 0, 50)); ?><?php echo strlen($complaint['perkara']) > 50 ? '...' : ''; ?>
+                                        </a>
+                                    </div>
+                                </td>
+
+                                <!-- Pegawai Terima -->
+                                <td class="py-3 px-4 text-sm">
+                                    <?php if (!empty($complaint['officer_name'])): ?>
+                                        <div class="text-gray-900"><?php echo htmlspecialchars($complaint['officer_name']); ?></div>
+                                    <?php else: ?>
+                                        <span class="text-gray-400 italic">-</span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <!-- Tarikh Dihantar -->
+                                <td class="py-3 px-4 text-sm text-gray-700">
+                                    <?php echo date('d-m-Y', strtotime($complaint['created_at'])); ?>
+                                </td>
+
+                                <!-- Tarikh Selesai -->
+                                <td class="py-3 px-4 text-sm text-gray-700">
+                                    <?php if ($complaint['status'] === 'selesai' && !empty($complaint['completed_at'])): ?>
+                                        <?php echo date('d-m-Y', strtotime($complaint['completed_at'])); ?>
+                                    <?php else: ?>
+                                        <span class="text-gray-400">-</span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <!-- Status -->
                                 <td class="py-3 px-4">
                                     <?php
                                     $status_colors = [
@@ -180,16 +217,19 @@ $user = getUser();
                                         <?php echo str_replace('_', ' ', ucfirst($complaint['status'])); ?>
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 text-sm"><?php echo date('d/m/Y H:i', strtotime($complaint['created_at'])); ?></td>
+
+                                <!-- Tindakan -->
                                 <td class="py-3 px-4">
-                                    <a href="view_complaint.php?id=<?php echo $complaint['id']; ?>"
-                                       class="text-purple-600 hover:text-purple-800 mr-3" title="Lihat">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <button onclick="deleteComplaint(<?php echo $complaint['id']; ?>, '<?php echo htmlspecialchars($complaint['ticket_number']); ?>')"
-                                       class="text-red-600 hover:text-red-800" title="Padam">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <div class="flex gap-2">
+                                        <a href="view_complaint.php?id=<?php echo $complaint['id']; ?>"
+                                           class="text-purple-600 hover:text-purple-800" title="Lihat">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <button onclick="deleteComplaint(<?php echo $complaint['id']; ?>, '<?php echo htmlspecialchars($complaint['ticket_number']); ?>')"
+                                           class="text-red-600 hover:text-red-800" title="Padam">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
