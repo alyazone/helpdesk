@@ -665,47 +665,22 @@ $user = getUser();
 
             <!-- Sidebar -->
             <div class="lg:col-span-1 space-y-6">
-                <!-- Garis Masa -->
-                <div class="bg-white rounded-xl shadow-md p-6 no-print">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Garis Masa</h3>
+                <!-- Ticket Number Display -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md p-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-ticket-alt text-white text-2xl"></i>
+                        </div>
+                        <p class="text-sm text-purple-700 mb-1">No. Tiket</p>
+                        <p class="text-2xl font-bold text-purple-900"><?php echo htmlspecialchars($complaint['ticket_number']); ?></p>
 
-                    <div class="space-y-4">
-                        <?php if (!empty($complaint['rating'])): ?>
-                        <div class="border-l-4 border-green-500 pl-4">
-                            <span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded mb-2">
-                                Bagi
-                            </span>
-                            <p class="text-sm text-gray-700">
-                                oleh <strong><?php echo htmlspecialchars($complaint['nama_pengadu']); ?></strong>
-                            </p>
-                            <p class="text-xs text-gray-500 mt-1">
-                                <?php echo !empty($complaint['feedback_comment']) ? htmlspecialchars(substr($complaint['feedback_comment'], 0, 50)) . '...' : 'Tiada komen'; ?>
-                            </p>
+                        <?php if (!empty($complaint['officer_name'])): ?>
+                        <div class="mt-4 pt-4 border-t border-purple-200">
+                            <p class="text-xs text-purple-700 mb-2">Pegawai Bertugas</p>
+                            <p class="text-sm font-semibold text-purple-900"><?php echo htmlspecialchars($complaint['officer_name']); ?></p>
                         </div>
                         <?php endif; ?>
-
-                        <?php
-                        // Show recent status history in sidebar
-                        $recent_history = array_slice($status_history, 0, 3);
-                        foreach ($recent_history as $history):
-                        ?>
-                        <div class="border-l-4 border-blue-500 pl-4">
-                            <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded mb-2">
-                                <?php echo date('d M Y', strtotime($history['created_at'])); ?>
-                            </span>
-                            <p class="text-sm text-gray-700">
-                                oleh <strong><?php echo htmlspecialchars($history['changed_by_name'] ?? 'System'); ?></strong>
-                            </p>
-                            <p class="text-xs text-gray-500 mt-1">
-                                <?php echo ucfirst(str_replace('_', ' ', $history['status'])); ?>
-                            </p>
-                        </div>
-                        <?php endforeach; ?>
                     </div>
-
-                    <button class="w-full mt-4 px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-lg transition text-sm font-medium">
-                        Papar senarai aduan
-                    </button>
                 </div>
 
                 <!-- Action Buttons -->
@@ -727,24 +702,6 @@ $user = getUser();
                            class="block w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium text-center">
                             <i class="fas fa-arrow-left mr-2"></i>Kembali ke Senarai
                         </a>
-                    </div>
-                </div>
-
-                <!-- Info Card -->
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md p-6">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <i class="fas fa-ticket-alt text-white text-2xl"></i>
-                        </div>
-                        <p class="text-sm text-purple-700 mb-1">No. Tiket</p>
-                        <p class="text-2xl font-bold text-purple-900"><?php echo htmlspecialchars($complaint['ticket_number']); ?></p>
-
-                        <?php if (!empty($complaint['officer_name'])): ?>
-                        <div class="mt-4 pt-4 border-t border-purple-200">
-                            <p class="text-xs text-purple-700 mb-2">Pegawai Bertugas</p>
-                            <p class="text-sm font-semibold text-purple-900"><?php echo htmlspecialchars($complaint['officer_name']); ?></p>
-                        </div>
-                        <?php endif; ?>
                     </div>
                 </div>
             </div>
