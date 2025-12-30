@@ -6,6 +6,45 @@
 
 require_once __DIR__ . '/../config/config.php';
 
+/**
+ * Calculate progress based on workflow status or regular status
+ * @param string $workflow_status The workflow status
+ * @param string $status The regular status (fallback)
+ * @return int Progress percentage (0-100)
+ */
+function calculateProgress($workflow_status, $status) {
+    // Workflow status progress mapping
+    $workflow_progress = [
+        'baru' => 10,
+        'disahkan_unit_aduan' => 20,
+        'dimajukan_unit_aset' => 30,
+        'dalam_semakan_unit_aset' => 50,
+        'dimajukan_pegawai_pelulus' => 70,
+        'diluluskan' => 85,
+        'ditolak' => 0,
+        'selesai' => 100
+    ];
+
+    // Regular status progress mapping (fallback)
+    $status_progress = [
+        'pending' => 10,
+        'dalam_pemeriksaan' => 30,
+        'sedang_dibaiki' => 60,
+        'selesai' => 100,
+        'dibatalkan' => 0
+    ];
+
+    // Use workflow_status if available, otherwise use regular status
+    if (!empty($workflow_status) && isset($workflow_progress[$workflow_status])) {
+        return $workflow_progress[$workflow_status];
+    } elseif (!empty($status) && isset($status_progress[$status])) {
+        return $status_progress[$status];
+    }
+
+    // Default to 0 if no match
+    return 0;
+}
+
 // Accept both GET and POST requests
 $complaint_id = 0;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -73,6 +112,12 @@ try {
         // Fallback to workflow_status if available
         $complaint['current_status_label'] = $complaint['workflow_status'] ?? $complaint['status'];
     }
+
+    // Calculate dynamic progress based on workflow_status or status
+    $complaint['progress'] = calculateProgress(
+        $complaint['workflow_status'] ?? '',
+        $complaint['status'] ?? ''
+    );
 
     jsonResponse(true, 'Data berjaya diambil', [
         'complaint' => $complaint
