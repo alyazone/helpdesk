@@ -514,7 +514,7 @@
             const tingkat = document.getElementById('tingkat').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            const terms = document.getElementById('terms').checked;
+
 
             // Validation
             if (!email.includes('@jpbdselangor.gov.my')) {
@@ -529,11 +529,6 @@
 
             if (password !== confirmPassword) {
                 showError('Kata laluan tidak sepadan');
-                return;
-            }
-
-            if (!terms) {
-                showError('Sila setuju dengan Terma & Syarat');
                 return;
             }
 
