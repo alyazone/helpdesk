@@ -101,28 +101,6 @@
         .progress-bar {
             transition: width 1s ease-out;
         }
-
-        .border-3 {
-            border-width: 3px;
-        }
-
-        .animate-pulse-once {
-            animation: pulse 0.5s ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        .mandatory-rating-btn {
-            text-align: center;
-        }
-
-        .mandatory-rating-btn:disabled {
-            cursor: not-allowed !important;
-            opacity: 0.6 !important;
-        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -141,14 +119,14 @@
                     </button>
                     <div id="userMenu" class="hidden">
                         <div class="flex items-center space-x-3">
-                            <div class="text-right hidden sm:block">
-                                <p class="text-sm font-semibold" id="navUserName"></p>
-                                <p class="text-xs opacity-90" id="navUserEmail"></p>
-                            </div>
                             <button onclick="logout()" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span class="hidden sm:inline">Log Keluar</span>
                             </button>
+                            <div class="text-right hidden sm:block">
+                                <p class="text-sm font-semibold" id="navUserName"></p>
+                                <p class="text-xs opacity-90" id="navUserEmail"></p>
+                            </div>
                         </div>
                     </div>
                     <button id="loginButton" onclick="window.location.href='login.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
@@ -363,71 +341,6 @@
         </div>
     </div>
 
-    <!-- Mandatory Feedback Modal -->
-    <div id="mandatoryFeedbackModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-[60] flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-2xl w-full card-shadow animate-pulse-once">
-            <div class="gradient-bg text-white p-6 rounded-t-2xl">
-                <div class="flex items-center justify-center">
-                    <i class="fas fa-star text-yellow-300 text-3xl mr-3"></i>
-                    <h3 class="text-2xl font-bold">Penilaian Diperlukan</h3>
-                    <i class="fas fa-star text-yellow-300 text-3xl ml-3"></i>
-                </div>
-            </div>
-
-            <div id="mandatoryFeedbackContent" class="p-8">
-                <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-check-circle text-green-600 text-4xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-2">Aduan Anda Telah Selesai!</h4>
-                    <p class="text-gray-600 mb-1" id="mandatoryFeedbackTicket"></p>
-                    <p class="text-gray-700 font-semibold" id="mandatoryFeedbackTitle"></p>
-                </div>
-
-                <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-6 mb-6">
-                    <div class="flex items-start space-x-3">
-                        <i class="fas fa-info-circle text-purple-600 text-xl mt-1"></i>
-                        <div>
-                            <p class="text-purple-900 font-semibold mb-2">Penilaian anda amat penting!</p>
-                            <p class="text-purple-800 text-sm">Sila berikan penilaian terhadap penyelesaian aduan ini. Maklum balas anda membantu kami meningkatkan kualiti perkhidmatan.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <p class="text-center text-lg font-semibold text-gray-700 mb-4">Bagaimanakah penilaian anda?</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="submitMandatoryRating('cemerlang')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-green-500 hover:bg-green-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-star text-yellow-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-green-700">Cemerlang</p>
-                            <p class="text-xs text-gray-500 mt-1">Sangat memuaskan</p>
-                        </button>
-                        <button onclick="submitMandatoryRating('baik')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-thumbs-up text-blue-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-blue-700">Baik</p>
-                            <p class="text-xs text-gray-500 mt-1">Memuaskan hati</p>
-                        </button>
-                        <button onclick="submitMandatoryRating('memuaskan')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-smile text-yellow-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-yellow-700">Memuaskan</p>
-                            <p class="text-xs text-gray-500 mt-1">Boleh diterima</p>
-                        </button>
-                        <button onclick="submitMandatoryRating('tidak_memuaskan')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-red-500 hover:bg-red-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-frown text-red-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-red-700">Tidak Memuaskan</p>
-                            <p class="text-xs text-gray-500 mt-1">Perlu penambahbaikan</p>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="text-center text-sm text-gray-500">
-                    <i class="fas fa-lock mr-2"></i>
-                    Sila berikan penilaian untuk meneruskan
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         // Global variable to store current user
         let currentUser = null;
@@ -609,9 +522,6 @@
                 `;
                 return;
             }
-
-            // Check for mandatory feedback before rendering complaints
-            checkMandatoryFeedback(data.complaints);
 
             data.complaints.forEach(complaint => {
                 const statusColors = {
@@ -1079,170 +989,6 @@
                 alert('Ralat sambungan. Sila cuba lagi.\n\nButiran: ' + error.message);
             }
         }
-
-        // Global variable to store complaint requiring mandatory feedback
-        let mandatoryFeedbackComplaint = null;
-
-        // Check for completed complaints without ratings and show mandatory feedback
-        function checkMandatoryFeedback(complaints) {
-            // Find the first completed complaint without a rating
-            const complaintNeedingFeedback = complaints.find(c =>
-                c.status === 'selesai' && !c.rating
-            );
-
-            if (complaintNeedingFeedback) {
-                mandatoryFeedbackComplaint = complaintNeedingFeedback;
-                showMandatoryFeedbackModal();
-            }
-        }
-
-        // Show mandatory feedback modal
-        function showMandatoryFeedbackModal() {
-            if (!mandatoryFeedbackComplaint) return;
-
-            const modal = document.getElementById('mandatoryFeedbackModal');
-            document.getElementById('mandatoryFeedbackTicket').textContent =
-                mandatoryFeedbackComplaint.ticket_number;
-            document.getElementById('mandatoryFeedbackTitle').textContent =
-                mandatoryFeedbackComplaint.perkara;
-
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Close mandatory feedback modal (only after rating is submitted)
-        function closeMandatoryFeedbackModal() {
-            const modal = document.getElementById('mandatoryFeedbackModal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            mandatoryFeedbackComplaint = null;
-        }
-
-        // Submit mandatory rating
-        async function submitMandatoryRating(rating) {
-            if (!mandatoryFeedbackComplaint) {
-                alert('Ralat: Tiada aduan dipilih');
-                return;
-            }
-
-            const complaintId = mandatoryFeedbackComplaint.id;
-
-            // Disable all rating buttons to prevent double submission
-            const buttons = document.querySelectorAll('.mandatory-rating-btn');
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                btn.style.opacity = '0.6';
-                btn.style.cursor = 'not-allowed';
-            });
-
-            try {
-                console.log('Submitting mandatory rating:', rating, 'for complaint:', complaintId);
-
-                const response = await fetch('api/submit_rating.php', {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        complaint_id: complaintId,
-                        rating: rating
-                    })
-                });
-
-                console.log('Response status:', response.status);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('HTTP error:', response.status, errorText);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const responseText = await response.text();
-                console.log('Response text:', responseText);
-
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    console.error('JSON parse error:', parseError);
-                    console.error('Response was:', responseText);
-                    throw new Error('Ralat: Respons tidak sah dari server');
-                }
-
-                console.log('Parsed result:', result);
-
-                if (result.success) {
-                    // Show success message
-                    const ratingLabels = {
-                        'cemerlang': 'Cemerlang',
-                        'baik': 'Baik',
-                        'memuaskan': 'Memuaskan',
-                        'tidak_memuaskan': 'Tidak Memuaskan'
-                    };
-
-                    // Update the modal content to show success
-                    document.getElementById('mandatoryFeedbackContent').innerHTML = `
-                        <div class="text-center py-8">
-                            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
-                                <i class="fas fa-check-circle text-green-600 text-5xl"></i>
-                            </div>
-                            <h4 class="text-2xl font-bold text-gray-800 mb-3">Terima Kasih!</h4>
-                            <p class="text-gray-600 mb-6">Penilaian anda <span class="font-bold text-purple-600">"${ratingLabels[rating]}"</span> telah berjaya direkodkan.</p>
-                            <button onclick="completeMandatoryFeedback()" class="btn-primary text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition">
-                                <i class="fas fa-check mr-2"></i>
-                                Teruskan
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    console.error('API error:', result.message);
-                    throw new Error(result.message || 'Gagal menghantar penilaian');
-                }
-            } catch (error) {
-                console.error('Rating submission error:', error);
-                alert('Ralat sambungan. Sila cuba lagi.\n\nButiran: ' + error.message);
-
-                // Re-enable buttons on error
-                buttons.forEach(btn => {
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.style.cursor = 'pointer';
-                });
-            }
-        }
-
-        // Complete mandatory feedback and reload complaints
-        async function completeMandatoryFeedback() {
-            closeMandatoryFeedbackModal();
-
-            // Reload the complaints list to show updated data
-            if (currentUser && currentUser.email) {
-                await autoLoadComplaints();
-            } else {
-                // For non-logged in users, reload using the email from the complaint
-                const email = mandatoryFeedbackComplaint.email;
-                if (email) {
-                    try {
-                        const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`, {
-                            credentials: 'same-origin'
-                        });
-                        const result = await response.json();
-                        if (result.success) {
-                            showStatusPage(result.data);
-                        }
-                    } catch (error) {
-                        console.error('Error reloading complaints:', error);
-                    }
-                }
-            }
-        }
-
-        // Prevent closing mandatory feedback modal by clicking outside
-        document.getElementById('mandatoryFeedbackModal').addEventListener('click', function(e) {
-            // Do nothing - cannot close by clicking outside
-            e.stopPropagation();
-        });
 
         // Close modal when clicking outside
         document.getElementById('complaintModal').addEventListener('click', function(e) {
