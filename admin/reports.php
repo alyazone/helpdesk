@@ -65,6 +65,21 @@ foreach ($stmt->fetchAll() as $row) {
     $priority_stats[$row['priority']] = $row['count'];
 }
 
+// Average resolution time by priority
+$stmt = $db->prepare("
+    SELECT priority, AVG(TIMESTAMPDIFF(HOUR, created_at, completed_at)) as avg_hours
+    FROM complaints
+    WHERE status = 'selesai'
+    AND completed_at IS NOT NULL
+    AND DATE(created_at) BETWEEN ? AND ?
+    GROUP BY priority
+");
+$stmt->execute([$date_from, $date_to]);
+$priority_resolution_time = [];
+foreach ($stmt->fetchAll() as $row) {
+    $priority_resolution_time[$row['priority']] = round($row['avg_hours'] ?? 0, 1);
+}
+
 // Top officers by complaints handled
 $stmt = $db->prepare("
     SELECT o.nama, COUNT(c.id) as total_complaints,
@@ -143,7 +158,7 @@ $stmt = $db->prepare("
 $stmt->execute([$date_from, $date_to]);
 $feedback_summary = $stmt->fetch();
 $total_feedback = $feedback_summary['total'];
-$overall_avg_score = round($feedback_summary['overall_avg'], 2);
+$overall_avg_score = round($feedback_summary['overall_avg'] ?? 0, 2);
 
 // Feedback with comments
 $stmt = $db->prepare("
@@ -408,9 +423,9 @@ $user = getUser();
                 <canvas id="jenisChart"></canvas>
             </div>
 
-            <!-- Priority Chart -->
+            <!-- Priority Resolution Time Chart -->
             <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Keutamaan</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Masa Penyelesaian Mengikut Keutamaan</h3>
                 <canvas id="priorityChart"></canvas>
             </div>
 
@@ -420,25 +435,10 @@ $user = getUser();
                 <canvas id="feedbackChart"></canvas>
             </div>
 
-            <!-- Top Officers -->
+            <!-- Officer Completion Rate -->
             <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Top Pegawai</h3>
-                <div class="space-y-3">
-                    <?php foreach ($top_officers as $officer): ?>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                                <?php echo strtoupper(substr($officer['nama'], 0, 1)); ?>
-                            </div>
-                            <div>
-                                <p class="font-medium"><?php echo htmlspecialchars($officer['nama']); ?></p>
-                                <p class="text-xs text-gray-500"><?php echo $officer['completed_complaints']; ?> selesai / <?php echo $officer['total_complaints']; ?> jumlah</p>
-                            </div>
-                        </div>
-                        <span class="font-bold text-purple-600"><?php echo $officer['total_complaints']; ?></span>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Kadar Penyiapan Pegawai</h3>
+                <canvas id="officerCompletionChart"></canvas>
             </div>
         </div>
 
@@ -491,18 +491,18 @@ $user = getUser();
             }
         });
 
-        // Priority Chart
+        // Priority Resolution Time Chart
         new Chart(document.getElementById('priorityChart'), {
             type: 'bar',
             data: {
                 labels: ['Rendah', 'Sederhana', 'Tinggi', 'Kritikal'],
                 datasets: [{
-                    label: 'Jumlah',
+                    label: 'Purata Masa (Jam)',
                     data: [
-                        <?php echo $priority_stats['rendah'] ?? 0; ?>,
-                        <?php echo $priority_stats['sederhana'] ?? 0; ?>,
-                        <?php echo $priority_stats['tinggi'] ?? 0; ?>,
-                        <?php echo $priority_stats['kritikal'] ?? 0; ?>
+                        <?php echo $priority_resolution_time['rendah'] ?? 0; ?>,
+                        <?php echo $priority_resolution_time['sederhana'] ?? 0; ?>,
+                        <?php echo $priority_resolution_time['tinggi'] ?? 0; ?>,
+                        <?php echo $priority_resolution_time['kritikal'] ?? 0; ?>
                     ],
                     backgroundColor: ['#9CA3AF', '#3B82F6', '#F59E0B', '#EF4444']
                 }]
@@ -514,7 +514,18 @@ $user = getUser();
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 1
+                            callback: function(value) {
+                                return value + 'h';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Purata Masa: ' + context.parsed.y + ' jam';
+                            }
                         }
                     }
                 }
@@ -591,6 +602,62 @@ $user = getUser();
                                 const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
                                 label += ' (' + percentage + '%)';
                                 return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Officer Completion Rate Chart
+        new Chart(document.getElementById('officerCompletionChart'), {
+            type: 'bar',
+            data: {
+                labels: [
+                    <?php foreach ($top_officers as $officer): ?>
+                        '<?php echo htmlspecialchars($officer['nama']); ?>',
+                    <?php endforeach; ?>
+                ],
+                datasets: [{
+                    label: 'Kadar Penyiapan (%)',
+                    data: [
+                        <?php foreach ($top_officers as $officer): ?>
+                            <?php
+                                $completion_rate = $officer['total_complaints'] > 0
+                                    ? round(($officer['completed_complaints'] / $officer['total_complaints']) * 100, 1)
+                                    : 0;
+                                echo $completion_rate;
+                            ?>,
+                        <?php endforeach; ?>
+                    ],
+                    backgroundColor: '#667eea',
+                    borderColor: '#764ba2',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Kadar Penyiapan: ' + context.parsed.x + '%';
                             }
                         }
                     }
