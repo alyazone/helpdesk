@@ -144,20 +144,20 @@
                     <span class="font-semibold text-lg">Sistem Helpdesk</span>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button onclick="window.location.href='v1.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                    <button onclick="window.location.href='borang_aduan.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
                         <i class="fas fa-file-alt"></i>
                         <span class="hidden sm:inline">Borang Aduan</span>
                     </button>
                     <div id="userMenu" class="hidden">
                         <div class="flex items-center space-x-3">
-                            <div class="text-right hidden sm:block">
-                                <p class="text-sm font-semibold" id="navUserName"></p>
-                                <p class="text-xs opacity-90" id="navUserEmail"></p>
-                            </div>
                             <button onclick="logout()" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span class="hidden sm:inline">Log Keluar</span>
                             </button>
+                            <div class="text-right hidden sm:block">
+                                <p class="text-sm font-semibold" id="navUserName"></p>
+                                <p class="text-xs opacity-90" id="navUserEmail"></p>
+                            </div>
                         </div>
                     </div>
                     <button id="loginButton" onclick="window.location.href='login.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
@@ -192,14 +192,14 @@
                     <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-user-check text-white text-2xl"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Kembali!</h2>
-                    <p class="text-gray-600">Berikut adalah senarai aduan anda</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang ke Sistem Helpdesk!</h2>
+                    <p class="text-gray-600">Tiada aduan direkodkan di bawah akaun anda buat masa ini.</p>
                 </div>
 
                 <div class="text-center">
-                    <button onclick="viewMyComplaints()" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center space-x-3 shadow-lg text-lg">
+                    <button onclick="window.location.href='borang_aduan.html'" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center space-x-3 shadow-lg text-lg">
                         <i class="fas fa-list"></i>
-                        <span>Lihat Aduan Saya</span>
+                        <span>Buat Aduan Baharu</span>
                     </button>
                 </div>
 
@@ -260,10 +260,6 @@
         <header class="gradient-bg text-white py-12 shadow-xl">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between">
-                    <button onclick="showSearchPage()" class="flex items-center space-x-2 text-white hover:text-purple-200 transition">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Kembali</span>
-                    </button>
                     <div class="text-center flex-1">
                         <h1 class="text-3xl font-bold">Status Aduan Anda</h1>
                     </div>
@@ -525,11 +521,6 @@
             }
         }
 
-        // View my complaints button handler
-        function viewMyComplaints() {
-            autoLoadComplaints();
-        }
-
         // Logout function
         async function logout() {
             try {
@@ -618,9 +609,6 @@
                 `;
                 return;
             }
-
-            // Check for mandatory feedback before rendering complaints
-            checkMandatoryFeedback(data.complaints);
 
             data.complaints.forEach(complaint => {
                 const statusColors = {

@@ -54,3 +54,25 @@
 2025-12-30 11:15:25 - Complaint insert executed successfully
 2025-12-30 11:15:25 - Complaint ID: 21
 2025-12-30 11:15:25 - Complaint submitted successfully. ID: 21, Ticket: ADU-2025-390
+2025-12-30 14:51:49 - Complaint submission started
+2025-12-30 14:51:49 - Request method: POST
+2025-12-30 14:51:49 - Validation errors: Pegawai penerima aduan diperlukan
+2025-12-30 14:52:04 - Complaint submission started
+2025-12-30 14:52:04 - Request method: POST
+2025-12-30 14:52:04 - Validation errors: Pegawai penerima aduan diperlukan
+2025-12-30 14:59:08 - Complaint submission started
+2025-12-30 14:59:08 - Request method: POST
+2025-12-30 14:59:08 - Validation passed. Data received: {"jenis":"cadangan","perkara":"ADUAN KEROSAKAN TAYAR KERETA","nama":"Adam Idris","email":"adam@jpbdselangor.gov.my"}
+2025-12-30 14:59:08 - Database connection successful
+2025-12-30 14:59:08 - Attempting to insert complaint with ticket: ADU-2025-838
+2025-12-30 14:59:08 - Complaint insert executed successfully
+2025-12-30 14:59:08 - Complaint ID: 22
+2025-12-30 14:59:08 - Complaint submitted successfully. ID: 22, Ticket: ADU-2025-838
+2025-12-30 15:09:54 - Complaint submission started
+2025-12-30 15:09:54 - Request method: POST
+2025-12-30 15:09:54 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEROSAKAN LAMPU DAN KIPAS","nama":"Adam Idris","email":"adam@jpbdselangor.gov.my"}
+2025-12-30 15:09:54 - Database connection successful
+2025-12-30 15:09:54 - Attempting to insert complaint with ticket: ADU-2025-243
+2025-12-30 15:09:54 - Complaint insert executed successfully
+2025-12-30 15:09:54 - Complaint ID: 23
+2025-12-30 15:09:54 - Complaint submitted successfully. ID: 23, Ticket: ADU-2025-243
