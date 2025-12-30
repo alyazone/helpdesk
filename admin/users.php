@@ -160,9 +160,13 @@ $user = getUser();
                     <div>
                         <select name="role" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
                             <option value="all" <?php echo $role_filter === 'all' ? 'selected' : ''; ?>>Semua Peranan</option>
-                            <option value="admin" <?php echo $role_filter === 'admin' ? 'selected' : ''; ?>>Admin</option>
-                            <option value="staff" <?php echo $role_filter === 'staff' ? 'selected' : ''; ?>>Staff</option>
-                            <option value="user" <?php echo $role_filter === 'user' ? 'selected' : ''; ?>>User</option>
+                            <option value="admin" <?php echo $role_filter === 'admin' ? 'selected' : ''; ?>>Pentadbir</option>
+                            <option value="staff" <?php echo $role_filter === 'staff' ? 'selected' : ''; ?>>Pegawai</option>
+                            <option value="user" <?php echo $role_filter === 'user' ? 'selected' : ''; ?>>Pengguna Biasa</option>
+                            <option value="Unit_it_sokongan" <?php echo $role_filter === 'Unit_it_sokongan' ? 'selected' : ''; ?>>Unit IT / Sokongan</option>
+                            <option value="Unit_aduan_dalaman" <?php echo $role_filter === 'Unit_aduan_dalaman' ? 'selected' : ''; ?>>Unit Aduan Dalaman</option>
+                            <option value="Unit_aset" <?php echo $role_filter === 'Unit_aset' ? 'selected' : ''; ?>>Unit Aset</option>
+                            <option value="Pegawai_pelulus_aset" <?php echo $role_filter === 'Pegawai_pelulus_aset' ? 'selected' : ''; ?>>Pegawai Pelulus Aset</option>
                         </select>
                     </div>
                     <div>
@@ -236,12 +240,26 @@ $user = getUser();
                                     $role_colors = [
                                         'admin' => 'bg-red-100 text-red-800',
                                         'staff' => 'bg-blue-100 text-blue-800',
-                                        'user' => 'bg-green-100 text-green-800'
+                                        'user' => 'bg-green-100 text-green-800',
+                                        'Unit_it_sokongan' => 'bg-purple-100 text-purple-800',
+                                        'Unit_aduan_dalaman' => 'bg-yellow-100 text-yellow-800',
+                                        'Unit_aset' => 'bg-orange-100 text-orange-800',
+                                        'Pegawai_pelulus_aset' => 'bg-indigo-100 text-indigo-800'
+                                    ];
+                                    $role_names = [
+                                        'admin' => 'Pentadbir',
+                                        'staff' => 'Pegawai',
+                                        'user' => 'Pengguna Biasa',
+                                        'Unit_it_sokongan' => 'Unit IT / Sokongan',
+                                        'Unit_aduan_dalaman' => 'Unit Aduan Dalaman',
+                                        'Unit_aset' => 'Unit Aset',
+                                        'Pegawai_pelulus_aset' => 'Pegawai Pelulus Aset'
                                     ];
                                     $color = $role_colors[$u['role']] ?? 'bg-gray-100 text-gray-800';
+                                    $role_display = $role_names[$u['role']] ?? ucfirst($u['role']);
                                     ?>
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold <?php echo $color; ?>">
-                                        <?php echo ucfirst($u['role']); ?>
+                                        <?php echo $role_display; ?>
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">
@@ -335,9 +353,13 @@ $user = getUser();
                         </label>
                         <select id="role" name="role" required
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
-                            <option value="user">User</option>
-                            <option value="staff">Staff</option>
-                            <option value="admin">Admin</option>
+                            <option value="user">Pengguna Biasa</option>
+                            <option value="staff">Pegawai</option>
+                            <option value="admin">Pentadbir</option>
+                            <option value="Unit_it_sokongan">Unit IT / Sokongan</option>
+                            <option value="Unit_aduan_dalaman">Unit Aduan Dalaman</option>
+                            <option value="Unit_aset">Unit Aset</option>
+                            <option value="Pegawai_pelulus_aset">Pegawai Pelulus Aset</option>
                         </select>
                     </div>
                     <div>
