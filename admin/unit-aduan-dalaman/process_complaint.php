@@ -104,6 +104,18 @@ try {
         'Aduan disahkan dan dimajukan ke Unit Aset'
     ]);
 
+    // Add to complaint status history for public viewing
+    $stmt = $db->prepare("
+        INSERT INTO complaint_status_history (complaint_id, status, keterangan, created_by)
+        VALUES (?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $complaint_id,
+        'Dimajukan ke Unit Aset',
+        'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya',
+        $user['id']
+    ]);
+
     // Commit transaction
     $db->commit();
 
