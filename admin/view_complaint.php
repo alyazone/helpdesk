@@ -53,6 +53,16 @@ $stmt = $db->prepare("SELECT * FROM workflow_actions WHERE complaint_id = ? ORDE
 $stmt->execute([$complaint_id]);
 $workflow_actions = $stmt->fetchAll();
 
+// Get cost details from borang_kerosakan_aset
+$stmt = $db->prepare("SELECT * FROM borang_kerosakan_aset WHERE complaint_id = ? LIMIT 1");
+$stmt->execute([$complaint_id]);
+$borang_aset = $stmt->fetch();
+
+// Get internal complaint unit documents
+$stmt = $db->prepare("SELECT * FROM dokumen_unit_aduan WHERE complaint_id = ? ORDER BY created_at DESC");
+$stmt->execute([$complaint_id]);
+$dokumen_unit_aduan = $stmt->fetchAll();
+
 $user = getUser();
 ?>
 <!DOCTYPE html>
@@ -338,10 +348,69 @@ $user = getUser();
                         <div id="tab-kos" class="tab-content">
                             <h3 class="text-xl font-bold text-gray-800 mb-6">Butiran Kos</h3>
 
+                            <?php if (!empty($borang_aset)): ?>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <?php if (!empty($borang_aset['jumlah_kos_penyelenggaraan_terdahulu'])): ?>
+                                <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                    <label class="block text-sm font-semibold text-blue-700 mb-2">Jumlah Kos Penyelenggaraan Terdahulu</label>
+                                    <p class="text-2xl font-bold text-blue-900">
+                                        RM <?php echo number_format($borang_aset['jumlah_kos_penyelenggaraan_terdahulu'], 2); ?>
+                                    </p>
+                                </div>
+                                <?php endif; ?>
+
+                                <?php if (!empty($borang_aset['anggaran_kos_penyelenggaraan'])): ?>
+                                <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                                    <label class="block text-sm font-semibold text-green-700 mb-2">Anggaran Kos Penyelenggaraan</label>
+                                    <p class="text-2xl font-bold text-green-900">
+                                        RM <?php echo number_format($borang_aset['anggaran_kos_penyelenggaraan'], 2); ?>
+                                    </p>
+                                </div>
+                                <?php endif; ?>
+
+                                <?php if (!empty($borang_aset['jumlah_kos_penyelenggaraan_terdahulu']) && !empty($borang_aset['anggaran_kos_penyelenggaraan'])): ?>
+                                <div class="md:col-span-2 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                                    <label class="block text-sm font-semibold text-purple-700 mb-2">Perbezaan Kos</label>
+                                    <p class="text-2xl font-bold text-purple-900">
+                                        RM <?php
+                                        $difference = $borang_aset['anggaran_kos_penyelenggaraan'] - $borang_aset['jumlah_kos_penyelenggaraan_terdahulu'];
+                                        echo number_format(abs($difference), 2);
+                                        ?>
+                                        <span class="text-base font-normal <?php echo $difference >= 0 ? 'text-red-600' : 'text-green-600'; ?>">
+                                            (<?php echo $difference >= 0 ? '+' : '-'; ?><?php echo number_format(abs($difference / $borang_aset['jumlah_kos_penyelenggaraan_terdahulu'] * 100), 1); ?>%)
+                                        </span>
+                                    </p>
+                                </div>
+                                <?php endif; ?>
+
+                                <?php
+                                // Display other fields from borang_kerosakan_aset if available
+                                $display_fields = [
+                                    'nama_aset' => 'Nama Aset',
+                                    'jenis_aset' => 'Jenis Aset',
+                                    'no_siri' => 'No. Siri',
+                                    'lokasi' => 'Lokasi',
+                                    'status_aset' => 'Status Aset'
+                                ];
+
+                                foreach ($display_fields as $field => $label):
+                                    if (!empty($borang_aset[$field])):
+                                ?>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2"><?php echo $label; ?></label>
+                                    <p class="text-gray-900"><?php echo htmlspecialchars($borang_aset[$field]); ?></p>
+                                </div>
+                                <?php
+                                    endif;
+                                endforeach;
+                                ?>
+                            </div>
+                            <?php else: ?>
                             <div class="text-center py-8 text-gray-500">
                                 <i class="fas fa-money-bill-wave text-4xl mb-2"></i>
                                 <p>Maklumat kos tidak tersedia untuk aduan ini</p>
                             </div>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Lampiran -->
@@ -418,36 +487,158 @@ $user = getUser();
                         <div id="tab-dokumen" class="tab-content">
                             <h3 class="text-xl font-bold text-gray-800 mb-6">Dokumen/Laporan</h3>
 
-                            <div class="flex gap-3 flex-wrap mb-6">
-                                <?php if (!empty($workflow_actions)): ?>
-                                    <?php foreach ($workflow_actions as $action): ?>
-                                        <?php if (!empty($action['dokumen_path'])): ?>
-                                        <a href="<?php echo htmlspecialchars($action['dokumen_path']); ?>"
-                                           target="_blank"
-                                           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                            <i class="fas fa-file-pdf mr-2"></i><?php echo htmlspecialchars($action['action_type'] ?? 'Dokumen'); ?>
-                                        </a>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
+                            <div class="space-y-6">
+                                <!-- Dokumen Aduan -->
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                                        <i class="fas fa-file-alt text-blue-600 mr-2"></i>
+                                        Dokumen Aduan
+                                    </h4>
+                                    <?php if (!empty($complaint['dokumen_path']) || !empty($complaint['document_path'])): ?>
+                                        <?php $doc_path = $complaint['dokumen_path'] ?? $complaint['document_path']; ?>
+                                        <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <i class="fas fa-file-pdf text-blue-600 text-2xl"></i>
+                                                    <div>
+                                                        <p class="font-medium text-gray-900">Dokumen Aduan Asal</p>
+                                                        <p class="text-xs text-gray-500">Dihantar pada <?php echo date('d/m/Y H:i', strtotime($complaint['created_at'])); ?></p>
+                                                    </div>
+                                                </div>
+                                                <a href="<?php echo htmlspecialchars($doc_path); ?>"
+                                                   target="_blank"
+                                                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                                    <i class="fas fa-download mr-2"></i>Muat Turun
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="p-4 bg-gray-50 rounded-lg text-center text-gray-500">
+                                            <i class="fas fa-file-alt text-gray-400 text-2xl mb-2"></i>
+                                            <p class="text-sm">Tiada dokumen aduan</p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Dokumen Unit Aduan Dalaman -->
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                                        <i class="fas fa-folder text-purple-600 mr-2"></i>
+                                        Dokumen Unit Aduan Dalaman
+                                    </h4>
+                                    <?php if (!empty($dokumen_unit_aduan)): ?>
+                                        <div class="space-y-3">
+                                            <?php foreach ($dokumen_unit_aduan as $dokumen): ?>
+                                            <div class="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex items-center space-x-3">
+                                                        <i class="fas fa-file-pdf text-purple-600 text-2xl"></i>
+                                                        <div>
+                                                            <p class="font-medium text-gray-900">
+                                                                <?php echo htmlspecialchars($dokumen['nama_dokumen'] ?? $dokumen['document_name'] ?? 'Dokumen Unit Aduan'); ?>
+                                                            </p>
+                                                            <p class="text-xs text-gray-500">
+                                                                <?php if (!empty($dokumen['created_at'])): ?>
+                                                                    Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($dokumen['created_at'])); ?>
+                                                                <?php endif; ?>
+                                                                <?php if (!empty($dokumen['created_by'])): ?>
+                                                                    oleh <?php echo htmlspecialchars($dokumen['created_by']); ?>
+                                                                <?php endif; ?>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <?php if (!empty($dokumen['dokumen_path']) || !empty($dokumen['document_path'])): ?>
+                                                        <?php $dok_path = $dokumen['dokumen_path'] ?? $dokumen['document_path']; ?>
+                                                        <a href="<?php echo htmlspecialchars($dok_path); ?>"
+                                                           target="_blank"
+                                                           class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                                            <i class="fas fa-download mr-2"></i>Muat Turun
+                                                        </a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="p-4 bg-gray-50 rounded-lg text-center text-gray-500">
+                                            <i class="fas fa-folder text-gray-400 text-2xl mb-2"></i>
+                                            <p class="text-sm">Tiada dokumen unit aduan dalaman</p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Borang Unit Aset -->
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                                        <i class="fas fa-clipboard-check text-green-600 mr-2"></i>
+                                        Borang Unit Aset
+                                    </h4>
+                                    <?php if (!empty($borang_aset) && (!empty($borang_aset['dokumen_path']) || !empty($borang_aset['borang_path']))): ?>
+                                        <?php $borang_path = $borang_aset['dokumen_path'] ?? $borang_aset['borang_path']; ?>
+                                        <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <i class="fas fa-file-pdf text-green-600 text-2xl"></i>
+                                                    <div>
+                                                        <p class="font-medium text-gray-900">Borang Kerosakan Aset</p>
+                                                        <p class="text-xs text-gray-500">
+                                                            <?php if (!empty($borang_aset['created_at'])): ?>
+                                                                Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($borang_aset['created_at'])); ?>
+                                                            <?php endif; ?>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <a href="<?php echo htmlspecialchars($borang_path); ?>"
+                                                   target="_blank"
+                                                   class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                                                    <i class="fas fa-download mr-2"></i>Muat Turun
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="p-4 bg-gray-50 rounded-lg text-center text-gray-500">
+                                            <i class="fas fa-clipboard-check text-gray-400 text-2xl mb-2"></i>
+                                            <p class="text-sm">Tiada borang unit aset</p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Workflow Actions Documents (if any) -->
+                                <?php if (!empty($workflow_actions) && array_filter($workflow_actions, function($a) { return !empty($a['dokumen_path']); })): ?>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                                        <i class="fas fa-stream text-orange-600 mr-2"></i>
+                                        Dokumen Workflow Lain
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <?php foreach ($workflow_actions as $action): ?>
+                                            <?php if (!empty($action['dokumen_path'])): ?>
+                                            <div class="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex items-center space-x-3">
+                                                        <i class="fas fa-file-pdf text-orange-600 text-2xl"></i>
+                                                        <div>
+                                                            <p class="font-medium text-gray-900"><?php echo htmlspecialchars($action['action_type'] ?? 'Dokumen Workflow'); ?></p>
+                                                            <p class="text-xs text-gray-500">
+                                                                <?php if (!empty($action['created_at'])): ?>
+                                                                    <?php echo date('d/m/Y H:i', strtotime($action['created_at'])); ?>
+                                                                <?php endif; ?>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <a href="<?php echo htmlspecialchars($action['dokumen_path']); ?>"
+                                                       target="_blank"
+                                                       class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
+                                                        <i class="fas fa-download mr-2"></i>Muat Turun
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
                                 <?php endif; ?>
-
-                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                    <i class="fas fa-file-alt mr-2"></i>Dokumen Aduan
-                                </button>
-                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                    <i class="fas fa-file-alt mr-2"></i>Dokumen Unit Aduan Dalaman
-                                </button>
-                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                    <i class="fas fa-file-alt mr-2"></i>Borang Unit Aset
-                                </button>
                             </div>
-
-                            <?php if (empty($workflow_actions) || !array_filter($workflow_actions, function($a) { return !empty($a['dokumen_path']); })): ?>
-                            <div class="text-center py-8 text-gray-500">
-                                <i class="fas fa-folder-open text-4xl mb-2"></i>
-                                <p>Tiada dokumen/laporan untuk aduan ini</p>
-                            </div>
-                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
