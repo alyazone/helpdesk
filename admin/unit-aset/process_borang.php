@@ -143,6 +143,18 @@ try {
                 $user['id'],
                 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih'
             ]);
+
+            // Add to complaint status history for public viewing
+            $stmt = $db->prepare("
+                INSERT INTO complaint_status_history (complaint_id, status, keterangan, created_by)
+                VALUES (?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $complaint_id,
+                'Dalam Semakan Unit Aset',
+                'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih',
+                $user['id']
+            ]);
         }
 
         $db->commit();
@@ -188,6 +200,18 @@ try {
             'dimajukan_pegawai_pelulus',
             $user['id'],
             'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan'
+        ]);
+
+        // Add to complaint status history for public viewing
+        $stmt = $db->prepare("
+            INSERT INTO complaint_status_history (complaint_id, status, keterangan, created_by)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $complaint_id,
+            'Dimajukan ke Pegawai Pelulus',
+            'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan',
+            $user['id']
         ]);
 
         $db->commit();

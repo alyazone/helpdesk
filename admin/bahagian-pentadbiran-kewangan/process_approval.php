@@ -115,6 +115,21 @@ try {
         $action_label . ' oleh ' . $keputusan_nama . ' - ' . $keputusan_ulasan
     ]);
 
+    // Add to complaint status history for public viewing
+    $status_message = $keputusan_status === 'diluluskan'
+        ? 'Diluluskan oleh Pegawai Pelulus'
+        : 'Ditolak oleh Pegawai Pelulus';
+    $stmt = $db->prepare("
+        INSERT INTO complaint_status_history (complaint_id, status, keterangan, created_by)
+        VALUES (?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $complaint_id,
+        $status_message,
+        $action_label . ' oleh ' . $keputusan_nama . '. Ulasan: ' . $keputusan_ulasan,
+        $user['id']
+    ]);
+
     $db->commit();
 
     echo json_encode([
