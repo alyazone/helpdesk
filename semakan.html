@@ -101,6 +101,37 @@
         .progress-bar {
             transition: width 1s ease-out;
         }
+
+        .border-3 {
+            border-width: 3px;
+        }
+
+        .animate-pulse-once {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .mandatory-rating-btn {
+            text-align: center;
+        }
+
+        .mandatory-rating-btn:disabled {
+            cursor: not-allowed !important;
+            opacity: 0.6 !important;
+        }
+
+        body.modal-open {
+            overflow: hidden !important;
+            pointer-events: none;
+        }
+
+        body.modal-open #mandatoryFeedbackModal {
+            pointer-events: auto;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -980,6 +1011,228 @@
                 alert('Ralat sambungan. Sila cuba lagi.\n\nButiran: ' + error.message);
             }
         }
+
+        // Global variable to store complaint requiring mandatory feedback
+        let mandatoryFeedbackComplaint = null;
+
+        // Check for completed complaints without ratings and show mandatory feedback
+        function checkMandatoryFeedback(complaints) {
+            console.log('Checking for mandatory feedback...', complaints);
+
+            // Find the first completed complaint without a rating
+            // Check both status and workflow_status fields, and also check current_status_label
+            const complaintNeedingFeedback = complaints.find(c => {
+                const isCompleted = c.status === 'selesai' ||
+                                   c.workflow_status === 'selesai' ||
+                                   (c.current_status_label && c.current_status_label.toLowerCase().includes('selesai'));
+                const hasNoRating = !c.rating;
+
+                console.log(`Complaint ${c.ticket_number}: status=${c.status}, workflow_status=${c.workflow_status}, current_status_label=${c.current_status_label}, rating=${c.rating}, isCompleted=${isCompleted}, hasNoRating=${hasNoRating}`);
+
+                return isCompleted && hasNoRating;
+            });
+
+            if (complaintNeedingFeedback) {
+                console.log('Found complaint needing feedback:', complaintNeedingFeedback);
+                mandatoryFeedbackComplaint = complaintNeedingFeedback;
+                showMandatoryFeedbackModal();
+            } else {
+                console.log('No complaints need feedback');
+            }
+        }
+
+        // Show mandatory feedback modal
+        function showMandatoryFeedbackModal() {
+            if (!mandatoryFeedbackComplaint) return;
+
+            console.log('Showing mandatory feedback modal for complaint:', mandatoryFeedbackComplaint);
+
+            const modal = document.getElementById('mandatoryFeedbackModal');
+            document.getElementById('mandatoryFeedbackTicket').textContent =
+                mandatoryFeedbackComplaint.ticket_number;
+            document.getElementById('mandatoryFeedbackTitle').textContent =
+                mandatoryFeedbackComplaint.perkara;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Prevent ESC key from closing the modal
+            modal.dataset.mandatory = 'true';
+
+            // Add a class to body to prevent interaction with background
+            document.body.classList.add('modal-open');
+
+            console.log('Mandatory feedback modal is now visible');
+        }
+
+        // Close mandatory feedback modal (only after rating is submitted)
+        function closeMandatoryFeedbackModal() {
+            console.log('Closing mandatory feedback modal');
+            const modal = document.getElementById('mandatoryFeedbackModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            document.body.classList.remove('modal-open');
+            modal.dataset.mandatory = 'false';
+            mandatoryFeedbackComplaint = null;
+        }
+
+        // Submit mandatory rating
+        async function submitMandatoryRating(rating) {
+            if (!mandatoryFeedbackComplaint) {
+                alert('Ralat: Tiada aduan dipilih');
+                return;
+            }
+
+            const complaintId = mandatoryFeedbackComplaint.id;
+
+            // Disable all rating buttons to prevent double submission
+            const buttons = document.querySelectorAll('.mandatory-rating-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                btn.style.cursor = 'not-allowed';
+            });
+
+            try {
+                console.log('Submitting mandatory rating:', rating, 'for complaint:', complaintId);
+
+                const response = await fetch('api/submit_rating.php', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        complaint_id: complaintId,
+                        rating: rating
+                    })
+                });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP error:', response.status, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    console.error('Response was:', responseText);
+                    throw new Error('Ralat: Respons tidak sah dari server');
+                }
+
+                console.log('Parsed result:', result);
+
+                if (result.success) {
+                    // Show success message
+                    const ratingLabels = {
+                        'cemerlang': 'Cemerlang',
+                        'baik': 'Baik',
+                        'memuaskan': 'Memuaskan',
+                        'tidak_memuaskan': 'Tidak Memuaskan'
+                    };
+
+                    // Update the modal content to show success
+                    document.getElementById('mandatoryFeedbackContent').innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+                                <i class="fas fa-check-circle text-green-600 text-5xl"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-gray-800 mb-3">Terima Kasih!</h4>
+                            <p class="text-gray-600 mb-6">Penilaian anda <span class="font-bold text-purple-600">"${ratingLabels[rating]}"</span> telah berjaya direkodkan.</p>
+                            <button onclick="completeMandatoryFeedback()" class="btn-primary text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition">
+                                <i class="fas fa-check mr-2"></i>
+                                Teruskan
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    console.error('API error:', result.message);
+                    throw new Error(result.message || 'Gagal menghantar penilaian');
+                }
+            } catch (error) {
+                console.error('Rating submission error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.\n\nButiran: ' + error.message);
+
+                // Re-enable buttons on error
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                });
+            }
+        }
+
+        // Complete mandatory feedback and reload complaints
+        async function completeMandatoryFeedback() {
+            closeMandatoryFeedbackModal();
+
+            // Reload the complaints list to show updated data
+            if (currentUser && currentUser.email) {
+                await autoLoadComplaints();
+            } else {
+                // For non-logged in users, reload using the email from the complaint
+                const email = mandatoryFeedbackComplaint.email;
+                if (email) {
+                    try {
+                        const response = await fetch(`api/check_status.php?email=${encodeURIComponent(email)}`, {
+                            credentials: 'same-origin'
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            showStatusPage(result.data);
+                        }
+                    } catch (error) {
+                        console.error('Error reloading complaints:', error);
+                    }
+                }
+            }
+        }
+
+        // Prevent closing mandatory feedback modal by clicking outside
+        document.getElementById('mandatoryFeedbackModal').addEventListener('click', function(e) {
+            // If clicking on the backdrop (not the content), show alert that feedback is required
+            if (e.target === this && this.dataset.mandatory === 'true') {
+                console.log('User tried to close mandatory feedback modal by clicking outside');
+                e.preventDefault();
+                e.stopPropagation();
+                // Optional: Show a gentle reminder
+                const content = document.querySelector('#mandatoryFeedbackModal .rounded-2xl');
+                if (content) {
+                    content.classList.add('animate-pulse-once');
+                    setTimeout(() => {
+                        content.classList.remove('animate-pulse-once');
+                        void content.offsetWidth; // Force reflow
+                    }, 500);
+                }
+            }
+        });
+
+        // Prevent ESC key from closing mandatory feedback modal
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('mandatoryFeedbackModal');
+            if (e.key === 'Escape' && modal && !modal.classList.contains('hidden') && modal.dataset.mandatory === 'true') {
+                console.log('User tried to close mandatory feedback modal with ESC key');
+                e.preventDefault();
+                e.stopPropagation();
+                // Pulse animation to remind user
+                const content = document.querySelector('#mandatoryFeedbackModal .rounded-2xl');
+                if (content) {
+                    content.classList.add('animate-pulse-once');
+                    setTimeout(() => {
+                        content.classList.remove('animate-pulse-once');
+                        void content.offsetWidth; // Force reflow
+                    }, 500);
+                }
+            }
+        });
 
         // Close modal when clicking outside
         document.getElementById('complaintModal').addEventListener('click', function(e) {
