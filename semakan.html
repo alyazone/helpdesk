@@ -393,7 +393,7 @@
                     <p class="text-gray-700 font-semibold" id="mandatoryFeedbackTitle"></p>
                 </div>
 
-                <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-6 mb-6">
+                <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-6 mb-6" id="mandatoryFeedbackInfo">
                     <div class="flex items-start space-x-3">
                         <i class="fas fa-info-circle text-purple-600 text-xl mt-1"></i>
                         <div>
@@ -1091,14 +1091,15 @@
 
         // Global variable to store complaint requiring mandatory feedback
         let mandatoryFeedbackComplaint = null;
+        let totalComplaintsNeedingFeedback = 0;
+        let currentFeedbackIndex = 0;
 
         // Check for completed complaints without ratings and show mandatory feedback
         function checkMandatoryFeedback(complaints) {
             console.log('Checking for mandatory feedback...', complaints);
 
-            // Find the first completed complaint without a rating
-            // Check both status and workflow_status fields, and also check current_status_label
-            const complaintNeedingFeedback = complaints.find(c => {
+            // Find ALL completed complaints without ratings
+            const complaintsNeedingFeedback = complaints.filter(c => {
                 const isCompleted = c.status === 'selesai' ||
                                    c.workflow_status === 'selesai' ||
                                    (c.current_status_label && c.current_status_label.toLowerCase().includes('selesai'));
@@ -1109,12 +1110,17 @@
                 return isCompleted && hasNoRating;
             });
 
-            if (complaintNeedingFeedback) {
-                console.log('Found complaint needing feedback:', complaintNeedingFeedback);
-                mandatoryFeedbackComplaint = complaintNeedingFeedback;
+            totalComplaintsNeedingFeedback = complaintsNeedingFeedback.length;
+
+            if (complaintsNeedingFeedback.length > 0) {
+                console.log(`Found ${totalComplaintsNeedingFeedback} complaints needing feedback`);
+                mandatoryFeedbackComplaint = complaintsNeedingFeedback[0]; // Take the first one
+                currentFeedbackIndex = 1; // We're showing the first complaint (1-indexed)
                 showMandatoryFeedbackModal();
             } else {
                 console.log('No complaints need feedback');
+                totalComplaintsNeedingFeedback = 0;
+                currentFeedbackIndex = 0;
             }
         }
 
@@ -1129,6 +1135,41 @@
                 mandatoryFeedbackComplaint.ticket_number;
             document.getElementById('mandatoryFeedbackTitle').textContent =
                 mandatoryFeedbackComplaint.perkara;
+
+            // Update the header if there are multiple complaints
+            const modalHeader = modal.querySelector('.gradient-bg h3');
+            if (totalComplaintsNeedingFeedback > 1) {
+                modalHeader.innerHTML = `Penilaian Diperlukan <span class="text-yellow-300 font-bold ml-2">(${currentFeedbackIndex}/${totalComplaintsNeedingFeedback})</span>`;
+
+                // Update info box to show multiple complaints message
+                const infoBox = document.getElementById('mandatoryFeedbackInfo');
+                infoBox.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-info-circle text-purple-600 text-xl mt-1"></i>
+                        <div>
+                            <p class="text-purple-900 font-semibold mb-2">Penilaian anda amat penting!</p>
+                            <p class="text-purple-800 text-sm mb-2">Sila berikan penilaian terhadap penyelesaian aduan ini. Maklum balas anda membantu kami meningkatkan kualiti perkhidmatan.</p>
+                            <p class="text-purple-800 text-sm font-semibold mt-3">
+                                <i class="fas fa-tasks mr-2"></i>Anda mempunyai ${totalComplaintsNeedingFeedback} aduan selesai yang memerlukan penilaian. Ini adalah aduan ke-${currentFeedbackIndex}.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                modalHeader.textContent = 'Penilaian Diperlukan';
+
+                // Reset info box to original message
+                const infoBox = document.getElementById('mandatoryFeedbackInfo');
+                infoBox.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-info-circle text-purple-600 text-xl mt-1"></i>
+                        <div>
+                            <p class="text-purple-900 font-semibold mb-2">Penilaian anda amat penting!</p>
+                            <p class="text-purple-800 text-sm">Sila berikan penilaian terhadap penyelesaian aduan ini. Maklum balas anda membantu kami meningkatkan kualiti perkhidmatan.</p>
+                        </div>
+                    </div>
+                `;
+            }
 
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -1216,20 +1257,39 @@
                         'tidak_memuaskan': 'Tidak Memuaskan'
                     };
 
+                    // Determine if there are more complaints to rate
+                    const remainingComplaints = totalComplaintsNeedingFeedback - currentFeedbackIndex;
+                    const hasMoreComplaints = remainingComplaints > 0;
+
                     // Update the modal content to show success
-                    document.getElementById('mandatoryFeedbackContent').innerHTML = `
+                    let successMessage = `
                         <div class="text-center py-8">
                             <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
                                 <i class="fas fa-check-circle text-green-600 text-5xl"></i>
                             </div>
                             <h4 class="text-2xl font-bold text-gray-800 mb-3">Terima Kasih!</h4>
-                            <p class="text-gray-600 mb-6">Penilaian anda <span class="font-bold text-purple-600">"${ratingLabels[rating]}"</span> telah berjaya direkodkan.</p>
+                            <p class="text-gray-600 mb-3">Penilaian anda <span class="font-bold text-purple-600">"${ratingLabels[rating]}"</span> telah berjaya direkodkan.</p>
+                    `;
+
+                    if (hasMoreComplaints) {
+                        successMessage += `
+                            <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-6 mt-4">
+                                <p class="text-blue-900 font-semibold text-sm">
+                                    <i class="fas fa-info-circle mr-2"></i>Anda masih mempunyai ${remainingComplaints} aduan lagi yang memerlukan penilaian.
+                                </p>
+                            </div>
+                        `;
+                    }
+
+                    successMessage += `
                             <button onclick="completeMandatoryFeedback()" class="btn-primary text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition">
-                                <i class="fas fa-check mr-2"></i>
-                                Teruskan
+                                <i class="fas fa-${hasMoreComplaints ? 'arrow-right' : 'check'} mr-2"></i>
+                                ${hasMoreComplaints ? 'Seterusnya' : 'Teruskan'}
                             </button>
                         </div>
                     `;
+
+                    document.getElementById('mandatoryFeedbackContent').innerHTML = successMessage;
                 } else {
                     console.error('API error:', result.message);
                     throw new Error(result.message || 'Gagal menghantar penilaian');
