@@ -186,10 +186,10 @@ $user = getUser();
                                        class="text-purple-600 hover:text-purple-800 mr-3" title="Lihat">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="edit_complaint.php?id=<?php echo $complaint['id']; ?>"
-                                       class="text-blue-600 hover:text-blue-800" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    <button onclick="deleteComplaint(<?php echo $complaint['id']; ?>, '<?php echo htmlspecialchars($complaint['ticket_number']); ?>')"
+                                       class="text-red-600 hover:text-red-800" title="Padam">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -199,5 +199,34 @@ $user = getUser();
             </div>
         </div>
     </div>
+
+    <script>
+        async function deleteComplaint(complaintId, ticketNumber) {
+            if (!confirm(`Adakah anda pasti mahu memadam aduan "${ticketNumber}"?\n\nAmaran: Tindakan ini tidak boleh dibatalkan!`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('../api/admin/delete_complaint.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `complaint_id=${complaintId}`
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message);
+                    window.location.reload();
+                } else {
+                    alert('Ralat: ' + result.message);
+                }
+            } catch (error) {
+                alert('Ralat: ' + error.message);
+            }
+        }
+    </script>
 </body>
 </html>

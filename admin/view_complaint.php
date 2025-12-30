@@ -96,10 +96,10 @@ $user = getUser();
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Action Buttons -->
         <div class="mb-6 flex gap-4 no-print">
-            <a href="edit_complaint.php?id=<?php echo $complaint['id']; ?>"
-               class="px-6 py-3 gradient-bg text-white rounded-lg hover:opacity-90 transition">
-                <i class="fas fa-edit mr-2"></i>Edit Aduan
-            </a>
+            <button onclick="deleteComplaint(<?php echo $complaint['id']; ?>, '<?php echo htmlspecialchars($complaint['ticket_number']); ?>')"
+               class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                <i class="fas fa-trash mr-2"></i>Padam Aduan
+            </button>
             <button onclick="window.print()" class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
                 <i class="fas fa-print mr-2"></i>Cetak
             </button>
@@ -390,5 +390,39 @@ $user = getUser();
             </div>
         </div>
     </div>
+
+    <script>
+        async function deleteComplaint(complaintId, ticketNumber) {
+            if (!confirm(`Adakah anda pasti mahu memadam aduan "${ticketNumber}"?\n\nAmaran: Tindakan ini tidak boleh dibatalkan dan semua data berkaitan (lampiran, sejarah status) akan turut dipadam!`)) {
+                return;
+            }
+
+            // Double confirmation for critical action
+            if (!confirm('Pengesahan terakhir: Padam aduan ini secara kekal?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('../api/admin/delete_complaint.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `complaint_id=${complaintId}`
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message);
+                    window.location.href = 'complaints.php';
+                } else {
+                    alert('Ralat: ' + result.message);
+                }
+            } catch (error) {
+                alert('Ralat: ' + error.message);
+            }
+        }
+    </script>
 </body>
 </html>
