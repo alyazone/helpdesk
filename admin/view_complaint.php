@@ -488,29 +488,35 @@ $user = getUser();
                             <h3 class="text-xl font-bold text-gray-800 mb-6">Dokumen/Laporan</h3>
 
                             <div class="space-y-6">
-                                <!-- Dokumen Aduan -->
+                                <!-- Dokumen Aduan (from attachments) -->
                                 <div>
                                     <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
                                         <i class="fas fa-file-alt text-blue-600 mr-2"></i>
-                                        Dokumen Aduan
+                                        Dokumen Aduan (Lampiran Asal)
                                     </h4>
-                                    <?php if (!empty($complaint['dokumen_path']) || !empty($complaint['document_path'])): ?>
-                                        <?php $doc_path = $complaint['dokumen_path'] ?? $complaint['document_path']; ?>
-                                        <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex items-center space-x-3">
-                                                    <i class="fas fa-file-pdf text-blue-600 text-2xl"></i>
-                                                    <div>
-                                                        <p class="font-medium text-gray-900">Dokumen Aduan Asal</p>
-                                                        <p class="text-xs text-gray-500">Dihantar pada <?php echo date('d/m/Y H:i', strtotime($complaint['created_at'])); ?></p>
+                                    <?php if (!empty($attachments)): ?>
+                                        <div class="space-y-3">
+                                            <?php foreach ($attachments as $attachment): ?>
+                                            <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex items-center space-x-3">
+                                                        <i class="fas fa-file text-blue-600 text-2xl"></i>
+                                                        <div>
+                                                            <p class="font-medium text-gray-900"><?php echo htmlspecialchars($attachment['file_original_name']); ?></p>
+                                                            <p class="text-xs text-gray-500">
+                                                                Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($attachment['uploaded_at'])); ?> •
+                                                                <?php echo formatFileSize($attachment['file_size']); ?>
+                                                            </p>
+                                                        </div>
                                                     </div>
+                                                    <a href="<?php echo htmlspecialchars($attachment['file_path']); ?>"
+                                                       target="_blank"
+                                                       class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                                        <i class="fas fa-download mr-2"></i>Muat Turun
+                                                    </a>
                                                 </div>
-                                                <a href="<?php echo htmlspecialchars($doc_path); ?>"
-                                                   target="_blank"
-                                                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                                    <i class="fas fa-download mr-2"></i>Muat Turun
-                                                </a>
                                             </div>
+                                            <?php endforeach; ?>
                                         </div>
                                     <?php else: ?>
                                         <div class="p-4 bg-gray-50 rounded-lg text-center text-gray-500">
@@ -534,27 +540,20 @@ $user = getUser();
                                                     <div class="flex items-center space-x-3">
                                                         <i class="fas fa-file-pdf text-purple-600 text-2xl"></i>
                                                         <div>
-                                                            <p class="font-medium text-gray-900">
-                                                                <?php echo htmlspecialchars($dokumen['nama_dokumen'] ?? $dokumen['document_name'] ?? 'Dokumen Unit Aduan'); ?>
-                                                            </p>
+                                                            <p class="font-medium text-gray-900">Dokumen Unit Aduan</p>
                                                             <p class="text-xs text-gray-500">
-                                                                <?php if (!empty($dokumen['created_at'])): ?>
-                                                                    Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($dokumen['created_at'])); ?>
-                                                                <?php endif; ?>
-                                                                <?php if (!empty($dokumen['created_by'])): ?>
-                                                                    oleh <?php echo htmlspecialchars($dokumen['created_by']); ?>
+                                                                Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($dokumen['created_at'])); ?>
+                                                                <?php if (!empty($dokumen['no_rujukan_fail'])): ?>
+                                                                • Rujukan: <?php echo htmlspecialchars($dokumen['no_rujukan_fail']); ?>
                                                                 <?php endif; ?>
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <?php if (!empty($dokumen['dokumen_path']) || !empty($dokumen['document_path'])): ?>
-                                                        <?php $dok_path = $dokumen['dokumen_path'] ?? $dokumen['document_path']; ?>
-                                                        <a href="<?php echo htmlspecialchars($dok_path); ?>"
-                                                           target="_blank"
-                                                           class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
-                                                            <i class="fas fa-download mr-2"></i>Muat Turun
-                                                        </a>
-                                                    <?php endif; ?>
+                                                    <a href="../unit-aduan-dalaman/generate_dokumen.php?id=<?php echo $complaint_id; ?>"
+                                                       target="_blank"
+                                                       class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                                        <i class="fas fa-eye mr-2"></i>Papar
+                                                    </a>
                                                 </div>
                                             </div>
                                             <?php endforeach; ?>
@@ -573,8 +572,7 @@ $user = getUser();
                                         <i class="fas fa-clipboard-check text-green-600 mr-2"></i>
                                         Borang Unit Aset
                                     </h4>
-                                    <?php if (!empty($borang_aset) && (!empty($borang_aset['dokumen_path']) || !empty($borang_aset['borang_path']))): ?>
-                                        <?php $borang_path = $borang_aset['dokumen_path'] ?? $borang_aset['borang_path']; ?>
+                                    <?php if (!empty($borang_aset)): ?>
                                         <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                                             <div class="flex items-center justify-between">
                                                 <div class="flex items-center space-x-3">
@@ -582,16 +580,14 @@ $user = getUser();
                                                     <div>
                                                         <p class="font-medium text-gray-900">Borang Kerosakan Aset</p>
                                                         <p class="text-xs text-gray-500">
-                                                            <?php if (!empty($borang_aset['created_at'])): ?>
-                                                                Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($borang_aset['created_at'])); ?>
-                                                            <?php endif; ?>
+                                                            Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($borang_aset['created_at'])); ?>
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <a href="<?php echo htmlspecialchars($borang_path); ?>"
+                                                <a href="../unit-aset/generate_borang.php?id=<?php echo $complaint_id; ?>"
                                                    target="_blank"
                                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                                                    <i class="fas fa-download mr-2"></i>Muat Turun
+                                                    <i class="fas fa-eye mr-2"></i>Papar
                                                 </a>
                                             </div>
                                         </div>
