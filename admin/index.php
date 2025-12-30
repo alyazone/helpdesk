@@ -17,17 +17,35 @@ $db = getDB();
 $stmt = $db->query("SELECT COUNT(*) as total FROM complaints");
 $total_complaints = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE status = 'pending'");
-$pending = $stmt->fetch()['total'];
+// Workflow status statistics
+$stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE workflow_status = 'baru'");
+$stat_baru = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE status IN ('dalam_pemeriksaan', 'sedang_dibaiki')");
-$in_progress = $stmt->fetch()['total'];
+$stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE workflow_status = 'disahkan_unit_aduan'");
+$stat_unit_aduan = $stmt->fetch()['total'];
+
+$stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE workflow_status IN ('dimajukan_unit_aset', 'dalam_semakan_unit_aset')");
+$stat_unit_aset = $stmt->fetch()['total'];
+
+$stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE workflow_status IN ('dimajukan_pegawai_pelulus', 'diluluskan') AND status != 'selesai'");
+$stat_diluluskan = $stmt->fetch()['total'];
 
 $stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE status = 'selesai'");
-$completed = $stmt->fetch()['total'];
+$stat_selesai = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM users WHERE role = 'user'");
-$total_users = $stmt->fetch()['total'];
+$stmt = $db->query("SELECT COUNT(*) as total FROM complaints WHERE status = 'dibatalkan'");
+$stat_dibatalkan = $stmt->fetch()['total'];
+
+// Complaint types breakdown for chart
+$stmt = $db->query("
+    SELECT perihal_kerosakan, COUNT(*) as count
+    FROM complaints
+    WHERE perihal_kerosakan IS NOT NULL AND perihal_kerosakan != ''
+    GROUP BY perihal_kerosakan
+    ORDER BY count DESC
+    LIMIT 15
+");
+$complaint_categories = $stmt->fetchAll();
 
 // Get recent complaints
 $stmt = $db->query("
@@ -49,6 +67,7 @@ $user = getUser();
     <title>Admin Dashboard - Sistem Helpdesk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Inter', sans-serif; }
@@ -89,63 +108,148 @@ $user = getUser();
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 mb-1">Jumlah Aduan</p>
-                        <p class="text-3xl font-bold text-gray-800"><?php echo $total_complaints; ?></p>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <!-- Baru -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-exclamation text-pink-600 text-2xl"></i>
                     </div>
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                    <p class="text-4xl font-bold text-gray-800 mb-2"><?php echo $stat_baru; ?></p>
+                    <p class="text-sm text-gray-600 font-medium">Baru</p>
+                </div>
+            </div>
+
+            <!-- Disahkan Unit Aduan -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-thumbs-up text-blue-600 text-2xl"></i>
+                    </div>
+                    <p class="text-4xl font-bold text-gray-800 mb-2"><?php echo $stat_unit_aduan; ?></p>
+                    <p class="text-sm text-gray-600 font-medium">Disahkan Unit Aduan</p>
+                </div>
+            </div>
+
+            <!-- Disahkan Unit Aset -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-check text-yellow-600 text-2xl"></i>
+                    </div>
+                    <p class="text-4xl font-bold text-gray-800 mb-2"><?php echo $stat_unit_aset; ?></p>
+                    <p class="text-sm text-gray-600 font-medium">Disahkan Unit Aset</p>
+                </div>
+            </div>
+
+            <!-- Diluluskan/Dalam Proses -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-cog text-cyan-600 text-2xl"></i>
+                    </div>
+                    <p class="text-4xl font-bold text-gray-800 mb-2"><?php echo $stat_diluluskan; ?></p>
+                    <p class="text-sm text-gray-600 font-medium">Diluluskan / Dalam Proses</p>
+                </div>
+            </div>
+
+            <!-- Diselesaikan -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                    </div>
+                    <p class="text-4xl font-bold text-gray-800 mb-2"><?php echo $stat_selesai; ?></p>
+                    <p class="text-sm text-gray-600 font-medium">Diselesaikan</p>
+                </div>
+            </div>
+
+            <!-- Dibatalkan -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-times-circle text-red-600 text-2xl"></i>
+                    </div>
+                    <p class="text-4xl font-bold text-gray-800 mb-2"><?php echo $stat_dibatalkan; ?></p>
+                    <p class="text-sm text-gray-600 font-medium">Dibatalkan</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Chart and Recent Complaints -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Complaint Categories Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Statistik Aduan/Cadangan</h2>
+                <div class="flex items-center justify-center">
+                    <div style="max-width: 400px; width: 100%;">
+                        <canvas id="complaintChart"></canvas>
+                    </div>
+                    <div class="ml-8">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600 mb-1">Jumlah Aduan</p>
+                            <p class="text-5xl font-bold text-purple-600"><?php echo $total_complaints; ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Quick Stats -->
             <div class="bg-white rounded-xl shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 mb-1">Pending</p>
-                        <p class="text-3xl font-bold text-gray-800"><?php echo $pending; ?></p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Ringkasan Statistik</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-file-alt text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Jumlah Aduan</p>
+                                <p class="text-2xl font-bold text-gray-800"><?php echo $total_complaints; ?></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-clock text-gray-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
 
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 mb-1">Dalam Proses</p>
-                        <p class="text-3xl font-bold text-gray-800"><?php echo $in_progress; ?></p>
+                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-double text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Diselesaikan</p>
+                                <p class="text-2xl font-bold text-gray-800"><?php echo $stat_selesai; ?></p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-green-700 font-semibold">
+                                <?php echo $total_complaints > 0 ? round(($stat_selesai / $total_complaints) * 100, 1) : 0; ?>%
+                            </p>
+                            <p class="text-xs text-gray-500">Kadar Penyelesaian</p>
+                        </div>
                     </div>
-                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-cog text-yellow-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
 
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 mb-1">Selesai</p>
-                        <p class="text-3xl font-bold text-gray-800"><?php echo $completed; ?></p>
+                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-hourglass-half text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Dalam Tindakan</p>
+                                <p class="text-2xl font-bold text-gray-800"><?php echo $stat_baru + $stat_unit_aduan + $stat_unit_aset + $stat_diluluskan; ?></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
 
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 mb-1">Pengguna</p>
-                        <p class="text-3xl font-bold text-gray-800"><?php echo $total_users; ?></p>
-                    </div>
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-users text-purple-600 text-xl"></i>
+                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-ban text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Dibatalkan</p>
+                                <p class="text-2xl font-bold text-gray-800"><?php echo $stat_dibatalkan; ?></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,5 +318,61 @@ $user = getUser();
             </div>
         </div>
     </div>
+
+    <script>
+        // Complaint Categories Chart
+        const ctx = document.getElementById('complaintChart');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    <?php foreach ($complaint_categories as $cat): ?>
+                        '<?php echo addslashes(ucwords(str_replace('_', ' ', $cat['perihal_kerosakan']))); ?>',
+                    <?php endforeach; ?>
+                ],
+                datasets: [{
+                    data: [
+                        <?php foreach ($complaint_categories as $cat): ?>
+                            <?php echo $cat['count']; ?>,
+                        <?php endforeach; ?>
+                    ],
+                    backgroundColor: [
+                        '#8B5CF6', '#EC4899', '#10B981', '#F59E0B', '#3B82F6',
+                        '#EF4444', '#14B8A6', '#F97316', '#6366F1', '#84CC16',
+                        '#06B6D4', '#A855F7', '#22C55E', '#F43F5E', '#0EA5E9'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 11
+                            },
+                            padding: 10
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
