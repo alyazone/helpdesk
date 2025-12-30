@@ -54,6 +54,11 @@ $stmt = $db->prepare("SELECT * FROM attachments WHERE complaint_id = ? ORDER BY 
 $stmt->execute([$complaint_id]);
 $attachments = $stmt->fetchAll();
 
+// Get Unit IT officers (for assignment if approved)
+$stmt = $db->prepare("SELECT * FROM unit_it_sokongan_officers WHERE status = 'aktif' ORDER BY nama ASC");
+$stmt->execute();
+$unit_it_officers = $stmt->fetchAll();
+
 $user = getUser();
 $can_edit = in_array($complaint['workflow_status'], ['dimajukan_pegawai_pelulus']);
 ?>
@@ -273,6 +278,29 @@ $can_edit = in_array($complaint['workflow_status'], ['dimajukan_pegawai_pelulus'
                                     </span>
                                 </label>
                             </div>
+                        </div>
+
+                        <!-- Unit IT Officer Assignment (shown only when "Diluluskan" is selected) -->
+                        <div id="unitItOfficerSection" style="display: none;">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Pilih Pegawai Unit IT / Sokongan <span class="text-red-500">*</span>
+                            </label>
+                            <select name="unit_it_officer_id" id="unitItOfficer"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                                <option value="">-- Pilih Pegawai --</option>
+                                <?php foreach ($unit_it_officers as $officer): ?>
+                                <option value="<?php echo $officer['id']; ?>">
+                                    <?php echo htmlspecialchars($officer['nama']); ?>
+                                    <?php if (!empty($officer['jawatan'])): ?>
+                                        - <?php echo htmlspecialchars($officer['jawatan']); ?>
+                                    <?php endif; ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Pegawai yang dipilih akan menerima tugasan untuk melaksanakan tindakan yang diperlukan
+                            </p>
                         </div>
 
                         <!-- Comments/Remarks -->
@@ -507,15 +535,41 @@ $can_edit = in_array($complaint['workflow_status'], ['dimajukan_pegawai_pelulus'
     </div>
 
     <script>
+        // Show/hide Unit IT officer section based on decision
+        document.querySelectorAll('input[name="keputusan_status"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const unitItSection = document.getElementById('unitItOfficerSection');
+                const unitItOfficer = document.getElementById('unitItOfficer');
+
+                if (this.value === 'diluluskan') {
+                    unitItSection.style.display = 'block';
+                    unitItOfficer.setAttribute('required', 'required');
+                } else {
+                    unitItSection.style.display = 'none';
+                    unitItOfficer.removeAttribute('required');
+                    unitItOfficer.value = '';
+                }
+            });
+        });
+
         document.getElementById('approvalForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const formData = new FormData(this);
             const keputusan = formData.get('keputusan_status');
 
+            // Validate Unit IT officer if approved
+            if (keputusan === 'diluluskan') {
+                const unitItOfficerId = formData.get('unit_it_officer_id');
+                if (!unitItOfficerId || unitItOfficerId === '') {
+                    alert('Sila pilih Pegawai Unit IT / Sokongan untuk melaksanakan tindakan');
+                    return;
+                }
+            }
+
             // Confirm before submitting
             const confirmMsg = keputusan === 'diluluskan'
-                ? 'Adakah anda pasti untuk MELULUSKAN permohonan ini? Tindakan ini tidak boleh dibatalkan.'
+                ? 'Adakah anda pasti untuk MELULUSKAN permohonan ini? Aduan akan dimajukan kepada Unit IT / Sokongan untuk tindakan.'
                 : 'Adakah anda pasti untuk MENOLAK permohonan ini? Tindakan ini tidak boleh dibatalkan.';
 
             if (!confirm(confirmMsg)) {

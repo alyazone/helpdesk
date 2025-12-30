@@ -149,13 +149,19 @@ function isBahagianPentadbiranKewangan() {
     return isset($_SESSION['role']) && $_SESSION['role'] === 'bahagian_pentadbiran_kewangan';
 }
 
+// Check if user is Unit IT / Sokongan
+function isUnitITSokongan() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'unit_it_sokongan';
+}
+
 // Check if user has any admin role (including unit roles)
 function hasAdminRole() {
     return isset($_SESSION['role']) && in_array($_SESSION['role'], [
         'admin',
         'unit_aduan_dalaman',
         'unit_aset',
-        'bahagian_pentadbiran_kewangan'
+        'bahagian_pentadbiran_kewangan',
+        'unit_it_sokongan'
     ]);
 }
 
