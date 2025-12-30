@@ -22,3 +22,11 @@
 2025-12-30 08:27:44 - Complaint insert executed successfully
 2025-12-30 08:27:44 - Complaint ID: 17
 2025-12-30 08:27:44 - Complaint submitted successfully. ID: 17, Ticket: ADU-2025-391
+2025-12-30 09:57:01 - Complaint submission started
+2025-12-30 09:57:01 - Request method: POST
+2025-12-30 09:57:01 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN TENTANG KEROSAKAN KERUSI","nama":"Amar Maaruf","email":"amar@jpbdselangor.gov.my"}
+2025-12-30 09:57:01 - Database connection successful
+2025-12-30 09:57:01 - Attempting to insert complaint with ticket: ADU-2025-280
+2025-12-30 09:57:01 - Complaint insert executed successfully
+2025-12-30 09:57:01 - Complaint ID: 18
+2025-12-30 09:57:01 - Complaint submitted successfully. ID: 18, Ticket: ADU-2025-280
