@@ -529,7 +529,15 @@
                     'dalam_pemeriksaan': 'bg-blue-100 text-blue-800',
                     'sedang_dibaiki': 'bg-yellow-100 text-yellow-800',
                     'selesai': 'bg-green-100 text-green-800',
-                    'dibatalkan': 'bg-red-100 text-red-800'
+                    'dibatalkan': 'bg-red-100 text-red-800',
+                    // Workflow status colors
+                    'baru': 'bg-gray-100 text-gray-800',
+                    'disahkan_unit_aduan': 'bg-blue-100 text-blue-800',
+                    'dimajukan_unit_aset': 'bg-purple-100 text-purple-800',
+                    'dalam_semakan_unit_aset': 'bg-yellow-100 text-yellow-800',
+                    'dimajukan_pegawai_pelulus': 'bg-indigo-100 text-indigo-800',
+                    'diluluskan': 'bg-green-100 text-green-800',
+                    'ditolak': 'bg-red-100 text-red-800'
                 };
 
                 const statusLabels = {
@@ -537,19 +545,46 @@
                     'dalam_pemeriksaan': 'Dalam Pemeriksaan',
                     'sedang_dibaiki': 'Sedang Dibaiki',
                     'selesai': 'Selesai',
-                    'dibatalkan': 'Dibatalkan'
+                    'dibatalkan': 'Dibatalkan',
+                    // Workflow status labels
+                    'baru': 'Baru',
+                    'disahkan_unit_aduan': 'Disahkan oleh Unit Aduan',
+                    'dimajukan_unit_aset': 'Dimajukan ke Unit Aset',
+                    'dalam_semakan_unit_aset': 'Dalam Semakan Unit Aset',
+                    'dimajukan_pegawai_pelulus': 'Dimajukan ke Pegawai Pelulus',
+                    'diluluskan': 'Diluluskan',
+                    'ditolak': 'Ditolak'
                 };
 
                 const complaintDiv = document.createElement('div');
                 complaintDiv.className = 'border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition cursor-pointer';
                 complaintDiv.onclick = () => showComplaintDetails(complaint.id);
 
+                // Get the display status - use current_status_label if available, otherwise workflow_status, otherwise status
+                const displayStatus = complaint.current_status_label || complaint.workflow_status || complaint.status;
+                const statusKey = complaint.workflow_status || complaint.status;
+
+                // Determine color based on status key or use default
+                let statusColor = statusColors[statusKey] || 'bg-blue-100 text-blue-800';
+
+                // If current_status_label contains certain keywords, apply appropriate colors
+                const displayStatusLower = displayStatus.toLowerCase();
+                if (displayStatusLower.includes('dimajukan') || displayStatusLower.includes('majukan')) {
+                    statusColor = 'bg-purple-100 text-purple-800';
+                } else if (displayStatusLower.includes('ditolak') || displayStatusLower.includes('tolak')) {
+                    statusColor = 'bg-red-100 text-red-800';
+                } else if (displayStatusLower.includes('diluluskan') || displayStatusLower.includes('lulus')) {
+                    statusColor = 'bg-green-100 text-green-800';
+                } else if (displayStatusLower.includes('selesai')) {
+                    statusColor = 'bg-green-100 text-green-800';
+                }
+
                 let complaintHTML = `
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex-1">
                             <div class="flex items-center space-x-3 mb-2">
-                                <span class="px-3 py-1 ${statusColors[complaint.status]} rounded-full text-sm font-semibold">
-                                    ${statusLabels[complaint.status]}
+                                <span class="px-3 py-1 ${statusColor} rounded-full text-sm font-semibold">
+                                    ${displayStatus}
                                 </span>
                                 <span class="text-sm text-gray-500">${complaint.ticket_number}</span>
                             </div>
@@ -662,7 +697,15 @@
                         'dalam_pemeriksaan': 'bg-blue-100 text-blue-800',
                         'sedang_dibaiki': 'bg-yellow-100 text-yellow-800',
                         'selesai': 'bg-green-100 text-green-800',
-                        'dibatalkan': 'bg-red-100 text-red-800'
+                        'dibatalkan': 'bg-red-100 text-red-800',
+                        // Workflow status colors
+                        'baru': 'bg-gray-100 text-gray-800',
+                        'disahkan_unit_aduan': 'bg-blue-100 text-blue-800',
+                        'dimajukan_unit_aset': 'bg-purple-100 text-purple-800',
+                        'dalam_semakan_unit_aset': 'bg-yellow-100 text-yellow-800',
+                        'dimajukan_pegawai_pelulus': 'bg-indigo-100 text-indigo-800',
+                        'diluluskan': 'bg-green-100 text-green-800',
+                        'ditolak': 'bg-red-100 text-red-800'
                     };
 
                     const statusLabels = {
@@ -670,7 +713,15 @@
                         'dalam_pemeriksaan': 'Dalam Pemeriksaan',
                         'sedang_dibaiki': 'Sedang Dibaiki',
                         'selesai': 'Selesai',
-                        'dibatalkan': 'Dibatalkan'
+                        'dibatalkan': 'Dibatalkan',
+                        // Workflow status labels
+                        'baru': 'Baru',
+                        'disahkan_unit_aduan': 'Disahkan oleh Unit Aduan',
+                        'dimajukan_unit_aset': 'Dimajukan ke Unit Aset',
+                        'dalam_semakan_unit_aset': 'Dalam Semakan Unit Aset',
+                        'dimajukan_pegawai_pelulus': 'Dimajukan ke Pegawai Pelulus',
+                        'diluluskan': 'Diluluskan',
+                        'ditolak': 'Ditolak'
                     };
 
                     // Build timeline HTML
@@ -700,13 +751,33 @@
                         `;
                     });
 
+                    // Determine the current display status for modal
+                    const modalDisplayStatus = statusHistory.length > 0
+                        ? statusHistory[statusHistory.length - 1].status
+                        : (statusLabels[complaint.workflow_status] || statusLabels[complaint.status] || complaint.status);
+
+                    const modalStatusKey = complaint.workflow_status || complaint.status;
+                    let modalStatusColor = statusColors[modalStatusKey] || 'bg-blue-100 text-blue-800';
+
+                    // Apply color based on status keywords
+                    const modalStatusLower = modalDisplayStatus.toLowerCase();
+                    if (modalStatusLower.includes('dimajukan') || modalStatusLower.includes('majukan')) {
+                        modalStatusColor = 'bg-purple-100 text-purple-800';
+                    } else if (modalStatusLower.includes('ditolak') || modalStatusLower.includes('tolak')) {
+                        modalStatusColor = 'bg-red-100 text-red-800';
+                    } else if (modalStatusLower.includes('diluluskan') || modalStatusLower.includes('lulus')) {
+                        modalStatusColor = 'bg-green-100 text-green-800';
+                    } else if (modalStatusLower.includes('selesai')) {
+                        modalStatusColor = 'bg-green-100 text-green-800';
+                    }
+
                     // Populate modal with dynamic data
                     modalContent.innerHTML = `
                         <!-- Complaint Header -->
                         <div class="mb-6">
                             <div class="flex items-center space-x-3 mb-4">
-                                <span class="px-4 py-2 ${statusColors[complaint.status]} rounded-full text-sm font-semibold">
-                                    ${statusLabels[complaint.status]}
+                                <span class="px-4 py-2 ${modalStatusColor} rounded-full text-sm font-semibold">
+                                    ${modalDisplayStatus}
                                 </span>
                                 <span class="text-gray-500">${complaint.ticket_number}</span>
                             </div>
