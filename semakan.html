@@ -144,20 +144,20 @@
                     <span class="font-semibold text-lg">Sistem Helpdesk</span>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button onclick="window.location.href='v1.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
+                    <button onclick="window.location.href='borang_aduan.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
                         <i class="fas fa-file-alt"></i>
                         <span class="hidden sm:inline">Borang Aduan</span>
                     </button>
                     <div id="userMenu" class="hidden">
                         <div class="flex items-center space-x-3">
-                            <div class="text-right hidden sm:block">
-                                <p class="text-sm font-semibold" id="navUserName"></p>
-                                <p class="text-xs opacity-90" id="navUserEmail"></p>
-                            </div>
                             <button onclick="logout()" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span class="hidden sm:inline">Log Keluar</span>
                             </button>
+                            <div class="text-right hidden sm:block">
+                                <p class="text-sm font-semibold" id="navUserName"></p>
+                                <p class="text-xs opacity-90" id="navUserEmail"></p>
+                            </div>
                         </div>
                     </div>
                     <button id="loginButton" onclick="window.location.href='login.html'" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">
@@ -192,14 +192,14 @@
                     <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-user-check text-white text-2xl"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Kembali!</h2>
-                    <p class="text-gray-600">Berikut adalah senarai aduan anda</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang ke Sistem Helpdesk!</h2>
+                    <p class="text-gray-600">Tiada aduan direkodkan di bawah akaun anda buat masa ini.</p>
                 </div>
 
                 <div class="text-center">
-                    <button onclick="viewMyComplaints()" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center space-x-3 shadow-lg text-lg">
+                    <button onclick="window.location.href='borang_aduan.html'" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center space-x-3 shadow-lg text-lg">
                         <i class="fas fa-list"></i>
-                        <span>Lihat Aduan Saya</span>
+                        <span>Buat Aduan Baharu</span>
                     </button>
                 </div>
 
@@ -260,10 +260,6 @@
         <header class="gradient-bg text-white py-12 shadow-xl">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between">
-                    <button onclick="showSearchPage()" class="flex items-center space-x-2 text-white hover:text-purple-200 transition">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Kembali</span>
-                    </button>
                     <div class="text-center flex-1">
                         <h1 class="text-3xl font-bold">Status Aduan Anda</h1>
                     </div>
@@ -372,71 +368,6 @@
         </div>
     </div>
 
-    <!-- Mandatory Feedback Modal -->
-    <div id="mandatoryFeedbackModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-[60] flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-2xl w-full card-shadow animate-pulse-once">
-            <div class="gradient-bg text-white p-6 rounded-t-2xl">
-                <div class="flex items-center justify-center">
-                    <i class="fas fa-star text-yellow-300 text-3xl mr-3"></i>
-                    <h3 class="text-2xl font-bold">Penilaian Diperlukan</h3>
-                    <i class="fas fa-star text-yellow-300 text-3xl ml-3"></i>
-                </div>
-            </div>
-
-            <div id="mandatoryFeedbackContent" class="p-8">
-                <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-check-circle text-green-600 text-4xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-2">Aduan Anda Telah Selesai!</h4>
-                    <p class="text-gray-600 mb-1" id="mandatoryFeedbackTicket"></p>
-                    <p class="text-gray-700 font-semibold" id="mandatoryFeedbackTitle"></p>
-                </div>
-
-                <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-6 mb-6">
-                    <div class="flex items-start space-x-3">
-                        <i class="fas fa-info-circle text-purple-600 text-xl mt-1"></i>
-                        <div>
-                            <p class="text-purple-900 font-semibold mb-2">Penilaian anda amat penting!</p>
-                            <p class="text-purple-800 text-sm">Sila berikan penilaian terhadap penyelesaian aduan ini. Maklum balas anda membantu kami meningkatkan kualiti perkhidmatan.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <p class="text-center text-lg font-semibold text-gray-700 mb-4">Bagaimanakah penilaian anda?</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="submitMandatoryRating('cemerlang')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-green-500 hover:bg-green-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-star text-yellow-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-green-700">Cemerlang</p>
-                            <p class="text-xs text-gray-500 mt-1">Sangat memuaskan</p>
-                        </button>
-                        <button onclick="submitMandatoryRating('baik')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-thumbs-up text-blue-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-blue-700">Baik</p>
-                            <p class="text-xs text-gray-500 mt-1">Memuaskan hati</p>
-                        </button>
-                        <button onclick="submitMandatoryRating('memuaskan')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-smile text-yellow-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-yellow-700">Memuaskan</p>
-                            <p class="text-xs text-gray-500 mt-1">Boleh diterima</p>
-                        </button>
-                        <button onclick="submitMandatoryRating('tidak_memuaskan')" class="mandatory-rating-btn group px-6 py-6 rounded-xl border-3 border-gray-300 hover:border-red-500 hover:bg-red-50 transition-all transform hover:scale-105 hover:shadow-lg">
-                            <i class="fas fa-frown text-red-500 text-3xl mb-2 group-hover:scale-110 transition-transform"></i>
-                            <p class="text-lg font-bold text-gray-700 group-hover:text-red-700">Tidak Memuaskan</p>
-                            <p class="text-xs text-gray-500 mt-1">Perlu penambahbaikan</p>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="text-center text-sm text-gray-500">
-                    <i class="fas fa-lock mr-2"></i>
-                    Sila berikan penilaian untuk meneruskan
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         // Global variable to store current user
         let currentUser = null;
@@ -523,11 +454,6 @@
             } catch (error) {
                 console.error('Auto-load complaints error:', error);
             }
-        }
-
-        // View my complaints button handler
-        function viewMyComplaints() {
-            autoLoadComplaints();
         }
 
         // Logout function
@@ -618,9 +544,6 @@
                 `;
                 return;
             }
-
-            // Check for mandatory feedback before rendering complaints
-            checkMandatoryFeedback(data.complaints);
 
             data.complaints.forEach(complaint => {
                 const statusColors = {
