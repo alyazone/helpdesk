@@ -76,3 +76,19 @@
 2025-12-30 15:09:54 - Complaint insert executed successfully
 2025-12-30 15:09:54 - Complaint ID: 23
 2025-12-30 15:09:54 - Complaint submitted successfully. ID: 23, Ticket: ADU-2025-243
+2025-12-30 18:22:37 - Complaint submission started
+2025-12-30 18:22:37 - Request method: POST
+2025-12-30 18:22:37 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KOMPUTER PC ROSAK","nama":"Adam Idris","email":"adam@jpbdselangor.gov.my"}
+2025-12-30 18:22:37 - Database connection successful
+2025-12-30 18:22:37 - Attempting to insert complaint with ticket: ADU-2025-090
+2025-12-30 18:22:37 - Complaint insert executed successfully
+2025-12-30 18:22:37 - Complaint ID: 24
+2025-12-30 18:22:37 - Complaint submitted successfully. ID: 24, Ticket: ADU-2025-090
+2025-12-30 18:25:10 - Complaint submission started
+2025-12-30 18:25:10 - Request method: POST
+2025-12-30 18:25:10 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEROSAKAN LAMPU","nama":"Adlin Nabila","email":"adlin@jpbdselangor.gov.my"}
+2025-12-30 18:25:10 - Database connection successful
+2025-12-30 18:25:10 - Attempting to insert complaint with ticket: ADU-2025-065
+2025-12-30 18:25:10 - Complaint insert executed successfully
+2025-12-30 18:25:10 - Complaint ID: 25
+2025-12-30 18:25:10 - Complaint submitted successfully. ID: 25, Ticket: ADU-2025-065
