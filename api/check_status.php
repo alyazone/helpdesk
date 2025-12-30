@@ -74,6 +74,16 @@ try {
         $history = $stmt->fetchAll();
 
         $complaint['status_history'] = $history;
+
+        // Get the latest status from status_history or workflow_status
+        if (!empty($history)) {
+            $latest_status = end($history)['status'];
+            $complaint['current_status_label'] = $latest_status;
+        } else {
+            // Fallback to workflow_status if available
+            $complaint['current_status_label'] = $complaint['workflow_status'] ?? $complaint['status'];
+        }
+
         $complaints_with_history[] = $complaint;
     }
 

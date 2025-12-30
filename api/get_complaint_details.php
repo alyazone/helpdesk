@@ -65,6 +65,15 @@ try {
     $complaint['status_history'] = $status_history;
     $complaint['attachments'] = $attachments;
 
+    // Get the latest status from status_history or workflow_status
+    if (!empty($status_history)) {
+        $latest_status = end($status_history)['status'];
+        $complaint['current_status_label'] = $latest_status;
+    } else {
+        // Fallback to workflow_status if available
+        $complaint['current_status_label'] = $complaint['workflow_status'] ?? $complaint['status'];
+    }
+
     jsonResponse(true, 'Data berjaya diambil', [
         'complaint' => $complaint
     ]);
