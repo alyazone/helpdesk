@@ -123,6 +123,15 @@
             cursor: not-allowed !important;
             opacity: 0.6 !important;
         }
+
+        body.modal-open {
+            overflow: hidden !important;
+            pointer-events: none;
+        }
+
+        body.modal-open #mandatoryFeedbackModal {
+            pointer-events: auto;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -1085,20 +1094,35 @@
 
         // Check for completed complaints without ratings and show mandatory feedback
         function checkMandatoryFeedback(complaints) {
+            console.log('Checking for mandatory feedback...', complaints);
+
             // Find the first completed complaint without a rating
-            const complaintNeedingFeedback = complaints.find(c =>
-                c.status === 'selesai' && !c.rating
-            );
+            // Check both status and workflow_status fields, and also check current_status_label
+            const complaintNeedingFeedback = complaints.find(c => {
+                const isCompleted = c.status === 'selesai' ||
+                                   c.workflow_status === 'selesai' ||
+                                   (c.current_status_label && c.current_status_label.toLowerCase().includes('selesai'));
+                const hasNoRating = !c.rating;
+
+                console.log(`Complaint ${c.ticket_number}: status=${c.status}, workflow_status=${c.workflow_status}, current_status_label=${c.current_status_label}, rating=${c.rating}, isCompleted=${isCompleted}, hasNoRating=${hasNoRating}`);
+
+                return isCompleted && hasNoRating;
+            });
 
             if (complaintNeedingFeedback) {
+                console.log('Found complaint needing feedback:', complaintNeedingFeedback);
                 mandatoryFeedbackComplaint = complaintNeedingFeedback;
                 showMandatoryFeedbackModal();
+            } else {
+                console.log('No complaints need feedback');
             }
         }
 
         // Show mandatory feedback modal
         function showMandatoryFeedbackModal() {
             if (!mandatoryFeedbackComplaint) return;
+
+            console.log('Showing mandatory feedback modal for complaint:', mandatoryFeedbackComplaint);
 
             const modal = document.getElementById('mandatoryFeedbackModal');
             document.getElementById('mandatoryFeedbackTicket').textContent =
@@ -1108,13 +1132,24 @@
 
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+
+            // Prevent ESC key from closing the modal
+            modal.dataset.mandatory = 'true';
+
+            // Add a class to body to prevent interaction with background
+            document.body.classList.add('modal-open');
+
+            console.log('Mandatory feedback modal is now visible');
         }
 
         // Close mandatory feedback modal (only after rating is submitted)
         function closeMandatoryFeedbackModal() {
+            console.log('Closing mandatory feedback modal');
             const modal = document.getElementById('mandatoryFeedbackModal');
             modal.classList.add('hidden');
             document.body.style.overflow = 'auto';
+            document.body.classList.remove('modal-open');
+            modal.dataset.mandatory = 'false';
             mandatoryFeedbackComplaint = null;
         }
 
@@ -1240,8 +1275,40 @@
 
         // Prevent closing mandatory feedback modal by clicking outside
         document.getElementById('mandatoryFeedbackModal').addEventListener('click', function(e) {
-            // Do nothing - cannot close by clicking outside
-            e.stopPropagation();
+            // If clicking on the backdrop (not the content), show alert that feedback is required
+            if (e.target === this && this.dataset.mandatory === 'true') {
+                console.log('User tried to close mandatory feedback modal by clicking outside');
+                e.preventDefault();
+                e.stopPropagation();
+                // Optional: Show a gentle reminder
+                const content = document.querySelector('#mandatoryFeedbackModal .rounded-2xl');
+                if (content) {
+                    content.classList.add('animate-pulse-once');
+                    setTimeout(() => {
+                        content.classList.remove('animate-pulse-once');
+                        void content.offsetWidth; // Force reflow
+                    }, 500);
+                }
+            }
+        });
+
+        // Prevent ESC key from closing mandatory feedback modal
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('mandatoryFeedbackModal');
+            if (e.key === 'Escape' && modal && !modal.classList.contains('hidden') && modal.dataset.mandatory === 'true') {
+                console.log('User tried to close mandatory feedback modal with ESC key');
+                e.preventDefault();
+                e.stopPropagation();
+                // Pulse animation to remind user
+                const content = document.querySelector('#mandatoryFeedbackModal .rounded-2xl');
+                if (content) {
+                    content.classList.add('animate-pulse-once');
+                    setTimeout(() => {
+                        content.classList.remove('animate-pulse-once');
+                        void content.offsetWidth; // Force reflow
+                    }, 500);
+                }
+            }
         });
 
         // Close modal when clicking outside
