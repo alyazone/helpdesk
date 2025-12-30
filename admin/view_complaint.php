@@ -488,14 +488,35 @@ $user = getUser();
                             <h3 class="text-xl font-bold text-gray-800 mb-6">Dokumen/Laporan</h3>
 
                             <div class="space-y-6">
-                                <!-- Dokumen Aduan (from attachments) -->
+                                <!-- Dokumen Aduan -->
                                 <div>
                                     <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
                                         <i class="fas fa-file-alt text-blue-600 mr-2"></i>
-                                        Dokumen Aduan (Lampiran Asal)
+                                        Dokumen Aduan
                                     </h4>
-                                    <?php if (!empty($attachments)): ?>
-                                        <div class="space-y-3">
+                                    <div class="space-y-3">
+                                        <!-- Generated Complaint Form -->
+                                        <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <i class="fas fa-file-pdf text-blue-600 text-2xl"></i>
+                                                    <div>
+                                                        <p class="font-medium text-gray-900">Borang Aduan/Cadangan</p>
+                                                        <p class="text-xs text-gray-500">
+                                                            Dokumen rasmi aduan • Tarikh: <?php echo date('d/m/Y', strtotime($complaint['created_at'])); ?>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <a href="generate_dokumen_aduan.php?id=<?php echo $complaint_id; ?>"
+                                                   target="_blank"
+                                                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                                    <i class="fas fa-eye mr-2"></i>Papar
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Uploaded Attachments -->
+                                        <?php if (!empty($attachments)): ?>
                                             <?php foreach ($attachments as $attachment): ?>
                                             <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
                                                 <div class="flex items-center justify-between">
@@ -504,7 +525,7 @@ $user = getUser();
                                                         <div>
                                                             <p class="font-medium text-gray-900"><?php echo htmlspecialchars($attachment['file_original_name']); ?></p>
                                                             <p class="text-xs text-gray-500">
-                                                                Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($attachment['uploaded_at'])); ?> •
+                                                                Lampiran • Dimuat naik pada <?php echo date('d/m/Y H:i', strtotime($attachment['uploaded_at'])); ?> •
                                                                 <?php echo formatFileSize($attachment['file_size']); ?>
                                                             </p>
                                                         </div>
@@ -524,13 +545,8 @@ $user = getUser();
                                                 </div>
                                             </div>
                                             <?php endforeach; ?>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="p-4 bg-gray-50 rounded-lg text-center text-gray-500">
-                                            <i class="fas fa-file-alt text-gray-400 text-2xl mb-2"></i>
-                                            <p class="text-sm">Tiada dokumen aduan</p>
-                                        </div>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
 
                                 <!-- Dokumen Unit Aduan Dalaman -->
@@ -556,7 +572,7 @@ $user = getUser();
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <a href="unit-aduan-dalaman/generate_dokumen.php?id=<?php echo $complaint_id; ?>"
+                                                    <a href="generate_dokumen_unit_aduan.php?id=<?php echo $complaint_id; ?>"
                                                        target="_blank"
                                                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
                                                         <i class="fas fa-eye mr-2"></i>Papar
@@ -591,7 +607,7 @@ $user = getUser();
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <a href="unit-aset/generate_borang.php?id=<?php echo $complaint_id; ?>"
+                                                <a href="generate_borang_aset.php?id=<?php echo $complaint_id; ?>"
                                                    target="_blank"
                                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                                                     <i class="fas fa-eye mr-2"></i>Papar
