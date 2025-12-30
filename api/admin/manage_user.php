@@ -69,7 +69,7 @@ try {
         }
 
         // Validate role
-        if (!in_array($role, ['user', 'admin', 'staff'])) {
+        if (!in_array($role, ['user', 'admin', 'staff', 'Unit_it_sokongan', 'Unit_aduan_dalaman', 'Unit_aset', 'Pegawai_pelulus_aset'])) {
             jsonResponse(false, 'Peranan tidak sah');
         }
 
