@@ -90,9 +90,6 @@ $user = getUser();
                     <a href="users.php" class="hover:opacity-80">
                         <i class="fas fa-users mr-2"></i>Pengguna
                     </a>
-                    <a href="officers.php" class="hover:opacity-80">
-                        <i class="fas fa-user-tie mr-2"></i>Pegawai
-                    </a>
                     <a href="reports.php" class="hover:opacity-80">
                         <i class="fas fa-chart-bar mr-2"></i>Laporan
                     </a>
