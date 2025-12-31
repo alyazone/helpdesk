@@ -65,21 +65,6 @@ $stmt = $db->prepare("
 $stmt->execute([$date_from, $date_to]);
 $top_users = $stmt->fetchAll();
 
-// Completion rate trend (weekly)
-$stmt = $db->prepare("
-    SELECT
-        YEARWEEK(created_at, 1) as week_key,
-        DATE(DATE_SUB(created_at, INTERVAL WEEKDAY(created_at) DAY)) as week_start,
-        COUNT(*) as total,
-        SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) as completed
-    FROM complaints
-    WHERE DATE(created_at) BETWEEN ? AND ?
-    GROUP BY week_key, week_start
-    ORDER BY week_start ASC
-");
-$stmt->execute([$date_from, $date_to]);
-$completion_trend = $stmt->fetchAll();
-
 // Average resolution time (for completed complaints)
 $stmt = $db->prepare("
     SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, completed_at)) as avg_hours
@@ -211,20 +196,20 @@ $user = getUser();
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Date Range Filter -->
         <div class="bg-white rounded-xl shadow-md p-6 mb-6 no-print">
-            <form method="GET" class="flex flex-wrap gap-4 items-center">
+            <form method="GET" id="reportForm" class="flex flex-wrap gap-4 items-center">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Tarikh Mula</label>
-                    <input type="date" name="date_from" value="<?php echo $date_from; ?>"
+                    <input type="date" name="date_from" id="date_from" value="<?php echo $date_from; ?>" required
                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Tarikh Akhir</label>
-                    <input type="date" name="date_to" value="<?php echo $date_to; ?>"
+                    <input type="date" name="date_to" id="date_to" value="<?php echo $date_to; ?>" required
                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
                 </div>
                 <div class="mt-6">
-                    <button type="submit" class="px-6 py-2 gradient-bg text-white rounded-lg hover:opacity-90">
-                        <i class="fas fa-search mr-2"></i>Jana Laporan
+                    <button type="submit" id="generateReportBtn" class="px-6 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition">
+                        <i class="fas fa-search mr-2"></i><span id="btnText">Jana Laporan</span>
                     </button>
                 </div>
                 <div class="mt-6">
@@ -417,12 +402,6 @@ $user = getUser();
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Taburan Maklum Balas</h3>
                 <canvas id="feedbackChart"></canvas>
             </div>
-
-            <!-- Completion Rate Trend -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Trend Kadar Penyiapan</h3>
-                <canvas id="completionTrendChart"></canvas>
-            </div>
         </div>
 
         <!-- Daily Trend Chart -->
@@ -433,6 +412,33 @@ $user = getUser();
     </div>
 
     <script>
+        // Report Form Validation and Visual Feedback
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            const dateFrom = document.getElementById('date_from').value;
+            const dateTo = document.getElementById('date_to').value;
+            const btn = document.getElementById('generateReportBtn');
+            const btnText = document.getElementById('btnText');
+
+            // Validate dates
+            if (!dateFrom || !dateTo) {
+                e.preventDefault();
+                alert('Sila masukkan kedua-dua tarikh.');
+                return false;
+            }
+
+            // Validate date range
+            if (new Date(dateFrom) > new Date(dateTo)) {
+                e.preventDefault();
+                alert('Tarikh mula tidak boleh lebih besar daripada tarikh akhir.');
+                return false;
+            }
+
+            // Show loading state
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menjana Laporan...';
+        });
+
         // Status Chart
         new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
@@ -592,59 +598,6 @@ $user = getUser();
                                 const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
                                 label += ' (' + percentage + '%)';
                                 return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Completion Rate Trend Chart
-        new Chart(document.getElementById('completionTrendChart'), {
-            type: 'line',
-            data: {
-                labels: [
-                    <?php foreach ($completion_trend as $week): ?>
-                        '<?php echo date('d/m', strtotime($week['week_start'])); ?>',
-                    <?php endforeach; ?>
-                ],
-                datasets: [{
-                    label: 'Kadar Penyiapan (%)',
-                    data: [
-                        <?php foreach ($completion_trend as $week): ?>
-                            <?php
-                                $completion_rate = $week['total'] > 0
-                                    ? round(($week['completed'] / $week['total']) * 100, 1)
-                                    : 0;
-                                echo $completion_rate;
-                            ?>,
-                        <?php endforeach; ?>
-                    ],
-                    borderColor: '#10B981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: {
-                            callback: function(value) {
-                                return value + '%';
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return 'Kadar Penyiapan: ' + context.parsed.y + '%';
                             }
                         }
                     }
