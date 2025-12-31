@@ -203,10 +203,15 @@ $user = getUser();
                                     <p class="text-xs text-gray-500"><?php echo formatFileSize($attachment['file_size']); ?></p>
                                 </div>
                             </div>
-                            <a href="<?php echo htmlspecialchars($attachment['file_path']); ?>"
-                               target="_blank"
-                               class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
-                                <i class="fas fa-download mr-2"></i>Muat Turun
+                            <a href="<?php
+                                    // Convert absolute path to web path
+                                    $web_path = str_replace('\\', '/', $attachment['file_path']);
+                                    if (strpos($web_path, '/uploads/') !== false) {
+                                    $web_path = '../' . substr($web_path, strpos($web_path, 'uploads/'));
+                                    }
+                                    echo htmlspecialchars($web_path);
+                                    ?>" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                    <i class="fas fa-download mr-2"></i>Muat Turun
                             </a>
                         </div>
                         <?php endforeach; ?>
