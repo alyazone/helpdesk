@@ -100,3 +100,19 @@
 2025-12-31 08:40:01 - Complaint insert executed successfully
 2025-12-31 08:40:01 - Complaint ID: 26
 2025-12-31 08:40:01 - Complaint submitted successfully. ID: 26, Ticket: ADU-2025-280
+2025-12-31 10:19:10 - Complaint submission started
+2025-12-31 10:19:10 - Request method: POST
+2025-12-31 10:19:10 - Validation passed. Data received: {"jenis":"cadangan","perkara":"CADANGAN KOMPUTER BAHARU UNTUK BILIK SERVER","nama":"Adam Idris","email":"adam@jpbdselangor.gov.my"}
+2025-12-31 10:19:10 - Database connection successful
+2025-12-31 10:19:10 - Attempting to insert complaint with ticket: ADU-2025-467
+2025-12-31 10:19:10 - Complaint insert executed successfully
+2025-12-31 10:19:10 - Complaint ID: 27
+2025-12-31 10:19:10 - Complaint submitted successfully. ID: 27, Ticket: ADU-2025-467
+2025-12-31 11:20:14 - Complaint submission started
+2025-12-31 11:20:14 - Request method: POST
+2025-12-31 11:20:14 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN PRINTER ROSAK","nama":"Alya Azuan","email":"alya@jpbdselangor.gov.my"}
+2025-12-31 11:20:14 - Database connection successful
+2025-12-31 11:20:14 - Attempting to insert complaint with ticket: ADU-2025-081
+2025-12-31 11:20:14 - Complaint insert executed successfully
+2025-12-31 11:20:14 - Complaint ID: 28
+2025-12-31 11:20:14 - Complaint submitted successfully. ID: 28, Ticket: ADU-2025-081
