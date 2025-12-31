@@ -208,8 +208,13 @@ $user = getUser();
                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
                 </div>
                 <div class="mt-6">
-                    <button type="submit" id="generateReportBtn" class="px-6 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition">
-                        <i class="fas fa-search mr-2"></i><span id="btnText">Jana Laporan</span>
+                    <button type="button" id="generateReportBtn" class="px-6 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition">
+                        <i class="fas fa-file-pdf mr-2"></i><span id="btnText">Jana Laporan PDF</span>
+                    </button>
+                </div>
+                <div class="mt-6">
+                    <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        <i class="fas fa-filter mr-2"></i>Tapis Laporan
                     </button>
                 </div>
                 <div class="mt-6">
@@ -412,23 +417,21 @@ $user = getUser();
     </div>
 
     <script>
-        // Report Form Validation and Visual Feedback
-        document.getElementById('reportForm').addEventListener('submit', function(e) {
+        // PDF Report Generation
+        document.getElementById('generateReportBtn').addEventListener('click', function() {
             const dateFrom = document.getElementById('date_from').value;
             const dateTo = document.getElementById('date_to').value;
-            const btn = document.getElementById('generateReportBtn');
+            const btn = this;
             const btnText = document.getElementById('btnText');
 
             // Validate dates
             if (!dateFrom || !dateTo) {
-                e.preventDefault();
                 alert('Sila masukkan kedua-dua tarikh.');
                 return false;
             }
 
             // Validate date range
             if (new Date(dateFrom) > new Date(dateTo)) {
-                e.preventDefault();
                 alert('Tarikh mula tidak boleh lebih besar daripada tarikh akhir.');
                 return false;
             }
@@ -436,7 +439,21 @@ $user = getUser();
             // Show loading state
             btn.disabled = true;
             btn.classList.add('opacity-75', 'cursor-not-allowed');
-            btnText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menjana Laporan...';
+            const originalHTML = btnText.innerHTML;
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menjana PDF...';
+
+            // Generate PDF URL
+            const pdfUrl = 'generate_report_pdf.php?date_from=' + encodeURIComponent(dateFrom) + '&date_to=' + encodeURIComponent(dateTo);
+
+            // Open PDF in new window
+            window.open(pdfUrl, '_blank');
+
+            // Reset button state after a short delay
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                btnText.innerHTML = originalHTML;
+            }, 2000);
         });
 
         // Status Chart
