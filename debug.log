@@ -116,3 +116,11 @@
 2025-12-31 11:20:14 - Complaint insert executed successfully
 2025-12-31 11:20:14 - Complaint ID: 28
 2025-12-31 11:20:14 - Complaint submitted successfully. ID: 28, Ticket: ADU-2025-081
+2026-01-05 14:51:09 - Complaint submission started
+2026-01-05 14:51:09 - Request method: POST
+2026-01-05 14:51:09 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN TENTANG KEROSAKAN PERKAKAS SERVER","nama":"Alya Azuan","email":"alya@jpbdselangor.gov.my"}
+2026-01-05 14:51:09 - Database connection successful
+2026-01-05 14:51:09 - Attempting to insert complaint with ticket: ADU-2026-186
+2026-01-05 14:51:09 - Complaint insert executed successfully
+2026-01-05 14:51:09 - Complaint ID: 29
+2026-01-05 14:51:09 - Complaint submitted successfully. ID: 29, Ticket: ADU-2026-186

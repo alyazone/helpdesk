@@ -446,7 +446,7 @@
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition bg-gray-100"
                                 value="En. Azri Hanis bin Zul (Pegawai Unit Aduan Dalaman)"
                                 style="cursor: not-allowed;">
-                            <input type="hidden" name="pegawai" value="En. Azri Hanis bin Zul">
+                            <input type="hidden" name="pegawai" value="Pn. Siti Norhayati Binti Mokti">
                             <p class="mt-2 text-sm text-gray-500 flex items-center">
                                 <i class="fas fa-info-circle mr-2"></i>
                                 Pegawai tetap untuk menerima aduan
@@ -625,39 +625,6 @@
     </main>
 
     <script>
-        // Load active officers on page load
-        // FUNCTION DISABLED - Using default officer "En. Azri Hanis bin Zul" instead
-        /*
-        async function loadActiveOfficers() {
-            try {
-                const response = await fetch('api/get_active_officers.php');
-                const result = await response.json();
-
-                const selectElement = document.getElementById('pegawaiPenerima');
-
-                if (result.success && result.data.officers.length > 0) {
-                    // Clear loading option
-                    selectElement.innerHTML = '<option value="">Pilih pegawai penerima aduan</option>';
-
-                    // Add officers to dropdown
-                    result.data.officers.forEach(officer => {
-                        const option = document.createElement('option');
-                        option.value = officer.id;
-                        option.textContent = officer.nama;
-                        selectElement.appendChild(option);
-                    });
-                } else {
-                    selectElement.innerHTML = '<option value="">Tiada pegawai bertugas tersedia</option>';
-                    console.warn('No active officers available');
-                }
-            } catch (error) {
-                console.error('Error loading officers:', error);
-                const selectElement = document.getElementById('pegawaiPenerima');
-                selectElement.innerHTML = '<option value="">Ralat memuatkan pegawai</option>';
-            }
-        }
-        */
-
         // Load user details and auto-fill form
         async function loadUserDetails() {
             try {
