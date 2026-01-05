@@ -48,11 +48,18 @@
 
         .stat-card {
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card.active {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            border: 2px solid #667eea;
         }
 
         .rating-btn {
@@ -269,44 +276,44 @@
 
                 <!-- Statistics Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card active" data-filter="all" onclick="filterComplaints('all')">
                         <div class="flex items-center justify-between mb-4">
                             <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                                 <i class="fas fa-file-alt text-blue-600 text-xl"></i>
                             </div>
                         </div>
                         <p class="text-gray-600 text-sm font-medium mb-1">Jumlah Aduan</p>
-                        <p class="text-3xl font-bold text-gray-800">12</p>
+                        <p class="text-3xl font-bold text-gray-800" id="stat-total">12</p>
                     </div>
 
-                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card" data-filter="in_progress" onclick="filterComplaints('in_progress')">
                         <div class="flex items-center justify-between mb-4">
                             <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
                                 <i class="fas fa-clock text-yellow-600 text-xl"></i>
                             </div>
                         </div>
                         <p class="text-gray-600 text-sm font-medium mb-1">Dalam Proses</p>
-                        <p class="text-3xl font-bold text-gray-800">3</p>
+                        <p class="text-3xl font-bold text-gray-800" id="stat-in-progress">3</p>
                     </div>
 
-                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card" data-filter="selesai" onclick="filterComplaints('selesai')">
                         <div class="flex items-center justify-between mb-4">
                             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                                 <i class="fas fa-check-circle text-green-600 text-xl"></i>
                             </div>
                         </div>
                         <p class="text-gray-600 text-sm font-medium mb-1">Selesai</p>
-                        <p class="text-3xl font-bold text-gray-800">8</p>
+                        <p class="text-3xl font-bold text-gray-800" id="stat-selesai">8</p>
                     </div>
 
-                    <div class="bg-white rounded-xl card-shadow p-6 stat-card">
+                    <div class="bg-white rounded-xl card-shadow p-6 stat-card" data-filter="dibatalkan" onclick="filterComplaints('dibatalkan')">
                         <div class="flex items-center justify-between mb-4">
                             <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                                 <i class="fas fa-times-circle text-red-600 text-xl"></i>
                             </div>
                         </div>
                         <p class="text-gray-600 text-sm font-medium mb-1">Dibatalkan</p>
-                        <p class="text-3xl font-bold text-gray-800">1</p>
+                        <p class="text-3xl font-bold text-gray-800" id="stat-dibatalkan">1</p>
                     </div>
                 </div>
 
@@ -495,7 +502,7 @@
         });
 
         function showStatusPage(data) {
-            // Store complaints data for validation
+            // Store complaints data for validation and filtering
             allComplaints = data.complaints || [];
 
             document.getElementById('searchPage').classList.add('hidden');
@@ -507,13 +514,64 @@
 
             // Update statistics
             const stats = data.statistics;
-            document.querySelectorAll('.stat-card')[0].querySelector('.text-3xl').textContent = stats.total;
-            document.querySelectorAll('.stat-card')[1].querySelector('.text-3xl').textContent =
+            document.getElementById('stat-total').textContent = stats.total;
+            document.getElementById('stat-in-progress').textContent =
                 (stats.pending || 0) + (stats.dalam_pemeriksaan || 0) + (stats.sedang_dibaiki || 0);
-            document.querySelectorAll('.stat-card')[2].querySelector('.text-3xl').textContent = stats.selesai || 0;
-            document.querySelectorAll('.stat-card')[3].querySelector('.text-3xl').textContent = stats.dibatalkan || 0;
+            document.getElementById('stat-selesai').textContent = stats.selesai || 0;
+            document.getElementById('stat-dibatalkan').textContent = stats.dibatalkan || 0;
 
-            // Clear and populate complaints list
+            // Reset to show all complaints by default
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector('[data-filter="all"]').classList.add('active');
+
+            // Render all complaints
+            renderComplaintsList(allComplaints);
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSearchPage() {
+            document.getElementById('statusPage').classList.add('hidden');
+            document.getElementById('searchPage').classList.remove('hidden');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Filter complaints based on status
+        function filterComplaints(filter) {
+            // Update active state on stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+
+            // Filter the complaints
+            let filteredComplaints = [];
+
+            if (filter === 'all') {
+                filteredComplaints = allComplaints;
+            } else if (filter === 'in_progress') {
+                // In progress includes pending, dalam_pemeriksaan, and sedang_dibaiki
+                filteredComplaints = allComplaints.filter(complaint => {
+                    const status = complaint.status;
+                    return status === 'pending' || status === 'dalam_pemeriksaan' || status === 'sedang_dibaiki';
+                });
+            } else if (filter === 'selesai') {
+                filteredComplaints = allComplaints.filter(complaint => complaint.status === 'selesai');
+            } else if (filter === 'dibatalkan') {
+                filteredComplaints = allComplaints.filter(complaint => complaint.status === 'dibatalkan');
+            }
+
+            // Re-render the complaints list
+            renderComplaintsList(filteredComplaints);
+        }
+
+        // Render complaints list
+        function renderComplaintsList(complaints) {
             const complaintsContainer = document.getElementById('complaintsContainer');
             if (!complaintsContainer) {
                 console.error('complaintsContainer not found!');
@@ -521,17 +579,17 @@
             }
             complaintsContainer.innerHTML = '';
 
-            if (data.complaints.length === 0) {
+            if (complaints.length === 0) {
                 complaintsContainer.innerHTML = `
                     <div class="text-center py-12 text-gray-500">
                         <i class="fas fa-inbox text-5xl mb-4"></i>
-                        <p>Tiada aduan dijumpai untuk alamat emel ini</p>
+                        <p>Tiada aduan dijumpai untuk kategori ini</p>
                     </div>
                 `;
                 return;
             }
 
-            data.complaints.forEach(complaint => {
+            complaints.forEach(complaint => {
                 const statusColors = {
                     'pending': 'bg-gray-100 text-gray-800',
                     'dalam_pemeriksaan': 'bg-blue-100 text-blue-800',
@@ -658,17 +716,6 @@
                 complaintDiv.innerHTML = complaintHTML;
                 complaintsContainer.appendChild(complaintDiv);
             });
-
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showSearchPage() {
-            document.getElementById('statusPage').classList.add('hidden');
-            document.getElementById('searchPage').classList.remove('hidden');
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function showComplaintDetails(id) {
