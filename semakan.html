@@ -1077,9 +1077,11 @@
 
             // If user is logged in, check for pending feedback
             if (currentUser && currentUser.email) {
-                if (hasPendingFeedback()) {
-                    const complaintsNeedingFeedback = getComplaintsNeedingFeedback();
-                    const count = complaintsNeedingFeedback.length;
+                const complaintsNeedingFeedback = getComplaintsNeedingFeedback();
+                const count = complaintsNeedingFeedback.length;
+
+                // Only restrict if user has 4 or more unsubmitted feedback
+                if (count >= 4) {
                     let message = `Anda mempunyai ${count} aduan selesai yang memerlukan penilaian.\n\n`;
                     message += 'Sila berikan penilaian terhadap aduan yang telah selesai sebelum membuat aduan baharu.\n\n';
                     message += 'Senarai aduan yang memerlukan penilaian:\n';
@@ -1091,7 +1093,7 @@
                 }
             }
 
-            // Allow navigation if no pending feedback
+            // Allow navigation if pending feedback is less than 4
             window.location.href = 'borang_aduan.html';
         }
 
