@@ -272,5 +272,8 @@ $my_complaints = $stmt->fetchAll();
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- Role Switcher Component -->
+    <script src="../../assets/js/role-switcher.js"></script>
 </body>
 </html>
