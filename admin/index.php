@@ -371,5 +371,8 @@ $user = getUser();
             }
         });
     </script>
+
+    <!-- Role Switcher Component -->
+    <script src="../assets/js/role-switcher.js"></script>
 </body>
 </html>

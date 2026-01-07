@@ -129,32 +129,38 @@ function isLoggedIn() {
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
-// Check if user is admin
+// Check if user is admin (checks active role for access control)
 function isAdmin() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    return !empty($activeRole) && $activeRole === 'admin';
 }
 
-// Check if user is Unit Aduan Dalaman
+// Check if user is Unit Aduan Dalaman (checks active role for access control)
 function isUnitAduanDalaman() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'unit_aduan_dalaman';
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    return !empty($activeRole) && $activeRole === 'unit_aduan_dalaman';
 }
 
-// Check if user is Unit Aset
+// Check if user is Unit Aset (checks active role for access control)
 function isUnitAset() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'unit_aset';
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    return !empty($activeRole) && $activeRole === 'unit_aset';
 }
 
-// Check if user is Bahagian Pentadbiran & Kewangan
+// Check if user is Bahagian Pentadbiran & Kewangan (checks active role for access control)
 function isBahagianPentadbiranKewangan() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'bahagian_pentadbiran_kewangan';
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    return !empty($activeRole) && $activeRole === 'bahagian_pentadbiran_kewangan';
 }
 
-// Check if user is Unit IT / Sokongan
+// Check if user is Unit IT / Sokongan (checks active role for access control)
 function isUnitITSokongan() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'unit_it_sokongan';
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    return !empty($activeRole) && $activeRole === 'unit_it_sokongan';
 }
 
-// Check if user has any admin role (including unit roles)
+// Check if user has any admin role (checks ORIGINAL role, not active role)
+// This determines who can see the role switcher
 function hasAdminRole() {
     return isset($_SESSION['role']) && in_array($_SESSION['role'], [
         'admin',
@@ -218,7 +224,8 @@ function getUser() {
         'id' => $_SESSION['user_id'] ?? null,
         'nama' => $_SESSION['nama'] ?? null,
         'email' => $_SESSION['email'] ?? null,
-        'role' => $_SESSION['role'] ?? 'user'
+        'role' => $_SESSION['role'] ?? 'user',
+        'active_role' => $_SESSION['active_role'] ?? $_SESSION['role'] ?? 'user'
     ];
 }
 
