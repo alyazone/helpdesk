@@ -44,6 +44,11 @@ $dokumen = $stmt->fetch();
 $stmt = $db->query("SELECT * FROM unit_aset_officers WHERE status = 'aktif' ORDER BY nama");
 $unit_aset_officers = $stmt->fetchAll();
 
+// Get Unit IT officers (for assignment if approved)
+$stmt = $db->prepare("SELECT * FROM unit_it_sokongan_officers WHERE status = 'aktif' ORDER BY nama ASC");
+$stmt->execute();
+$unit_it_officers = $stmt->fetchAll();
+
 // Get attachments
 $stmt = $db->prepare("SELECT * FROM attachments WHERE complaint_id = ? ORDER BY uploaded_at DESC");
 $stmt->execute([$complaint_id]);
@@ -284,7 +289,71 @@ $user = getUser();
                         </div>
                     </form>
                 </div>
-                <?php elseif ($complaint['workflow_status'] === 'dimajukan_unit_aset' || in_array($complaint['workflow_status'], ['dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 'diluluskan', 'selesai'])): ?>
+                <?php elseif ($complaint['workflow_status'] === 'diluluskan'): ?>
+                <!-- Unit IT Officer Assignment (for approved complaints) -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Untuk Kegunaan Pejabat Sahaja</h2>
+                    <p class="text-sm text-gray-600 mb-4">Aduan ini telah diluluskan. Sila pilih pegawai untuk tindakan susulan.</p>
+
+                    <form id="assignItOfficerForm" class="space-y-4">
+                        <input type="hidden" name="complaint_id" value="<?php echo $complaint_id; ?>">
+
+                        <!-- No. Rujukan Fail -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">No. Rujukan Fail</label>
+                            <input type="text" name="no_rujukan_fail"
+                                   value="<?php echo htmlspecialchars($complaint['ticket_number']); ?>"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                                   readonly>
+                        </div>
+
+                        <!-- Unit IT Officer Assignment -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Dimajukan ke <span class="text-red-500">*</span>
+                            </label>
+                            <select name="unit_it_officer_id" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                                <option value="">-- Pilih Pegawai Unit IT / Sokongan --</option>
+                                <?php foreach ($unit_it_officers as $officer): ?>
+                                <option value="<?php echo $officer['id']; ?>">
+                                    <?php echo htmlspecialchars($officer['nama']); ?>
+                                    <?php if (!empty($officer['jawatan'])): ?>
+                                        (<?php echo htmlspecialchars($officer['jawatan']); ?>)
+                                    <?php endif; ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Pegawai yang dipilih akan menerima tugasan untuk melaksanakan tindakan yang diperlukan
+                            </p>
+                        </div>
+
+                        <!-- Tindakan Susulan -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Tindakan / Kesimpulan <span class="text-red-500">*</span>
+                            </label>
+                            <div class="mb-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <p class="text-sm text-gray-700">
+                                    <?php echo htmlspecialchars($complaint['keterangan'] ?? ''); ?>
+                                </p>
+                            </div>
+                            <textarea name="tindakan_susulan" rows="4" required placeholder="Aduan telah diterima dan akan diambil tindakan segera..."
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"></textarea>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="flex gap-4 pt-4">
+                            <button type="submit" name="action" value="assign_it_officer"
+                                    class="px-6 py-3 gradient-bg text-white rounded-lg hover:opacity-90 transition">
+                                <i class="fas fa-check-circle mr-2"></i>Sahkan & Majukan ke Unit Aset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <?php elseif ($complaint['workflow_status'] === 'dimajukan_unit_aset' || in_array($complaint['workflow_status'], ['dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 'selesai'])): ?>
                 <div class="bg-green-50 border border-green-200 rounded-xl p-6">
                     <div class="flex items-start space-x-3">
                         <i class="fas fa-check-circle text-green-600 text-2xl mt-1"></i>
@@ -364,6 +433,35 @@ $user = getUser();
                     window.location.reload();
                 } else {
                     alert(result.message || 'Gagal memproses aduan');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ralat sambungan. Sila cuba lagi.');
+            }
+        });
+
+        document.getElementById('assignItOfficerForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            if (!confirm('Adakah anda pasti untuk memajukan aduan ini kepada Pegawai Unit IT / Sokongan yang dipilih?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('assign_it_officer.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Aduan berjaya dimajukan ke Unit IT / Sokongan!');
+                    window.location.reload();
+                } else {
+                    alert(result.message || 'Gagal memajukan aduan');
                 }
             } catch (error) {
                 console.error('Error:', error);
