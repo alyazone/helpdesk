@@ -24,11 +24,12 @@ $user = getUser();
 try {
     $complaint_id = intval($_POST['complaint_id'] ?? 0);
     $dimajukan_ke = intval($_POST['dimajukan_ke'] ?? 0);
+    $unit_it_officer_id = intval($_POST['unit_it_officer_id'] ?? 0);
     $tindakan_susulan = sanitize($_POST['tindakan_susulan'] ?? '');
     $no_rujukan_fail = sanitize($_POST['no_rujukan_fail'] ?? '');
 
     // Validation
-    if ($complaint_id <= 0 || $dimajukan_ke <= 0 || empty($tindakan_susulan)) {
+    if ($complaint_id <= 0 || $dimajukan_ke <= 0 || $unit_it_officer_id <= 0 || empty($tindakan_susulan)) {
         echo json_encode(['success' => false, 'message' => 'Sila lengkapkan semua medan yang diperlukan']);
         exit();
     }
@@ -49,6 +50,12 @@ try {
         exit();
     }
 
+    // Get Unit IT officer name for logging
+    $stmt = $db->prepare("SELECT nama FROM unit_it_sokongan_officers WHERE id = ?");
+    $stmt->execute([$unit_it_officer_id]);
+    $unit_it_officer = $stmt->fetch();
+    $unit_it_officer_name = $unit_it_officer ? $unit_it_officer['nama'] : 'Unknown';
+
     // Begin transaction
     $db->beginTransaction();
 
@@ -60,6 +67,8 @@ try {
             unit_aduan_verified_at = NOW(),
             dimajukan_ke = ?,
             tindakan_susulan = ?,
+            unit_it_officer_id = ?,
+            unit_it_assigned_at = NOW(),
             updated_at = NOW()
         WHERE id = ?
     ");
@@ -67,6 +76,7 @@ try {
         $user['id'],
         $dimajukan_ke,
         $tindakan_susulan,
+        $unit_it_officer_id,
         $complaint_id
     ]);
 
@@ -101,7 +111,7 @@ try {
         $complaint['workflow_status'],
         'dimajukan_unit_aset',
         $user['id'],
-        'Aduan disahkan dan dimajukan ke Unit Aset'
+        'Aduan disahkan, dimajukan ke Unit Aset, dan ditugaskan kepada ' . $unit_it_officer_name . ' (Unit IT/Pentadbiran)'
     ]);
 
     // Add to complaint status history for public viewing
@@ -111,8 +121,8 @@ try {
     ");
     $stmt->execute([
         $complaint_id,
-        'Dimajukan ke Unit Aset',
-        'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya',
+        'Dalam Proses',
+        'Aduan telah disahkan oleh Unit Aduan Dalaman, ditugaskan kepada pegawai pelaksana, dan dimajukan kepada Unit Aset untuk tindakan selanjutnya',
         $user['id']
     ]);
 
@@ -121,7 +131,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Aduan berjaya disahkan dan dimajukan ke Unit Aset'
+        'message' => 'Aduan berjaya disahkan, ditugaskan kepada pegawai, dan dimajukan ke Unit Aset'
     ]);
 
 } catch (PDOException $e) {
