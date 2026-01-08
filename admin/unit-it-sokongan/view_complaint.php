@@ -264,6 +264,7 @@ $is_waiting_approval = in_array($complaint['workflow_status'], ['dimajukan_unit_
                 </div>
                 <?php else: ?>
                 <!-- Completion Info (Read-only) -->
+                <?php if (!empty($complaint['unit_it_completed_at'])): ?>
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                         <span class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
@@ -273,11 +274,12 @@ $is_waiting_approval = in_array($complaint['workflow_status'], ['dimajukan_unit_
                     </h2>
                     <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                         <p class="text-sm text-green-800">
-                            Aduan ini telah ditandakan sebagai selesai oleh <?php echo htmlspecialchars($complaint['completed_by_name']); ?> 
+                            Aduan ini telah ditandakan sebagai selesai oleh <?php echo htmlspecialchars($complaint['completed_by_name'] ?? 'Unknown'); ?>
                             pada <?php echo date('d/m/Y H:i', strtotime($complaint['unit_it_completed_at'])); ?>
                         </p>
                     </div>
                 </div>
+                <?php endif; ?>
                 <?php endif; ?>
             </div>
 
