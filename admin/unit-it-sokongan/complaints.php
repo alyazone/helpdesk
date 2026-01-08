@@ -30,7 +30,8 @@ $query = "
     LEFT JOIN unit_it_sokongan_officers uito ON c.unit_it_officer_id = uito.id
     LEFT JOIN users u_pelulus ON c.pegawai_pelulus_id = u_pelulus.id
     LEFT JOIN users u_completed ON c.unit_it_completed_by = u_completed.id
-    WHERE c.workflow_status IN ('dimajukan_unit_it', 'selesai')
+    WHERE c.unit_it_officer_id IS NOT NULL
+    AND c.workflow_status IN ('dimajukan_unit_aset', 'dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 'diluluskan', 'selesai')
 ";
 
 $params = [];

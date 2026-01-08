@@ -21,6 +21,9 @@ $stmt = $db->prepare("
     SELECT c.*,
            bka.anggaran_kos_penyelenggaraan,
            bka.keputusan_ulasan,
+           bka.keputusan_status,
+           bka.keputusan_tarikh,
+           bka.keputusan_nama,
            uito.nama as assigned_officer_name,
            u_pelulus.nama_penuh as pelulus_name,
            u_completed.nama_penuh as completed_by_name
@@ -44,7 +47,9 @@ $stmt->execute([$complaint_id]);
 $attachments = $stmt->fetchAll();
 
 $user = getUser();
-$can_complete = ($complaint['workflow_status'] === 'dimajukan_unit_it');
+$can_complete = ($complaint['workflow_status'] === 'diluluskan');
+$is_approved = ($complaint['workflow_status'] === 'diluluskan');
+$is_waiting_approval = in_array($complaint['workflow_status'], ['dimajukan_unit_aset', 'dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus']);
 ?>
 <!DOCTYPE html>
 <html lang="ms">
@@ -98,11 +103,17 @@ $can_complete = ($complaint['workflow_status'] === 'dimajukan_unit_it');
                         <div>
                             <?php
                             $status_colors = [
-                                'dimajukan_unit_it' => 'bg-yellow-100 text-yellow-800',
-                                'selesai' => 'bg-green-100 text-green-800'
+                                'dimajukan_unit_aset' => 'bg-blue-100 text-blue-800',
+                                'dalam_semakan_unit_aset' => 'bg-blue-100 text-blue-800',
+                                'dimajukan_pegawai_pelulus' => 'bg-yellow-100 text-yellow-800',
+                                'diluluskan' => 'bg-green-100 text-green-800',
+                                'selesai' => 'bg-gray-100 text-gray-800'
                             ];
                             $status_labels = [
-                                'dimajukan_unit_it' => 'Perlu Tindakan',
+                                'dimajukan_unit_aset' => 'Menunggu Kelulusan',
+                                'dalam_semakan_unit_aset' => 'Dalam Semakan',
+                                'dimajukan_pegawai_pelulus' => 'Menunggu Kelulusan',
+                                'diluluskan' => 'Diluluskan - Perlu Tindakan',
                                 'selesai' => 'Selesai'
                             ];
                             $color = $status_colors[$complaint['workflow_status']] ?? 'bg-gray-100 text-gray-800';
@@ -119,6 +130,25 @@ $can_complete = ($complaint['workflow_status'] === 'dimajukan_unit_it');
                         <p class="text-gray-700 whitespace-pre-wrap"><?php echo htmlspecialchars($complaint['keterangan']); ?></p>
                     </div>
                 </div>
+
+                <!-- Waiting for Approval Notice -->
+                <?php if ($is_waiting_approval): ?>
+                <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-hourglass-half text-yellow-600 text-2xl mt-1"></i>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-yellow-800 mb-2">Menunggu Kelulusan</h3>
+                            <p class="text-yellow-700 mb-2">
+                                Aduan ini telah ditugaskan kepada anda, tetapi masih menunggu kelulusan daripada Pegawai Pelulus.
+                            </p>
+                            <p class="text-sm text-yellow-600">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Anda hanya boleh mengambil tindakan selepas aduan ini diluluskan oleh Pegawai Pelulus.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
 
                 <!-- Complaint Details -->
                 <div class="bg-white rounded-xl shadow-md p-6">
@@ -261,14 +291,22 @@ $can_complete = ($complaint['workflow_status'] === 'dimajukan_unit_it');
                             <label class="text-sm text-gray-600">Ditugaskan Kepada</label>
                             <p class="font-medium"><?php echo htmlspecialchars($complaint['assigned_officer_name']); ?></p>
                         </div>
+                        <?php if (!empty($complaint['keputusan_nama'])): ?>
                         <div>
                             <label class="text-sm text-gray-600">Diluluskan Oleh</label>
-                            <p class="font-medium"><?php echo htmlspecialchars($complaint['pelulus_name']); ?></p>
+                            <p class="font-medium"><?php echo htmlspecialchars($complaint['keputusan_nama']); ?></p>
                         </div>
+                        <?php endif; ?>
                         <div>
                             <label class="text-sm text-gray-600">Tarikh Ditugaskan</label>
                             <p class="font-medium"><?php echo date('d/m/Y H:i', strtotime($complaint['unit_it_assigned_at'])); ?></p>
                         </div>
+                        <?php if ($is_approved && !empty($complaint['keputusan_tarikh'])): ?>
+                        <div>
+                            <label class="text-sm text-gray-600">Tarikh Diluluskan</label>
+                            <p class="font-medium"><?php echo date('d/m/Y', strtotime($complaint['keputusan_tarikh'])); ?></p>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -284,19 +322,21 @@ $can_complete = ($complaint['workflow_status'] === 'dimajukan_unit_it');
                             </div>
                         </div>
                         <div class="flex items-start">
-                            <div class="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3"></div>
+                            <div class="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3"></div>
                             <div>
-                                <p class="text-sm font-medium text-gray-800">Diluluskan</p>
-                                <p class="text-xs text-gray-500"><?php echo date('d/m/Y', strtotime($complaint['pegawai_pelulus_reviewed_at'])); ?></p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3"></div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">Dimajukan ke Unit IT</p>
+                                <p class="text-sm font-medium text-gray-800">Ditugaskan kepada Pegawai</p>
                                 <p class="text-xs text-gray-500"><?php echo date('d/m/Y H:i', strtotime($complaint['unit_it_assigned_at'])); ?></p>
                             </div>
                         </div>
+                        <?php if ($is_approved && !empty($complaint['keputusan_tarikh'])): ?>
+                        <div class="flex items-start">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3"></div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Diluluskan</p>
+                                <p class="text-xs text-gray-500"><?php echo date('d/m/Y', strtotime($complaint['keputusan_tarikh'])); ?></p>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                         <?php if (!empty($complaint['unit_it_completed_at'])): ?>
                         <div class="flex items-start">
                             <div class="w-2 h-2 bg-green-600 rounded-full mt-2 mr-3"></div>
