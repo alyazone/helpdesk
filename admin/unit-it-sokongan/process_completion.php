@@ -33,7 +33,8 @@ try {
     }
 
     // Check if complaint is in correct workflow status
-    if ($complaint['workflow_status'] !== 'dimajukan_unit_it') {
+    // Complaint must be approved (diluluskan) before it can be completed
+    if ($complaint['workflow_status'] !== 'diluluskan') {
         throw new Exception('Status aduan tidak sesuai untuk tindakan ini. Status semasa: ' . $complaint['workflow_status']);
     }
 
@@ -74,7 +75,7 @@ try {
     $stmt->execute([
         $complaint_id,
         'selesai',
-        'dimajukan_unit_it',
+        'diluluskan',
         'selesai',
         $user['id'],
         'Tindakan selesai oleh Unit IT / Sokongan - ' . $catatan
