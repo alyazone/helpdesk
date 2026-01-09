@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Dec 30, 2025 at 04:59 PM
+-- Generation Time: Jan 09, 2026 at 04:18 AM
 -- Server version: 8.0.44
 -- PHP Version: 8.3.26
 
@@ -43,8 +43,8 @@ CREATE TABLE `attachments` (
 --
 
 INSERT INTO `attachments` (`id`, `complaint_id`, `file_name`, `file_original_name`, `file_path`, `file_size`, `file_type`, `uploaded_at`) VALUES
-(11, 24, '6953a7ede46b2_1767090157.jpeg', 'AP-MDSB1.jpeg', '/var/www/html/helpdesk/config/../uploads/6953a7ede46b2_1767090157.jpeg', 134940, 'image/jpeg', '2025-12-30 10:22:37'),
-(12, 25, '6953a88658ccb_1767090310.jpeg', 'AP-MDSB.jpeg', '/var/www/html/helpdesk/config/../uploads/6953a88658ccb_1767090310.jpeg', 109153, 'image/jpeg', '2025-12-30 10:25:10');
+(12, 25, '6953a88658ccb_1767090310.jpeg', 'AP-MDSB.jpeg', '/var/www/html/helpdesk/config/../uploads/6953a88658ccb_1767090310.jpeg', 109153, 'image/jpeg', '2025-12-30 10:25:10'),
+(13, 26, '695470e185684_1767141601.png', 'Screenshot 2025-12-30 235413.png', '/var/www/html/helpdesk/config/../uploads/695470e185684_1767141601.png', 140241, 'image/png', '2025-12-31 00:40:01');
 
 -- --------------------------------------------------------
 
@@ -83,7 +83,14 @@ CREATE TABLE `borang_kerosakan_aset` (
 
 INSERT INTO `borang_kerosakan_aset` (`id`, `complaint_id`, `jenis_aset`, `no_siri_pendaftaran_aset`, `pengguna_terakhir`, `tarikh_kerosakan`, `perihal_kerosakan`, `nama_jawatan_pengadu`, `tarikh_pengadu`, `jumlah_kos_penyelenggaraan_terdahulu`, `anggaran_kos_penyelenggaraan`, `nama_jawatan_pegawai_aset`, `tarikh_pegawai_aset`, `syor_ulasan`, `keputusan_status`, `keputusan_ulasan`, `keputusan_nama`, `keputusan_jawatan`, `keputusan_tarikh`, `tandatangan_dijana_komputer`, `created_at`, `updated_at`) VALUES
 (10, 25, 'lain-lain', 'ICT-2025-012', 'Adlin Nabila', '2025-12-30', 'Lampu', 'Adlin Nabila - Pegawai Teknologi Maklumat', '2025-12-30', 100.00, 200.00, 'Pn. Maznah Binti Marzuki', '2025-12-30', 'Disyorkan untuk perbaiki. Aduan akan dimajukan kepada pegawai pelulusan', 'diluluskan', 'diluluskan untuk tindakan selanjutnya', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2025-12-30', 1, '2025-12-30 10:30:39', '2025-12-30 10:34:58'),
-(11, 24, 'komputer', 'PC-2025-098', 'Adam Idris', '2025-12-30', 'Komputer Hang', 'Adam Idris - Pegawai Bandar Perancang', '2025-12-30', 1000.00, 500.00, 'Pn. Maznah Binti Marzuki', '2025-12-31', 'Boleh diperbaiki dengan segera. Telah majukan untuk kelulusan', 'diluluskan', 'Aduan telah diluluskan dan dimajukan kepada pegawai berkaitan untuk tindakan selanjutnya', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2025-12-31', 1, '2025-12-30 16:41:40', '2025-12-30 16:48:03');
+(12, 26, 'projector', 'PR-2021-025', 'Syazwani Ili', '2025-12-31', 'Lain-lain (ICT)', 'Syazwani Ili - Pegawai Bandar Perancang', '2025-12-31', 80.00, 100.00, 'Pn. Maznah Binti Marzuki', '2025-12-31', 'aset boleh diperbaiki setelah mendapat kelulusan', 'diluluskan', 'aduan diluluskan untuk tindakan selanjutnya', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2025-12-31', 1, '2025-12-31 02:06:31', '2025-12-31 02:10:21'),
+(13, 28, 'lain-lain', 'ICT-2023-041', 'Alya Azuan', '2025-12-31', 'Lain-lain (ICT)', 'Alya Azuan - Pegawai Bandar Perancang', '2025-12-31', 50.00, 100.00, 'Pn. Maznah Binti Marzuki', '2025-12-31', 'aset boleh diperbaiki', 'diluluskan', 'diluluskan', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2025-12-31', 1, '2025-12-31 03:26:06', '2025-12-31 03:36:47'),
+(14, 29, 'komputer', 'PC-2025-092', 'Alya Azuan', '2026-01-05', 'Lain-lain (ICT)', 'Alya Azuan - Pegawai Bandar Perancang', '2026-01-05', 20.00, 9.98, 'Pn. Maznah Binti Marzuki', '2026-01-05', 'boleh dibaiki', 'diluluskan', 'diluluskan', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2026-01-05', 1, '2026-01-05 06:57:30', '2026-01-05 06:58:57'),
+(15, 31, 'lain-lain', 'ICT-2024-202', 'En. Azri Hanis Bin Zul', '2026-01-07', 'Komputer Hang', 'En. Azri Hanis Bin Zul - Pegawai Unit Aduan Dalaman', '2026-01-07', 10.00, 50.00, 'Pn. Maznah Binti Marzuki', '2026-01-07', 'BOLEH DIBAIKI', 'diluluskan', 'dibaiki', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2026-01-07', 1, '2026-01-07 01:59:53', '2026-01-07 02:03:42'),
+(16, 32, 'monitor', 'MN-2023-001', 'Pn. Maznah Binti Marzuki', '2026-01-07', 'Masalah Password', 'Pn. Maznah Binti Marzuki - Pembantu Tadbir', '2026-01-07', 10.00, 20.00, 'Pn. Maznah Binti Marzuki', '2026-01-07', 'disyorkan baiki', 'pending', NULL, NULL, NULL, NULL, 1, '2026-01-07 02:05:30', '2026-01-07 02:05:30'),
+(17, 33, 'network', 'NT-201-2033', 'Pn. Alia Binti Mohd Yusof', '2026-01-07', 'Tidak Boleh Boot Windows', 'Pn. Alia Binti Mohd Yusof - Penolong Pengarah', '2026-01-07', 10.00, 20.00, 'Pn. Maznah Binti Marzuki', '2026-01-08', 'boleh dibaiki', 'diluluskan', 'diluluskan', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2026-01-08', 1, '2026-01-08 01:24:19', '2026-01-08 02:00:03'),
+(18, 30, 'lain-lain', 'SR-2020-045', 'Alya Azuan', '2026-01-07', 'Lain-lain (ICT)', 'Alya Azuan - Pegawai Bandar Perancang', '2026-01-07', 40.00, 45.00, 'Pn. Maznah Binti Marzuki', '2026-01-08', 'dimajukan kepada pegawai pelulus', 'diluluskan', 'boleh diluluskan', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2026-01-08', 1, '2026-01-08 03:55:37', '2026-01-08 03:57:06'),
+(19, 27, 'komputer', 'ICT-2021-033', 'Adam Idris', '2025-12-31', 'Lain-lain (ICT)', 'Adam Idris - Pegawai Bandar Perancang', '2025-12-31', 10.00, 12.00, 'Pn. Maznah Binti Marzuki', '2026-01-08', 'boleh dibaiki', 'diluluskan', 'diluluskan', 'Pn. Alia Binti Mohd Yusof', 'Penolong Pengarah', '2026-01-08', 1, '2026-01-08 03:58:57', '2026-01-08 04:34:14');
 
 -- --------------------------------------------------------
 
@@ -148,8 +155,15 @@ CREATE TABLE `complaints` (
 --
 
 INSERT INTO `complaints` (`id`, `ticket_number`, `jenis`, `perkara`, `keterangan`, `user_id`, `nama_pengadu`, `alamat`, `no_telefon`, `poskod`, `jawatan`, `bahagian`, `tingkat`, `email`, `no_sambungan`, `jenis_aset`, `no_pendaftaran_aset`, `pengguna_akhir`, `tarikh_kerosakan`, `perihal_kerosakan`, `perihal_kerosakan_value`, `officer_id`, `pegawai_penerima`, `status`, `workflow_status`, `unit_aduan_verified_by`, `priority`, `progress`, `rating`, `feedback_comment`, `created_at`, `updated_at`, `completed_at`, `unit_aduan_verified_at`, `dimajukan_ke`, `tindakan_susulan`, `tindakan_kesimpulan`, `unit_aset_officer_id`, `unit_aset_reviewed_at`, `pegawai_pelulus_id`, `pegawai_pelulus_reviewed_at`, `pegawai_pelulus_status`, `unit_aset_processed_by`, `unit_aset_processed_at`, `approval_officer_id`, `unit_it_officer_id`, `unit_it_assigned_at`, `unit_it_completed_by`, `unit_it_completed_at`) VALUES
-(24, 'ADU-2025-090', 'aduan', 'ADUAN KOMPUTER PC ROSAK', 'PC di tingkat 5 telah rosak', 19, 'Adam Idris', '', '', '', 'Pegawai Bandar Perancang', 'perancangan', '3', 'adam@jpbdselangor.gov.my', '2005', 'komputer', 'PC-2025-098', '', '2025-12-30', 'Komputer Hang', 'komputer_hang', NULL, 'En. Azri Hanis bin Zul', 'selesai', 'selesai', 14, 'sederhana', 0, 'cemerlang', '', '2025-12-30 10:22:37', '2025-12-30 16:55:07', '2025-12-30 16:54:21', '2025-12-30 16:38:19', 1, 'Aduan telah diterima dan telah majukan ke unit aset', NULL, NULL, NULL, 16, '2025-12-30 16:48:03', 'diluluskan', 15, '2025-12-30 16:43:30', 16, 3, '2025-12-30 16:48:03', 18, '2025-12-30 16:54:21'),
-(25, 'ADU-2025-065', 'aduan', 'ADUAN KEROSAKAN LAMPU', 'Lampu di bilik server telah rosak', 20, 'Adlin Nabila', '', '', '', 'Pegawai Teknologi Maklumat', 'perancangan', '9', 'adlin@jpbdselangor.gov.my', '2001', 'lain-lain', 'ICT-2025-012', '', '2025-12-30', 'Lampu', 'lampu_bangunan', NULL, 'En. Azri Hanis bin Zul', 'selesai', 'selesai', 14, 'sederhana', 0, NULL, NULL, '2025-12-30 10:25:10', '2025-12-30 10:36:40', '2025-12-30 10:36:40', '2025-12-30 10:26:44', 1, 'Aduan telah diterima. sila semak', NULL, NULL, NULL, 16, '2025-12-30 10:34:58', 'diluluskan', 15, '2025-12-30 10:33:00', 16, 1, '2025-12-30 10:34:58', 18, '2025-12-30 10:36:40');
+(25, 'ADU-2025-065', 'aduan', 'ADUAN KEROSAKAN LAMPU', 'Lampu di bilik server telah rosak', 20, 'Adlin Nabila', '', '', '', 'Pegawai Teknologi Maklumat', 'perancangan', '9', 'adlin@jpbdselangor.gov.my', '2001', 'lain-lain', 'ICT-2025-012', '', '2025-12-30', 'Lampu', 'lampu_bangunan', NULL, 'En. Azri Hanis bin Zul', 'selesai', 'selesai', 14, 'sederhana', 0, NULL, NULL, '2025-12-30 10:25:10', '2025-12-30 10:36:40', '2025-12-30 10:36:40', '2025-12-30 10:26:44', 1, 'Aduan telah diterima. sila semak', NULL, NULL, NULL, 16, '2025-12-30 10:34:58', 'diluluskan', 15, '2025-12-30 10:33:00', 16, 1, '2025-12-30 10:34:58', 18, '2025-12-30 10:36:40'),
+(26, 'ADU-2025-280', 'aduan', 'ADUAN KEROSAKAN SKRIN PROJEKTOR', 'Skrin projektor pada bilik meeting 2 telah mengalami kerosakan', 21, 'Syazwani Ili', '', '', '', 'Pegawai Bandar Perancang', 'korporat', '3', 'wani@jpbdselangor.gov.my', '2007', 'projector', 'PR-2021-025', '', '2025-12-31', 'Lain-lain (ICT)', 'ict_lain_lain', NULL, 'En. Azri Hanis bin Zul', 'selesai', 'selesai', 14, 'sederhana', 0, NULL, NULL, '2025-12-31 00:40:01', '2025-12-31 02:14:34', '2025-12-31 02:14:34', '2025-12-31 02:04:32', 1, 'aduan telah diterima', NULL, NULL, NULL, 16, '2025-12-31 02:10:21', 'diluluskan', 15, '2025-12-31 02:08:01', 16, 1, '2025-12-31 02:10:21', 18, '2025-12-31 02:14:34'),
+(27, 'ADU-2025-467', 'cadangan', 'CADANGAN KOMPUTER BAHARU UNTUK BILIK SERVER', 'Komputer di bilik server telah lama dan perlu diperbaharui', 19, 'Adam Idris', '', '', '', 'Pegawai Bandar Perancang', 'perancangan', '3', 'adam@jpbdselangor.gov.my', '2005', 'komputer', 'ICT-2021-033', '', '2025-12-31', 'Lain-lain (ICT)', 'ict_lain_lain', NULL, 'En. Azri Hanis bin Zul', 'selesai', 'selesai', 14, 'sederhana', 0, NULL, NULL, '2025-12-31 02:19:10', '2026-01-08 04:35:02', '2026-01-08 04:35:02', '2026-01-08 03:58:13', 1, 'dimajukan unit aset', NULL, NULL, NULL, 16, '2026-01-08 04:34:14', 'diluluskan', 15, '2026-01-08 03:58:57', 16, 1, '2026-01-08 03:58:13', 18, '2026-01-08 04:35:02'),
+(28, 'ADU-2025-081', 'aduan', 'ADUAN PRINTER ROSAK', 'Printer telah rosak pada 31 disember 2025', 22, 'Alya Azuan', '', '', '', 'Pegawai Bandar Perancang', 'perancangan', '3', 'alya@jpbdselangor.gov.my', '2001', 'lain-lain', 'ICT-2023-041', '', '2025-12-31', 'Lain-lain (ICT)', 'ict_lain_lain', NULL, 'En. Azri Hanis bin Zul', 'selesai', 'selesai', 14, 'sederhana', 0, 'cemerlang', '', '2025-12-31 03:20:14', '2025-12-31 03:58:17', '2025-12-31 03:50:25', '2025-12-31 03:21:34', 1, 'Aduan telah diterima', NULL, NULL, NULL, 16, '2025-12-31 03:36:47', 'diluluskan', 15, '2025-12-31 03:27:24', 16, 1, '2025-12-31 03:36:47', 18, '2025-12-31 03:50:25'),
+(29, 'ADU-2026-186', 'aduan', 'ADUAN TENTANG KEROSAKAN PERKAKAS SERVER', 'PERKAKAS SERVER TELAH ROSAK', 22, 'Alya Azuan', '', '', '', 'Pegawai Bandar Perancang', 'perancangan', '3', 'alya@jpbdselangor.gov.my', '2001', 'komputer', 'PC-2025-092', '', '2026-01-05', 'Lain-lain (ICT)', 'ict_lain_lain', NULL, 'En. Azri Hanis bin Zul', 'selesai', 'selesai', 14, 'sederhana', 0, NULL, NULL, '2026-01-05 06:51:09', '2026-01-05 06:59:42', '2026-01-05 06:59:42', '2026-01-05 06:56:39', 1, 'telah diterima', NULL, NULL, NULL, 16, '2026-01-05 06:58:57', 'diluluskan', 15, '2026-01-05 06:57:30', 16, 1, '2026-01-05 06:58:57', 18, '2026-01-05 06:59:42'),
+(30, 'ADU-2026-803', 'aduan', 'ADUAN KEROSAKAN SERVER', 'SERVER ROSAK', 22, 'Alya Azuan', '', '', '', 'Pegawai Bandar Perancang', 'perancangan', '3', 'alya@jpbdselangor.gov.my', '2001', 'lain-lain', 'SR-2020-045', '', '2026-01-07', 'Lain-lain (ICT)', 'ict_lain_lain', NULL, 'Pn. Siti Norhayati Binti Mokti', 'selesai', 'selesai', 14, 'sederhana', 0, NULL, NULL, '2026-01-07 01:44:41', '2026-01-08 04:32:20', '2026-01-08 04:32:20', '2026-01-08 03:54:29', 1, 'dimajukan ke unit aset', NULL, NULL, NULL, 16, '2026-01-08 03:57:06', 'diluluskan', 15, '2026-01-08 03:55:37', 16, 1, '2026-01-08 03:54:29', 18, '2026-01-08 04:32:20'),
+(31, 'ADU-2026-084', 'cadangan', 'TEST ADUAN AZRI HANIS', 'TEST ADUAN AZRI HANIS DETAILS', 14, 'En. Azri Hanis Bin Zul', '', '', '', 'Pegawai Unit Aduan Dalaman', 'Bahagian Pentadbiran dan Kewangan', '', 'azri.hanis@jpbdselangor.gov.my', '', 'lain-lain', 'ICT-2024-202', '', '2026-01-07', 'Komputer Hang', 'komputer_hang', NULL, 'Pn. Siti Norhayati Binti Mokti', 'selesai', 'selesai', 14, 'sederhana', 0, 'baik', '', '2026-01-07 01:55:33', '2026-01-07 02:07:07', '2026-01-07 02:06:40', '2026-01-07 01:57:46', 1, 'aduan diterima', NULL, NULL, NULL, 16, '2026-01-07 02:03:42', 'diluluskan', 15, '2026-01-07 01:59:53', 16, 1, '2026-01-07 02:03:42', 18, '2026-01-07 02:06:40'),
+(32, 'ADU-2026-724', 'cadangan', 'TEST ADUAN MAZNAH', 'TEST ADUAN MAZNAH DETAILS', 15, 'Pn. Maznah Binti Marzuki', '', '', '', 'Pembantu Tadbir', 'Bahagian Pentadbiran dan Kewangan', '', 'maznah@jpbdselangor.gov.my', '', 'monitor', 'MN-2023-001', '', '2026-01-07', 'Masalah Password', 'password', NULL, 'Pn. Siti Norhayati Binti Mokti', 'pending', 'dimajukan_pegawai_pelulus', 14, 'sederhana', 0, NULL, NULL, '2026-01-07 01:59:10', '2026-01-07 02:05:30', NULL, '2026-01-07 02:00:44', 1, 'boleh dibaiki', NULL, NULL, NULL, NULL, NULL, 'pending', 15, '2026-01-07 02:05:30', 16, NULL, NULL, NULL, NULL),
+(33, 'ADU-2026-852', 'cadangan', 'TEST ADUAN ALIA YUSOF', 'TEST ADUAN ALIA YUSOF DETAILS', 16, 'Pn. Alia Binti Mohd Yusof', '', '', '', 'Penolong Pengarah', 'Bahagian Pentadbiran &amp; Kewangan', '', 'alia.yusof@jpbdselangor.gov.my', '', 'network', 'NT-201-2033', '', '2026-01-07', 'Tidak Boleh Boot Windows', 'tidak_boleh_boot_windows', NULL, 'Pn. Siti Norhayati Binti Mokti', 'pending', 'diluluskan', 14, 'sederhana', 0, NULL, NULL, '2026-01-07 02:02:22', '2026-01-08 02:00:03', NULL, '2026-01-08 01:23:24', 1, 'diterima', NULL, NULL, NULL, 16, '2026-01-08 02:00:03', 'diluluskan', 15, '2026-01-08 01:24:19', 16, 1, '2026-01-08 01:23:24', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -171,7 +185,6 @@ CREATE TABLE `complaint_status_history` (
 --
 
 INSERT INTO `complaint_status_history` (`id`, `complaint_id`, `status`, `keterangan`, `created_by`, `created_at`) VALUES
-(61, 24, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 19, '2025-12-30 10:22:37'),
 (62, 25, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 20, '2025-12-30 10:25:10'),
 (63, 25, 'Dimajukan ke Unit Aset', 'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2025-12-30 10:26:44'),
 (64, 25, 'Dalam Semakan Unit Aset', 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih', 15, '2025-12-30 10:30:39'),
@@ -179,12 +192,49 @@ INSERT INTO `complaint_status_history` (`id`, `complaint_id`, `status`, `keteran
 (66, 25, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: diluluskan untuk tindakan selanjutnya', 16, '2025-12-30 10:34:58'),
 (67, 25, 'Dimajukan ke Unit IT / Sokongan', 'Aduan telah dimajukan ke Unit IT / Sokongan untuk pelaksanaan tindakan', 16, '2025-12-30 10:34:58'),
 (68, 25, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 30/12/2025. Catatan: telah selesai', 18, '2025-12-30 10:36:40'),
-(69, 24, 'Dimajukan ke Unit Aset', 'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2025-12-30 16:38:19'),
-(70, 24, 'Dalam Semakan Unit Aset', 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih', 15, '2025-12-30 16:41:40'),
-(71, 24, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2025-12-30 16:43:30'),
-(72, 24, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: Aduan telah diluluskan dan dimajukan kepada pegawai berkaitan untuk tindakan selanjutnya', 16, '2025-12-30 16:48:03'),
-(73, 24, 'Dimajukan ke Unit IT / Sokongan', 'Aduan telah dimajukan ke Unit IT / Sokongan untuk pelaksanaan tindakan', 16, '2025-12-30 16:48:03'),
-(74, 24, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 31/12/2025. Catatan: telah disiapkan dan boleh digunakan dengan sempura', 18, '2025-12-30 16:54:21');
+(75, 26, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 21, '2025-12-31 00:40:01'),
+(76, 26, 'Dimajukan ke Unit Aset', 'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2025-12-31 02:04:32'),
+(77, 26, 'Dalam Semakan Unit Aset', 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih', 15, '2025-12-31 02:06:31'),
+(78, 26, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2025-12-31 02:08:01'),
+(79, 26, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: aduan diluluskan untuk tindakan selanjutnya', 16, '2025-12-31 02:10:21'),
+(80, 26, 'Dimajukan ke Unit IT / Sokongan', 'Aduan telah dimajukan ke Unit IT / Sokongan untuk pelaksanaan tindakan', 16, '2025-12-31 02:10:21'),
+(81, 26, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 31/12/2025. Catatan: projektor telah diperbaiki', 18, '2025-12-31 02:14:34'),
+(82, 27, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 19, '2025-12-31 02:19:10'),
+(83, 28, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 22, '2025-12-31 03:20:14'),
+(84, 28, 'Dimajukan ke Unit Aset', 'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2025-12-31 03:21:34'),
+(85, 28, 'Dalam Semakan Unit Aset', 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih', 15, '2025-12-31 03:26:06'),
+(86, 28, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2025-12-31 03:27:24'),
+(87, 28, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: diluluskan', 16, '2025-12-31 03:36:47'),
+(88, 28, 'Dimajukan ke Unit IT / Sokongan', 'Aduan telah dimajukan ke Unit IT / Sokongan untuk pelaksanaan tindakan', 16, '2025-12-31 03:36:47'),
+(89, 28, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 31/12/2025. Catatan: selesai', 18, '2025-12-31 03:50:25'),
+(90, 29, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 22, '2026-01-05 06:51:09'),
+(91, 29, 'Dimajukan ke Unit Aset', 'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2026-01-05 06:56:39'),
+(92, 29, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2026-01-05 06:57:30'),
+(93, 29, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: diluluskan', 16, '2026-01-05 06:58:57'),
+(94, 29, 'Dimajukan ke Unit IT / Sokongan', 'Aduan telah dimajukan ke Unit IT / Sokongan untuk pelaksanaan tindakan', 16, '2026-01-05 06:58:57'),
+(95, 29, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 05/01/2026. Catatan: telah selesai laksanakan', 18, '2026-01-05 06:59:42'),
+(96, 30, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 22, '2026-01-07 01:44:41'),
+(97, 31, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 14, '2026-01-07 01:55:33'),
+(98, 31, 'Dimajukan ke Unit Aset', 'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2026-01-07 01:57:46'),
+(99, 32, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 15, '2026-01-07 01:59:10'),
+(100, 31, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2026-01-07 01:59:53'),
+(101, 32, 'Dimajukan ke Unit Aset', 'Aduan telah disahkan oleh Unit Aduan Dalaman dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2026-01-07 02:00:44'),
+(102, 33, 'Aduan Diterima', 'Aduan/Cadangan telah diterima dan akan diproses', 16, '2026-01-07 02:02:22'),
+(103, 31, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: dibaiki', 16, '2026-01-07 02:03:42'),
+(104, 31, 'Dimajukan ke Unit IT / Sokongan', 'Aduan telah dimajukan ke Unit IT / Sokongan untuk pelaksanaan tindakan', 16, '2026-01-07 02:03:42'),
+(105, 32, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2026-01-07 02:05:30'),
+(106, 31, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 07/01/2026. Catatan: selesai melaksana', 18, '2026-01-07 02:06:40'),
+(107, 33, 'Dalam Proses', 'Aduan telah disahkan oleh Unit Aduan Dalaman, ditugaskan kepada pegawai pelaksana, dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2026-01-08 01:23:24'),
+(108, 33, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2026-01-08 01:24:19'),
+(109, 33, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: diluluskan', 16, '2026-01-08 02:00:03'),
+(110, 30, 'Dalam Proses', 'Aduan telah disahkan oleh Unit Aduan Dalaman, ditugaskan kepada pegawai pelaksana, dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2026-01-08 03:54:29'),
+(111, 30, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2026-01-08 03:55:37'),
+(112, 30, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: boleh diluluskan', 16, '2026-01-08 03:57:06'),
+(113, 27, 'Dalam Proses', 'Aduan telah disahkan oleh Unit Aduan Dalaman, ditugaskan kepada pegawai pelaksana, dan dimajukan kepada Unit Aset untuk tindakan selanjutnya', 14, '2026-01-08 03:58:13'),
+(114, 27, 'Dimajukan ke Pegawai Pelulus', 'Borang Kerosakan Aset Alih telah disemak oleh Unit Aset dan dimajukan kepada Pegawai Pelulus untuk keputusan', 15, '2026-01-08 03:58:57'),
+(115, 30, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 08/01/2026. Catatan: selsesai', 18, '2026-01-08 04:32:20'),
+(116, 27, 'Diluluskan oleh Pegawai Pelulus', 'Diluluskan oleh Pn. Alia Binti Mohd Yusof. Ulasan: diluluskan', 16, '2026-01-08 04:34:14'),
+(117, 27, 'Selesai', 'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada 08/01/2026. Catatan: telah selesai', 18, '2026-01-08 04:35:02');
 
 -- --------------------------------------------------------
 
@@ -211,7 +261,14 @@ CREATE TABLE `dokumen_unit_aduan` (
 
 INSERT INTO `dokumen_unit_aduan` (`id`, `complaint_id`, `no_rujukan_fail`, `dimajukan_ke_officer_id`, `tindakan_susulan`, `tindakan_kesimpulan`, `tarikh`, `created_by`, `created_at`, `updated_at`) VALUES
 (11, 25, 'ADU-2025-065', 1, 'Aduan telah diterima. sila semak', 'Aduan telah diterima. sila semak', '2025-12-30', 14, '2025-12-30 10:26:44', '2025-12-30 10:26:44'),
-(12, 24, 'ADU-2025-090', 1, 'Aduan telah diterima dan telah majukan ke unit aset', 'Aduan telah diterima dan telah majukan ke unit aset', '2025-12-30', 14, '2025-12-30 16:38:19', '2025-12-30 16:38:19');
+(13, 26, 'ADU-2025-280', 1, 'aduan telah diterima', 'aduan telah diterima', '2025-12-31', 14, '2025-12-31 02:04:32', '2025-12-31 02:04:32'),
+(14, 28, 'ADU-2025-081', 1, 'Aduan telah diterima', 'Aduan telah diterima', '2025-12-31', 14, '2025-12-31 03:21:34', '2025-12-31 03:21:34'),
+(15, 29, 'ADU-2026-186', 1, 'telah diterima', 'telah diterima', '2026-01-05', 14, '2026-01-05 06:56:39', '2026-01-05 06:56:39'),
+(16, 31, 'ADU-2026-084', 1, 'aduan diterima', 'aduan diterima', '2026-01-07', 14, '2026-01-07 01:57:46', '2026-01-07 01:57:46'),
+(17, 32, 'ADU-2026-724', 1, 'boleh dibaiki', 'boleh dibaiki', '2026-01-07', 14, '2026-01-07 02:00:44', '2026-01-07 02:00:44'),
+(18, 33, 'ADU-2026-852', 1, 'diterima', 'diterima', '2026-01-08', 14, '2026-01-08 01:23:24', '2026-01-08 01:23:24'),
+(19, 30, 'ADU-2026-803', 1, 'dimajukan ke unit aset', 'dimajukan ke unit aset', '2026-01-08', 14, '2026-01-08 03:54:29', '2026-01-08 03:54:29'),
+(20, 27, 'ADU-2025-467', 1, 'dimajukan unit aset', 'dimajukan unit aset', '2026-01-08', 14, '2026-01-08 03:58:13', '2026-01-08 03:58:13');
 
 -- --------------------------------------------------------
 
@@ -292,9 +349,48 @@ CREATE TABLE `unit_it_sokongan_officers` (
 --
 
 INSERT INTO `unit_it_sokongan_officers` (`id`, `nama`, `email`, `no_telefon`, `jawatan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'En. Mohd Faizal Bin Ahmad', 'faizal@jpbdselangor.gov.my', '03-12345681', 'Juruteknik Komputer', 'aktif', '2025-12-30 03:11:27', '2025-12-30 03:11:27'),
-(2, 'Pn. Nurul Ain Binti Hassan', 'nurul.ain@jpbdselangor.gov.my', '03-12345682', 'Pembantu Teknikal IT', 'aktif', '2025-12-30 03:11:27', '2025-12-30 03:11:27'),
-(3, 'En. Rizal Bin Abdullah', 'rizal@jpbdselangor.gov.my', '03-12345683', 'Pegawai IT Sokongan', 'aktif', '2025-12-30 03:11:27', '2025-12-30 03:11:27');
+(1, 'En. Mohd Faizal Bin Ahmad', 'faizal@jpbdselangor.gov.my', '03-12345681', 'Juruteknik Komputer', 'aktif', '2025-12-30 03:11:27', '2025-12-30 03:11:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `unit_korporat_officers`
+--
+
+CREATE TABLE `unit_korporat_officers` (
+  `id` int NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jawatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bahagian` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('aktif','tidak_aktif') COLLATE utf8mb4_unicode_ci DEFAULT 'aktif',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `unit_korporat_officers`
+--
+
+INSERT INTO `unit_korporat_officers` (`id`, `nama`, `email`, `jawatan`, `bahagian`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Muhammad Adzhan bin Mohd Saike', 'adzhan@jpbdselangor.gov.my', 'Pegawai Unit Korporat', 'Unit Korporat (Laporan)', 'aktif', '2026-01-09 04:11:41', '2026-01-09 04:11:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `unit_pentadbiran_officers`
+--
+
+CREATE TABLE `unit_pentadbiran_officers` (
+  `id` int NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jawatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bahagian` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('aktif','tidak_aktif') COLLATE utf8mb4_unicode_ci DEFAULT 'aktif',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -312,7 +408,7 @@ CREATE TABLE `users` (
   `unit` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `no_sambungan` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tingkat` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` enum('user','admin','unit_aduan_dalaman','unit_aset','bahagian_pentadbiran_kewangan','unit_it_sokongan') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'user',
+  `role` enum('user','admin','unit_aduan_dalaman','unit_aset','bahagian_pentadbiran_kewangan','unit_it_sokongan','unit_korporat','unit_pentadbiran','staff') COLLATE utf8mb4_unicode_ci DEFAULT 'user',
   `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -333,7 +429,32 @@ INSERT INTO `users` (`id`, `nama_penuh`, `email`, `password`, `jawatan`, `bahagi
 (17, 'Amar Maaruf', 'amar@jpbdselangor.gov.my', '$2y$10$Nzff3eHPKSj10PQO7flWquM.90YZAic/5h4jr0EahR/akQB5HfslS', 'Pegawai Teknologi Maklumat', 'pembangunan', NULL, '1335', '2', 'user', 'active', '2025-12-30 00:22:00', '2025-12-30 00:22:00', NULL, NULL),
 (18, 'En. Mohd Faizal Bin Ahmad', 'faizal@jpbdselangor.gov.my', '$2y$12$8Wos13KhnYKoWOttGDI28OSaxxrS/oAIhtcczMKtMY5rm0EytQF7i', 'Juruteknik Komputer', 'Unit IT / Sokongan', 'Unit IT / Sokongan', '', NULL, 'unit_it_sokongan', 'active', '2025-12-30 03:11:27', '2025-12-30 16:36:52', NULL, NULL),
 (19, 'Adam Idris', 'adam@jpbdselangor.gov.my', '$2y$10$MyCCKe6DDQAdJMMoaQ9.A.eqTEA58ZD7ZXEHmULSjSLLrALLdShgO', 'Pegawai Bandar Perancang', 'perancangan', NULL, '2005', '3', 'user', 'active', '2025-12-30 06:43:10', '2025-12-30 06:43:10', NULL, NULL),
-(20, 'Adlin Nabila', 'adlin@jpbdselangor.gov.my', '$2y$10$3nOKlvOF67xbLfhtXlety.okUmf3/9Jpt.zV.WMwQblxo6UAANz7O', 'Pegawai Teknologi Maklumat', 'perancangan', NULL, '2001', '9', 'user', 'active', '2025-12-30 10:23:53', '2025-12-30 10:23:53', NULL, NULL);
+(20, 'Adlin Nabila', 'adlin@jpbdselangor.gov.my', '$2y$10$3nOKlvOF67xbLfhtXlety.okUmf3/9Jpt.zV.WMwQblxo6UAANz7O', 'Pegawai Teknologi Maklumat', 'perancangan', NULL, '2001', '9', 'user', 'active', '2025-12-30 10:23:53', '2025-12-30 10:23:53', NULL, NULL),
+(21, 'Syazwani Ili', 'wani@jpbdselangor.gov.my', '$2y$10$vHes/kkVHHIUexhoYvkDzuADgomJD8CSZgIv09GnEEe2tixcyWifq', 'Pegawai Bandar Perancang', 'korporat', NULL, '2007', '3', 'user', 'active', '2025-12-31 00:35:15', '2025-12-31 00:35:15', NULL, NULL),
+(22, 'Alya Azuan', 'alya@jpbdselangor.gov.my', '$2y$10$IIq38jdXj8GbJGLdbT91quMZbrAIHDAWgXKpulgrZgTbRWy.QgGiu', 'Pegawai Bandar Perancang', 'perancangan', NULL, '2001', '3', 'user', 'active', '2025-12-31 03:13:06', '2025-12-31 03:13:06', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_roles`
+--
+
+CREATE TABLE `user_roles` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `role_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `assigned_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `assigned_by` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user_roles`
+--
+
+INSERT INTO `user_roles` (`id`, `user_id`, `role_name`, `assigned_at`, `assigned_by`) VALUES
+(1, 15, 'unit_aset', '2026-01-09 04:11:41', NULL),
+(2, 15, 'unit_pentadbiran', '2026-01-09 04:11:41', NULL),
+(3, 15, 'user', '2026-01-09 04:11:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -362,11 +483,37 @@ INSERT INTO `workflow_actions` (`id`, `complaint_id`, `action_type`, `from_statu
 (32, 25, 'dimajukan_pegawai_pelulus', 'dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2025-12-30 10:33:00'),
 (33, 25, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'dimajukan_unit_it', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - diluluskan untuk tindakan selanjutnya', '2025-12-30 10:34:58'),
 (34, 25, 'selesai', 'dimajukan_unit_it', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - telah selesai', '2025-12-30 10:36:40'),
-(35, 24, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan dan dimajukan ke Unit Aset', '2025-12-30 16:38:19'),
-(36, 24, 'dalam_semakan_unit_aset', 'dimajukan_unit_aset', 'dalam_semakan_unit_aset', 15, 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih', '2025-12-30 16:41:40'),
-(37, 24, 'dimajukan_pegawai_pelulus', 'dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2025-12-30 16:43:30'),
-(38, 24, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'dimajukan_unit_it', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - Aduan telah diluluskan dan dimajukan kepada pegawai berkaitan untuk tindakan selanjutnya', '2025-12-30 16:48:03'),
-(39, 24, 'selesai', 'dimajukan_unit_it', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - telah disiapkan dan boleh digunakan dengan sempura', '2025-12-30 16:54:21');
+(40, 26, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan dan dimajukan ke Unit Aset', '2025-12-31 02:04:32'),
+(41, 26, 'dalam_semakan_unit_aset', 'dimajukan_unit_aset', 'dalam_semakan_unit_aset', 15, 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih', '2025-12-31 02:06:31'),
+(42, 26, 'dimajukan_pegawai_pelulus', 'dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2025-12-31 02:08:01'),
+(43, 26, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'dimajukan_unit_it', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - aduan diluluskan untuk tindakan selanjutnya', '2025-12-31 02:10:21'),
+(44, 26, 'selesai', 'dimajukan_unit_it', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - projektor telah diperbaiki', '2025-12-31 02:14:34'),
+(45, 28, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan dan dimajukan ke Unit Aset', '2025-12-31 03:21:34'),
+(46, 28, 'dalam_semakan_unit_aset', 'dimajukan_unit_aset', 'dalam_semakan_unit_aset', 15, 'Unit Aset sedang menyemak dan mengisi Borang Kerosakan Aset Alih', '2025-12-31 03:26:06'),
+(47, 28, 'dimajukan_pegawai_pelulus', 'dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2025-12-31 03:27:24'),
+(48, 28, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'dimajukan_unit_it', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - diluluskan', '2025-12-31 03:36:47'),
+(49, 28, 'selesai', 'dimajukan_unit_it', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - selesai', '2025-12-31 03:50:25'),
+(50, 29, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan dan dimajukan ke Unit Aset', '2026-01-05 06:56:39'),
+(51, 29, 'dimajukan_pegawai_pelulus', 'dimajukan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2026-01-05 06:57:30'),
+(52, 29, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'dimajukan_unit_it', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - diluluskan', '2026-01-05 06:58:57'),
+(53, 29, 'selesai', 'dimajukan_unit_it', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - telah selesai laksanakan', '2026-01-05 06:59:42'),
+(54, 31, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan dan dimajukan ke Unit Aset', '2026-01-07 01:57:46'),
+(55, 31, 'dimajukan_pegawai_pelulus', 'dimajukan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2026-01-07 01:59:53'),
+(56, 32, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan dan dimajukan ke Unit Aset', '2026-01-07 02:00:44'),
+(57, 31, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'dimajukan_unit_it', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - dibaiki', '2026-01-07 02:03:42'),
+(58, 32, 'dimajukan_pegawai_pelulus', 'dimajukan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2026-01-07 02:05:30'),
+(59, 31, 'selesai', 'dimajukan_unit_it', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - selesai melaksana', '2026-01-07 02:06:40'),
+(60, 33, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan, dimajukan ke Unit Aset, dan ditugaskan kepada En. Mohd Faizal Bin Ahmad (Unit IT/Pentadbiran)', '2026-01-08 01:23:24'),
+(61, 33, 'dimajukan_pegawai_pelulus', 'dimajukan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2026-01-08 01:24:19'),
+(62, 33, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'diluluskan', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - diluluskan', '2026-01-08 02:00:03'),
+(63, 30, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan, dimajukan ke Unit Aset, dan ditugaskan kepada En. Mohd Faizal Bin Ahmad (Unit IT/Pentadbiran)', '2026-01-08 03:54:29'),
+(64, 30, 'dimajukan_pegawai_pelulus', 'dimajukan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2026-01-08 03:55:37'),
+(65, 30, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'diluluskan', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - boleh diluluskan', '2026-01-08 03:57:06'),
+(66, 27, 'forward_to_unit_aset', 'baru', 'dimajukan_unit_aset', 14, 'Aduan disahkan, dimajukan ke Unit Aset, dan ditugaskan kepada En. Mohd Faizal Bin Ahmad (Unit IT/Pentadbiran)', '2026-01-08 03:58:13'),
+(67, 27, 'dimajukan_pegawai_pelulus', 'dimajukan_unit_aset', 'dimajukan_pegawai_pelulus', 15, 'Borang Kerosakan Aset Alih telah lengkap dan dimajukan kepada Pegawai Pelulus untuk keputusan', '2026-01-08 03:58:57'),
+(68, 30, 'selesai', 'diluluskan', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - selsesai', '2026-01-08 04:32:20'),
+(69, 27, 'keputusan_pegawai_pelulus', 'dimajukan_pegawai_pelulus', 'diluluskan', 16, 'Diluluskan oleh Pn. Alia Binti Mohd Yusof - diluluskan', '2026-01-08 04:34:14'),
+(70, 27, 'selesai', 'diluluskan', 'selesai', 18, 'Tindakan selesai oleh Unit IT / Sokongan - telah selesai', '2026-01-08 04:35:02');
 
 --
 -- Indexes for dumped tables
@@ -458,6 +605,22 @@ ALTER TABLE `unit_it_sokongan_officers`
   ADD KEY `idx_status` (`status`);
 
 --
+-- Indexes for table `unit_korporat_officers`
+--
+ALTER TABLE `unit_korporat_officers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_email` (`email`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Indexes for table `unit_pentadbiran_officers`
+--
+ALTER TABLE `unit_pentadbiran_officers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_email` (`email`),
+  ADD KEY `idx_status` (`status`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -467,6 +630,16 @@ ALTER TABLE `users`
   ADD KEY `idx_role` (`role`),
   ADD KEY `idx_status` (`status`),
   ADD KEY `idx_reset_token` (`reset_token`);
+
+--
+-- Indexes for table `user_roles`
+--
+ALTER TABLE `user_roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_user_role` (`user_id`,`role_name`),
+  ADD KEY `assigned_by` (`assigned_by`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_role_name` (`role_name`);
 
 --
 -- Indexes for table `workflow_actions`
@@ -486,31 +659,31 @@ ALTER TABLE `workflow_actions`
 -- AUTO_INCREMENT for table `attachments`
 --
 ALTER TABLE `attachments`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `borang_kerosakan_aset`
 --
 ALTER TABLE `borang_kerosakan_aset`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `complaint_status_history`
 --
 ALTER TABLE `complaint_status_history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT for table `dokumen_unit_aduan`
 --
 ALTER TABLE `dokumen_unit_aduan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -537,16 +710,34 @@ ALTER TABLE `unit_it_sokongan_officers`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `unit_korporat_officers`
+--
+ALTER TABLE `unit_korporat_officers`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `unit_pentadbiran_officers`
+--
+ALTER TABLE `unit_pentadbiran_officers`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `user_roles`
+--
+ALTER TABLE `user_roles`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `workflow_actions`
 --
 ALTER TABLE `workflow_actions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- Constraints for dumped tables
@@ -600,6 +791,13 @@ ALTER TABLE `dokumen_unit_aduan`
 ALTER TABLE `notifications`
   ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `notifications_ibfk_2` FOREIGN KEY (`complaint_id`) REFERENCES `complaints` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `user_roles`
+--
+ALTER TABLE `user_roles`
+  ADD CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`assigned_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `workflow_actions`

@@ -124,3 +124,35 @@
 2026-01-05 14:51:09 - Complaint insert executed successfully
 2026-01-05 14:51:09 - Complaint ID: 29
 2026-01-05 14:51:09 - Complaint submitted successfully. ID: 29, Ticket: ADU-2026-186
+2026-01-07 09:44:41 - Complaint submission started
+2026-01-07 09:44:41 - Request method: POST
+2026-01-07 09:44:41 - Validation passed. Data received: {"jenis":"aduan","perkara":"ADUAN KEROSAKAN SERVER","nama":"Alya Azuan","email":"alya@jpbdselangor.gov.my"}
+2026-01-07 09:44:41 - Database connection successful
+2026-01-07 09:44:41 - Attempting to insert complaint with ticket: ADU-2026-803
+2026-01-07 09:44:41 - Complaint insert executed successfully
+2026-01-07 09:44:41 - Complaint ID: 30
+2026-01-07 09:44:41 - Complaint submitted successfully. ID: 30, Ticket: ADU-2026-803
+2026-01-07 09:55:33 - Complaint submission started
+2026-01-07 09:55:33 - Request method: POST
+2026-01-07 09:55:33 - Validation passed. Data received: {"jenis":"cadangan","perkara":"TEST ADUAN AZRI HANIS","nama":"En. Azri Hanis Bin Zul","email":"azri.hanis@jpbdselangor.gov.my"}
+2026-01-07 09:55:33 - Database connection successful
+2026-01-07 09:55:33 - Attempting to insert complaint with ticket: ADU-2026-084
+2026-01-07 09:55:33 - Complaint insert executed successfully
+2026-01-07 09:55:33 - Complaint ID: 31
+2026-01-07 09:55:33 - Complaint submitted successfully. ID: 31, Ticket: ADU-2026-084
+2026-01-07 09:59:10 - Complaint submission started
+2026-01-07 09:59:10 - Request method: POST
+2026-01-07 09:59:10 - Validation passed. Data received: {"jenis":"cadangan","perkara":"TEST ADUAN MAZNAH","nama":"Pn. Maznah Binti Marzuki","email":"maznah@jpbdselangor.gov.my"}
+2026-01-07 09:59:10 - Database connection successful
+2026-01-07 09:59:10 - Attempting to insert complaint with ticket: ADU-2026-724
+2026-01-07 09:59:10 - Complaint insert executed successfully
+2026-01-07 09:59:10 - Complaint ID: 32
+2026-01-07 09:59:10 - Complaint submitted successfully. ID: 32, Ticket: ADU-2026-724
+2026-01-07 10:02:22 - Complaint submission started
+2026-01-07 10:02:22 - Request method: POST
+2026-01-07 10:02:22 - Validation passed. Data received: {"jenis":"cadangan","perkara":"TEST ADUAN ALIA YUSOF","nama":"Pn. Alia Binti Mohd Yusof","email":"alia.yusof@jpbdselangor.gov.my"}
+2026-01-07 10:02:22 - Database connection successful
+2026-01-07 10:02:22 - Attempting to insert complaint with ticket: ADU-2026-852
+2026-01-07 10:02:22 - Complaint insert executed successfully
+2026-01-07 10:02:22 - Complaint ID: 33
+2026-01-07 10:02:22 - Complaint submitted successfully. ID: 33, Ticket: ADU-2026-852
