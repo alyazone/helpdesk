@@ -31,7 +31,9 @@ class RoleSwitcher {
             'unit_aduan_dalaman',
             'unit_aset',
             'bahagian_pentadbiran_kewangan',
-            'unit_it_sokongan'
+            'unit_it_sokongan',
+            'unit_korporat',
+            'unit_pentadbiran'
         ];
         return adminRoles.includes(role);
     }
@@ -55,9 +57,39 @@ class RoleSwitcher {
             'unit_aduan_dalaman': '/helpdesk/admin/unit-aduan-dalaman/index.php',
             'unit_aset': '/helpdesk/admin/unit-aset/index.php',
             'bahagian_pentadbiran_kewangan': '/helpdesk/admin/bahagian-pentadbiran-kewangan/index.php',
-            'unit_it_sokongan': '/helpdesk/admin/unit-it-sokongan/index.php'
+            'unit_it_sokongan': '/helpdesk/admin/unit-it-sokongan/index.php',
+            'unit_korporat': '/helpdesk/admin/unit-korporat/index.php',
+            'unit_pentadbiran': '/helpdesk/admin/unit-it-sokongan/index.php'
         };
         return redirectUrls[role] || '/helpdesk/semakan.html';
+    }
+
+    getRoleDisplayName(role) {
+        const roleNames = {
+            'user': 'Pengguna Biasa',
+            'admin': 'Super Admin',
+            'unit_aduan_dalaman': 'Unit Aduan Dalaman',
+            'unit_aset': 'Unit Aset',
+            'bahagian_pentadbiran_kewangan': 'Pegawai Pelulus',
+            'unit_it_sokongan': 'Unit ICT (Pelaksana)',
+            'unit_korporat': 'Unit Korporat (Laporan)',
+            'unit_pentadbiran': 'Unit Pentadbiran (Pelaksana)'
+        };
+        return roleNames[role] || role;
+    }
+
+    getRoleIcon(role) {
+        const roleIcons = {
+            'user': '👤',
+            'admin': '👑',
+            'unit_aduan_dalaman': '📝',
+            'unit_aset': '📦',
+            'bahagian_pentadbiran_kewangan': '✅',
+            'unit_it_sokongan': '💻',
+            'unit_korporat': '📊',
+            'unit_pentadbiran': '⚙️'
+        };
+        return roleIcons[role] || '⚙️';
     }
 
     renderRoleSwitcher() {
@@ -71,22 +103,47 @@ class RoleSwitcher {
             z-index: 9999;
         `;
 
-        // Get role display names
+        // Get active role and available roles
         const activeRole = this.currentUser.active_role || this.currentUser.role;
-        const originalRole = this.currentUser.role;
-
-        const roleNames = {
-            'user': 'Pengguna',
-            'admin': 'Pentadbir',
-            'unit_aduan_dalaman': 'Unit Aduan Dalaman',
-            'unit_aset': 'Unit Aset',
-            'bahagian_pentadbiran_kewangan': 'Bahagian Pentadbiran & Kewangan',
-            'unit_it_sokongan': 'Unit IT / Sokongan'
-        };
+        const availableRoles = this.currentUser.roles || [this.currentUser.role];
 
         // Determine button color based on active role
         const buttonColor = activeRole === 'user' ? '#007bff' : '#28a745';
-        const buttonIcon = activeRole === 'user' ? '👤' : '⚙️';
+        const buttonIcon = this.getRoleIcon(activeRole);
+
+        // Generate role buttons dynamically
+        const roleButtonsHTML = availableRoles.map(role => {
+            const isActive = role === activeRole;
+            const roleColor = role === 'user' ? '#007bff' :
+                             role === 'admin' ? '#dc3545' :
+                             role === 'unit_korporat' ? '#6f42c1' :
+                             '#28a745';
+
+            return `
+                <button class="role-switch-btn" data-role="${role}" style="
+                    padding: 10px 16px;
+                    border: 1px solid ${roleColor};
+                    background: ${isActive ? this.lightenColor(roleColor, 0.9) : roleColor};
+                    color: ${isActive ? roleColor : 'white'};
+                    border-radius: 6px;
+                    cursor: ${isActive ? 'not-allowed' : 'pointer'};
+                    font-size: 14px;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 8px;
+                    transition: all 0.2s ease;
+                    opacity: ${isActive ? '0.6' : '1'};
+                " ${isActive ? 'disabled' : ''}>
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <span>${this.getRoleIcon(role)}</span>
+                        <span>${this.getRoleDisplayName(role)}</span>
+                    </span>
+                    ${isActive ? '<span style="font-size: 14px;">✓</span>' : ''}
+                </button>
+            `;
+        }).join('');
 
         container.innerHTML = `
             <!-- Compact toggle button -->
@@ -106,7 +163,7 @@ class RoleSwitcher {
                 transition: all 0.3s ease;
             ">
                 <span>${buttonIcon}</span>
-                <span id="current-role-text">${roleNames[activeRole]}</span>
+                <span id="current-role-text">${this.getRoleDisplayName(activeRole)}</span>
                 <span style="font-size: 10px;">▼</span>
             </button>
 
@@ -120,60 +177,20 @@ class RoleSwitcher {
                 border-radius: 12px;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.2);
                 border: 1px solid #e0e0e0;
-                min-width: 280px;
+                min-width: 320px;
+                max-width: 400px;
                 display: none;
                 animation: slideUp 0.3s ease;
             ">
                 <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0;">
                     <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 8px;">Tukar Peranan</div>
                     <div style="font-size: 12px; color: #666;">
-                        <div style="margin-bottom: 4px;"><strong>Peranan Asal:</strong> ${roleNames[originalRole]}</div>
-                        <div><strong>Peranan Aktif:</strong> <span id="active-role-display">${roleNames[activeRole]}</span></div>
+                        <div><strong>Peranan Aktif:</strong> <span id="active-role-display">${this.getRoleDisplayName(activeRole)}</span></div>
                     </div>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button id="switch-to-user" class="role-switch-btn" style="
-                        padding: 10px 16px;
-                        border: 1px solid #007bff;
-                        background: ${activeRole === 'user' ? '#e7f3ff' : '#007bff'};
-                        color: ${activeRole === 'user' ? '#007bff' : 'white'};
-                        border-radius: 6px;
-                        cursor: ${activeRole === 'user' ? 'not-allowed' : 'pointer'};
-                        font-size: 14px;
-                        font-weight: 500;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        gap: 8px;
-                        transition: all 0.2s ease;
-                        opacity: ${activeRole === 'user' ? '0.6' : '1'};
-                    " ${activeRole === 'user' ? 'disabled' : ''}>
-                        <span>👤</span>
-                        <span>Mod Pengguna</span>
-                        ${activeRole === 'user' ? '<span style="font-size: 12px;">✓</span>' : ''}
-                    </button>
-
-                    <button id="switch-to-admin" class="role-switch-btn" style="
-                        padding: 10px 16px;
-                        border: 1px solid #28a745;
-                        background: ${activeRole !== 'user' ? '#e8f5e9' : '#28a745'};
-                        color: ${activeRole !== 'user' ? '#28a745' : 'white'};
-                        border-radius: 6px;
-                        cursor: ${activeRole !== 'user' ? 'not-allowed' : 'pointer'};
-                        font-size: 14px;
-                        font-weight: 500;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        gap: 8px;
-                        transition: all 0.2s ease;
-                        opacity: ${activeRole !== 'user' ? '0.6' : '1'};
-                    " ${activeRole !== 'user' ? 'disabled' : ''}>
-                        <span>⚙️</span>
-                        <span>Mod ${roleNames[originalRole]}</span>
-                        ${activeRole !== 'user' ? '<span style="font-size: 12px;">✓</span>' : ''}
-                    </button>
+                    ${roleButtonsHTML}
                 </div>
 
                 <div id="switch-status" style="
@@ -231,9 +248,25 @@ class RoleSwitcher {
             }
         });
 
-        // Add event listeners for switching roles
-        document.getElementById('switch-to-user').addEventListener('click', () => this.switchRole('user'));
-        document.getElementById('switch-to-admin').addEventListener('click', () => this.switchRole(originalRole));
+        // Add event listeners for all role buttons
+        const roleButtons = document.querySelectorAll('.role-switch-btn[data-role]');
+        roleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const role = button.getAttribute('data-role');
+                if (role && role !== activeRole) {
+                    this.switchRole(role);
+                }
+            });
+        });
+    }
+
+    lightenColor(color, opacity) {
+        // Simple function to create a lighter version of the color
+        const hex = color.replace('#', '');
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     }
 
     async switchRole(newRole) {

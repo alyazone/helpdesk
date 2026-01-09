@@ -159,6 +159,18 @@ function isUnitITSokongan() {
     return !empty($activeRole) && $activeRole === 'unit_it_sokongan';
 }
 
+// Check if user is Unit Korporat (checks active role for access control)
+function isUnitKorporat() {
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    return !empty($activeRole) && $activeRole === 'unit_korporat';
+}
+
+// Check if user is Unit Pentadbiran (checks active role for access control)
+function isUnitPentadbiran() {
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    return !empty($activeRole) && $activeRole === 'unit_pentadbiran';
+}
+
 // Check if user has any admin role (checks ORIGINAL role, not active role)
 // This determines who can see the role switcher
 function hasAdminRole() {
@@ -167,8 +179,99 @@ function hasAdminRole() {
         'unit_aduan_dalaman',
         'unit_aset',
         'bahagian_pentadbiran_kewangan',
-        'unit_it_sokongan'
+        'unit_it_sokongan',
+        'unit_korporat',
+        'unit_pentadbiran'
     ]);
+}
+
+/**
+ * MULTI-ROLE SUPPORT FUNCTIONS
+ */
+
+// Get all roles assigned to a user from the database
+function getUserRoles($userId) {
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT DISTINCT role_name FROM user_roles WHERE user_id = ? ORDER BY role_name");
+        $stmt->execute([$userId]);
+        $roles = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $roles ?: [];
+    } catch (Exception $e) {
+        error_log("Error fetching user roles: " . $e->getMessage());
+        return [];
+    }
+}
+
+// Check if user has a specific role (checks from database)
+function hasRole($userId, $roleName) {
+    $roles = getUserRoles($userId);
+    return in_array($roleName, $roles);
+}
+
+// Check if user has any of the specified roles
+function hasAnyRole($userId, $roleNames) {
+    $userRoles = getUserRoles($userId);
+    return !empty(array_intersect($roleNames, $userRoles));
+}
+
+// Check if active role has access to a specific interface
+function canAccessInterface($interface) {
+    if (!isLoggedIn()) {
+        return false;
+    }
+
+    $activeRole = $_SESSION['active_role'] ?? $_SESSION['role'] ?? '';
+    $userId = $_SESSION['user_id'] ?? null;
+
+    // Map interfaces to required roles
+    $interfaceRoleMap = [
+        'admin' => ['admin'],
+        'unit_aduan_dalaman' => ['admin', 'unit_aduan_dalaman'],
+        'unit_aset' => ['admin', 'unit_aset'],
+        'bahagian_pentadbiran_kewangan' => ['admin', 'bahagian_pentadbiran_kewangan'],
+        'unit_it_sokongan' => ['admin', 'unit_it_sokongan', 'unit_pentadbiran'],
+        'unit_korporat' => ['admin', 'unit_korporat'],
+        'unit_pentadbiran' => ['admin', 'unit_pentadbiran'],
+        'user' => ['user', 'admin', 'unit_aduan_dalaman', 'unit_aset', 'bahagian_pentadbiran_kewangan', 'unit_it_sokongan', 'unit_korporat', 'unit_pentadbiran']
+    ];
+
+    // If interface is not defined, deny access
+    if (!isset($interfaceRoleMap[$interface])) {
+        return false;
+    }
+
+    $requiredRoles = $interfaceRoleMap[$interface];
+
+    // Check if user has any of the required roles
+    return hasAnyRole($userId, $requiredRoles) || in_array($activeRole, $requiredRoles);
+}
+
+// Get all available roles for role switching
+function getAvailableRoles($userId) {
+    $roles = getUserRoles($userId);
+
+    // Map database role names to display names
+    $roleDisplayNames = [
+        'admin' => 'Super Admin',
+        'unit_aduan_dalaman' => 'Unit Aduan Dalaman',
+        'unit_aset' => 'Unit Aset',
+        'bahagian_pentadbiran_kewangan' => 'Pegawai Pelulus',
+        'unit_it_sokongan' => 'Unit ICT (Pelaksana)',
+        'unit_korporat' => 'Unit Korporat (Laporan)',
+        'unit_pentadbiran' => 'Unit Pentadbiran (Pelaksana)',
+        'user' => 'Pengguna Biasa'
+    ];
+
+    $availableRoles = [];
+    foreach ($roles as $role) {
+        $availableRoles[] = [
+            'value' => $role,
+            'label' => $roleDisplayNames[$role] ?? ucfirst(str_replace('_', ' ', $role))
+        ];
+    }
+
+    return $availableRoles;
 }
 
 // Redirect function

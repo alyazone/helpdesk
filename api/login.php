@@ -43,12 +43,21 @@ try {
         jsonResponse(false, 'kata laluan tidak sah');
     }
 
+    // Get all user roles from user_roles table
+    $userRoles = getUserRoles($user['id']);
+
+    // If user has no roles in user_roles table, use the role from users table
+    if (empty($userRoles)) {
+        $userRoles = [$user['role']];
+    }
+
     // Set session
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['nama'] = $user['nama_penuh'];
     $_SESSION['email'] = $user['email'];
     $_SESSION['role'] = $user['role'];
     $_SESSION['active_role'] = $user['role']; // Initialize active role to actual role
+    $_SESSION['user_roles'] = $userRoles; // Store all user roles
     $_SESSION['jawatan'] = $user['jawatan'] ?? '';
 
     // Force write session data before response
@@ -62,7 +71,9 @@ try {
             'id' => $user['id'],
             'nama' => $user['nama_penuh'],
             'email' => $user['email'],
-            'role' => $user['role']
+            'role' => $user['role'],
+            'roles' => $userRoles,
+            'active_role' => $user['role']
         ],
         'session_id' => session_id() // For debugging
     ]);
