@@ -230,7 +230,7 @@ function canAccessInterface($interface) {
         'unit_aduan_dalaman' => ['admin', 'unit_aduan_dalaman'],
         'unit_aset' => ['admin', 'unit_aset'],
         'bahagian_pentadbiran_kewangan' => ['admin', 'bahagian_pentadbiran_kewangan'],
-        'unit_it_sokongan' => ['admin', 'unit_it_sokongan', 'unit_pentadbiran'],
+        'unit_it_sokongan' => ['admin', 'unit_it_sokongan'],
         'unit_korporat' => ['admin', 'unit_korporat'],
         'unit_pentadbiran' => ['admin', 'unit_pentadbiran'],
         'user' => ['user', 'admin', 'unit_aduan_dalaman', 'unit_aset', 'bahagian_pentadbiran_kewangan', 'unit_it_sokongan', 'unit_korporat', 'unit_pentadbiran']
