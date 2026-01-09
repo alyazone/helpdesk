@@ -8,7 +8,8 @@ require_once __DIR__ . '/../../config/config.php';
 
 header('Content-Type: application/json');
 
-if (!isLoggedIn() || !isUnitITSokongan()) {
+// Allow both Unit IT Sokongan and Unit Pentadbiran roles
+if (!isLoggedIn() || (!isUnitITSokongan() && !isUnitPentadbiran())) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
