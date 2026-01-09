@@ -6,7 +6,8 @@
 
 require_once __DIR__ . '/../../config/config.php';
 
-if (!isLoggedIn() || !isUnitITSokongan()) {
+// Allow both Unit IT Sokongan and Unit Pentadbiran roles
+if (!isLoggedIn() || (!isUnitITSokongan() && !isUnitPentadbiran())) {
     redirect('../../login.html');
 }
 
