@@ -44,10 +44,11 @@ $dokumen = $stmt->fetch();
 $stmt = $db->query("SELECT * FROM unit_aset_officers WHERE status = 'aktif' ORDER BY nama");
 $unit_aset_officers = $stmt->fetchAll();
 
-// Get Unit IT officers (for assignment if approved)
-$stmt = $db->prepare("SELECT * FROM unit_it_sokongan_officers WHERE status = 'aktif' ORDER BY nama ASC");
-$stmt->execute();
-$unit_it_officers = $stmt->fetchAll();
+// Available units for assignment
+$available_units = [
+    'unit_it' => 'Unit IT',
+    'unit_pentadbiran' => 'Unit Pentadbiran'
+];
 
 // Get attachments
 $stmt = $db->prepare("SELECT * FROM attachments WHERE complaint_id = ? ORDER BY uploaded_at DESC");
@@ -260,27 +261,24 @@ $user = getUser();
                             </select>
                         </div>
 
-                        <!-- Tugaskan kepada (Unit IT / Pentadbiran Officer) -->
+                        <!-- Tugaskan kepada (Unit) -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Tugaskan kepada (Unit IT / Pentadbiran) <span class="text-red-500">*</span>
+                                Tugaskan kepada <span class="text-red-500">*</span>
                             </label>
-                            <select name="unit_it_officer_id" required
+                            <select name="assigned_unit" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
-                                <option value="">-- Pilih Pegawai Unit IT / Pentadbiran --</option>
-                                <?php foreach ($unit_it_officers as $officer): ?>
-                                <option value="<?php echo $officer['id']; ?>"
-                                        <?php echo (isset($complaint['unit_it_officer_id']) && $complaint['unit_it_officer_id'] == $officer['id']) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($officer['nama']); ?>
-                                    <?php if (!empty($officer['jawatan'])): ?>
-                                        (<?php echo htmlspecialchars($officer['jawatan']); ?>)
-                                    <?php endif; ?>
+                                <option value="">-- Pilih Unit --</option>
+                                <?php foreach ($available_units as $unit_value => $unit_label): ?>
+                                <option value="<?php echo $unit_value; ?>"
+                                        <?php echo (isset($complaint['assigned_unit']) && $complaint['assigned_unit'] == $unit_value) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($unit_label); ?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>
                             <p class="text-xs text-gray-500 mt-1">
                                 <i class="fas fa-info-circle mr-1"></i>
-                                Pegawai akan menerima tugasan tetapi hanya boleh mengambil tindakan selepas aduan diluluskan oleh Pegawai Pelulus
+                                Pilih unit yang akan menerima tugasan. Unit yang dipilih boleh mengambil tindakan selepas aduan diluluskan oleh Pegawai Pelulus.
                             </p>
                         </div>
 

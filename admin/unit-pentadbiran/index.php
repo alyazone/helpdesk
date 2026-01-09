@@ -1,13 +1,13 @@
 <?php
 /**
- * Unit IT / Sokongan - Dashboard
+ * Unit Pentadbiran - Dashboard
  * PLAN Malaysia Selangor - Helpdesk System
  */
 
 require_once __DIR__ . '/../../config/config.php';
 
-// Only allow Unit IT Sokongan role
-if (!isLoggedIn() || !isUnitITSokongan()) {
+// Only allow Unit Pentadbiran Sokongan role
+if (!isLoggedIn() || !isUnitPentadbiran()) {
     redirect('../../login.html');
 }
 
@@ -17,26 +17,26 @@ $user = getUser();
 // Get statistics
 $stats = [];
 
-// Pending action (dimajukan_unit_it) - Only for Unit IT
-$stmt = $db->prepare("SELECT COUNT(*) as count FROM complaints WHERE workflow_status = 'dimajukan_unit_it' AND assigned_unit = 'unit_it'");
+// Pending action (dimajukan_unit_it) - Only for Unit Pentadbiran
+$stmt = $db->prepare("SELECT COUNT(*) as count FROM complaints WHERE workflow_status = 'dimajukan_unit_it' AND assigned_unit = 'unit_pentadbiran'");
 $stmt->execute();
 $stats['pending'] = $stmt->fetch()['count'];
 
-// Completed (selesai) - Only for Unit IT
-$stmt = $db->prepare("SELECT COUNT(*) as count FROM complaints WHERE workflow_status = 'selesai' AND assigned_unit = 'unit_it'");
+// Completed (selesai) - Only for Unit Pentadbiran
+$stmt = $db->prepare("SELECT COUNT(*) as count FROM complaints WHERE workflow_status = 'selesai' AND assigned_unit = 'unit_pentadbiran'");
 $stmt->execute();
 $stats['completed'] = $stmt->fetch()['count'];
 
-// Total assigned to Unit IT
+// Total assigned to Unit Pentadbiran
 $stmt = $db->prepare("
     SELECT COUNT(*) as count
     FROM complaints c
-    WHERE c.assigned_unit = 'unit_it' AND c.workflow_status IN ('dimajukan_unit_it', 'selesai')
+    WHERE c.assigned_unit = 'unit_pentadbiran' AND c.workflow_status IN ('dimajukan_unit_it', 'selesai')
 ");
 $stmt->execute();
 $stats['my_tasks'] = $stmt->fetch()['count'];
 
-// Get recent complaints (dimajukan_unit_it status) - Only for Unit IT
+// Get recent complaints (dimajukan_unit_it status) - Only for Unit Pentadbiran
 $stmt = $db->prepare("
     SELECT c.*,
            bka.anggaran_kos_penyelenggaraan,
@@ -46,14 +46,14 @@ $stmt = $db->prepare("
     FROM complaints c
     LEFT JOIN borang_kerosakan_aset bka ON c.id = bka.complaint_id
     LEFT JOIN users u_pelulus ON c.pegawai_pelulus_id = u_pelulus.id
-    WHERE c.workflow_status = 'dimajukan_unit_it' AND c.assigned_unit = 'unit_it'
+    WHERE c.workflow_status = 'dimajukan_unit_it' AND c.assigned_unit = 'unit_pentadbiran'
     ORDER BY c.unit_it_assigned_at DESC
     LIMIT 10
 ");
 $stmt->execute();
 $pending_complaints = $stmt->fetchAll();
 
-// Get complaints assigned to Unit IT
+// Get complaints assigned to Unit Pentadbiran
 $stmt = $db->prepare("
     SELECT c.*,
            bka.anggaran_kos_penyelenggaraan,
@@ -61,7 +61,7 @@ $stmt = $db->prepare("
            bka.keputusan_tarikh as approved_date
     FROM complaints c
     LEFT JOIN borang_kerosakan_aset bka ON c.id = bka.complaint_id
-    WHERE c.assigned_unit = 'unit_it' AND c.workflow_status = 'dimajukan_unit_it'
+    WHERE c.assigned_unit = 'unit_pentadbiran' AND c.workflow_status = 'dimajukan_unit_it'
     ORDER BY c.unit_it_assigned_at DESC
 ");
 $stmt->execute();
@@ -72,13 +72,13 @@ $my_complaints = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Unit IT / Sokongan</title>
+    <title>Dashboard Unit Pentadbiran</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .gradient-bg { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -88,7 +88,7 @@ $my_complaints = $stmt->fetchAll();
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-4">
                     <i class="fas fa-tools text-2xl"></i>
-                    <span class="font-semibold text-lg">Unit IT / Sokongan</span>
+                    <span class="font-semibold text-lg">Unit Pentadbiran</span>
                 </div>
                 <div class="flex items-center space-x-4">
                     <span class="text-sm"><?php echo htmlspecialchars($user['nama']); ?></span>
@@ -103,7 +103,7 @@ $my_complaints = $stmt->fetchAll();
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Dashboard Unit IT / Sokongan</h1>
+            <h1 class="text-3xl font-bold text-gray-800">Dashboard Unit Pentadbiran</h1>
             <p class="text-gray-600 mt-2">Melaksanakan tindakan untuk aduan yang diluluskan</p>
         </div>
 
@@ -187,8 +187,8 @@ $my_complaints = $stmt->fetchAll();
                                 <?php echo htmlspecialchars($complaint['nama_pengadu']); ?>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
-                                    Unit IT
+                                <span class="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-800">
+                                    Unit Pentadbiran
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
@@ -196,7 +196,7 @@ $my_complaints = $stmt->fetchAll();
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <a href="view_complaint.php?id=<?php echo $complaint['id']; ?>"
-                                   class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                                   class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
                                     <i class="fas fa-eye mr-1"></i>Lihat & Selesaikan
                                 </a>
                             </td>
@@ -248,8 +248,8 @@ $my_complaints = $stmt->fetchAll();
                                 <?php echo htmlspecialchars($complaint['nama_pengadu']); ?>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
-                                    Unit IT
+                                <span class="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-800">
+                                    Unit Pentadbiran
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
@@ -257,7 +257,7 @@ $my_complaints = $stmt->fetchAll();
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <a href="view_complaint.php?id=<?php echo $complaint['id']; ?>"
-                                   class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                                   class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
                                     <i class="fas fa-eye mr-1"></i>Lihat
                                 </a>
                             </td>

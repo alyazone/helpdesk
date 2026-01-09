@@ -1,12 +1,12 @@
 <?php
 /**
- * Unit IT / Sokongan - View and Complete Complaint
+ * Unit Pentadbiran - View and Complete Complaint
  */
 
 require_once __DIR__ . '/../../config/config.php';
 
-// Only allow Unit IT Sokongan role
-if (!isLoggedIn() || !isUnitITSokongan()) {
+// Only allow Unit Pentadbiran Sokongan role
+if (!isLoggedIn() || !isUnitPentadbiran()) {
     redirect('../../login.html');
 }
 
@@ -17,7 +17,7 @@ if ($complaint_id <= 0) {
     redirect('complaints.php');
 }
 
-// Get complaint details - Only for Unit IT
+// Get complaint details - Only for Unit Pentadbiran
 $stmt = $db->prepare("
     SELECT c.*,
            bka.anggaran_kos_penyelenggaraan,
@@ -31,7 +31,7 @@ $stmt = $db->prepare("
     LEFT JOIN borang_kerosakan_aset bka ON c.id = bka.complaint_id
     LEFT JOIN users u_pelulus ON c.pegawai_pelulus_id = u_pelulus.id
     LEFT JOIN users u_completed ON c.unit_it_completed_by = u_completed.id
-    WHERE c.id = ? AND c.assigned_unit = 'unit_it'
+    WHERE c.id = ? AND c.assigned_unit = 'unit_pentadbiran'
 ");
 $stmt->execute([$complaint_id]);
 $complaint = $stmt->fetch();
@@ -61,7 +61,7 @@ $is_waiting_approval = in_array($complaint['workflow_status'], ['dimajukan_unit_
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .gradient-bg { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -196,7 +196,7 @@ $is_waiting_approval = in_array($complaint['workflow_status'], ['dimajukan_unit_
                             </div>
                             <a href="<?php echo htmlspecialchars($attachment['file_path']); ?>"
                                target="_blank"
-                               class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                               class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
                                 <i class="fas fa-download mr-2"></i>Muat Turun
                             </a>
                         </div>
@@ -290,7 +290,7 @@ $is_waiting_approval = in_array($complaint['workflow_status'], ['dimajukan_unit_
                     <div class="space-y-3">
                         <div>
                             <label class="text-sm text-gray-600">Ditugaskan Kepada</label>
-                            <p class="font-medium">Unit IT</p>
+                            <p class="font-medium">Unit Pentadbiran</p>
                         </div>
                         <?php if (!empty($complaint['keputusan_nama'])): ?>
                         <div>
@@ -340,7 +340,7 @@ $is_waiting_approval = in_array($complaint['workflow_status'], ['dimajukan_unit_
                         <?php endif; ?>
                         <?php if (!empty($complaint['unit_it_completed_at'])): ?>
                         <div class="flex items-start">
-                            <div class="w-2 h-2 bg-green-600 rounded-full mt-2 mr-3"></div>
+                            <div class="w-2 h-2 bg-orange-600 rounded-full mt-2 mr-3"></div>
                             <div>
                                 <p class="text-sm font-medium text-gray-800">Selesai</p>
                                 <p class="text-xs text-gray-500"><?php echo date('d/m/Y H:i', strtotime($complaint['unit_it_completed_at'])); ?></p>
