@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit IT / Sokongan - Process Completion
+ * Unit Pentadbiran - Process Completion
  * Handles marking complaint as selesai (completed)
  */
 
@@ -8,8 +8,8 @@ require_once __DIR__ . '/../../config/config.php';
 
 header('Content-Type: application/json');
 
-// Only allow Unit IT Sokongan role
-if (!isLoggedIn() || !isUnitITSokongan()) {
+// Only allow Unit Pentadbiran Sokongan role
+if (!isLoggedIn() || !isUnitPentadbiran()) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
@@ -24,13 +24,13 @@ try {
         throw new Exception('ID aduan tidak sah');
     }
 
-    // Get complaint - Only for Unit IT
-    $stmt = $db->prepare("SELECT * FROM complaints WHERE id = ? AND assigned_unit = 'unit_it'");
+    // Get complaint - Only for Unit Pentadbiran
+    $stmt = $db->prepare("SELECT * FROM complaints WHERE id = ? AND assigned_unit = 'unit_pentadbiran'");
     $stmt->execute([$complaint_id]);
     $complaint = $stmt->fetch();
 
     if (!$complaint) {
-        throw new Exception('Aduan tidak dijumpai atau tidak ditugaskan kepada Unit IT');
+        throw new Exception('Aduan tidak dijumpai atau tidak ditugaskan kepada Unit Pentadbiran');
     }
 
     // Check if complaint is in correct workflow status
@@ -79,7 +79,7 @@ try {
         'diluluskan',
         'selesai',
         $user['id'],
-        'Tindakan selesai oleh Unit IT / Sokongan - ' . $catatan
+        'Tindakan selesai oleh Unit Pentadbiran - ' . $catatan
     ]);
 
     // Add to complaint status history for public viewing
@@ -90,7 +90,7 @@ try {
     $stmt->execute([
         $complaint_id,
         'Selesai',
-        'Tindakan telah diselesaikan oleh Unit IT / Sokongan pada ' . date('d/m/Y', strtotime($tarikh_selesai)) . '. Catatan: ' . $catatan,
+        'Tindakan telah diselesaikan oleh Unit Pentadbiran pada ' . date('d/m/Y', strtotime($tarikh_selesai)) . '. Catatan: ' . $catatan,
         $user['id']
     ]);
 

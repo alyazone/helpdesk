@@ -1,13 +1,13 @@
 <?php
 /**
- * Unit IT / Sokongan - Complaint List
+ * Unit Pentadbiran - Complaint List
  * PLAN Malaysia Selangor - Helpdesk System
  */
 
 require_once __DIR__ . '/../../config/config.php';
 
-// Only allow Unit IT Sokongan role
-if (!isLoggedIn() || !isUnitITSokongan()) {
+// Only allow Unit Pentadbiran Sokongan role
+if (!isLoggedIn() || !isUnitPentadbiran()) {
     redirect('../../login.html');
 }
 
@@ -17,7 +17,7 @@ $db = getDB();
 $status_filter = $_GET['status'] ?? 'all';
 $search = $_GET['search'] ?? '';
 
-// Build query - Only for Unit IT
+// Build query - Only for Unit Pentadbiran
 $query = "
     SELECT c.*,
            bka.anggaran_kos_penyelenggaraan,
@@ -29,7 +29,7 @@ $query = "
     LEFT JOIN borang_kerosakan_aset bka ON c.id = bka.complaint_id
     LEFT JOIN users u_pelulus ON c.pegawai_pelulus_id = u_pelulus.id
     LEFT JOIN users u_completed ON c.unit_it_completed_by = u_completed.id
-    WHERE c.assigned_unit = 'unit_it'
+    WHERE c.assigned_unit = 'unit_pentadbiran'
     AND c.workflow_status IN ('dimajukan_unit_aset', 'dalam_semakan_unit_aset', 'dimajukan_pegawai_pelulus', 'diluluskan', 'dimajukan_unit_it', 'selesai')
 ";
 
@@ -63,13 +63,13 @@ $user = getUser();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Senarai Aduan - Unit IT / Sokongan</title>
+    <title>Senarai Aduan - Unit Pentadbiran</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .gradient-bg { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -98,7 +98,7 @@ $user = getUser();
         <!-- Header -->
         <div class="mb-6">
             <h1 class="text-3xl font-bold text-gray-800">Senarai Aduan</h1>
-            <p class="text-gray-600 mt-2">Aduan yang memerlukan tindakan Unit IT / Sokongan</p>
+            <p class="text-gray-600 mt-2">Aduan yang memerlukan tindakan Unit Pentadbiran</p>
         </div>
 
         <!-- Filter and Search -->
@@ -164,15 +164,15 @@ $user = getUser();
                                 <div class="text-xs text-gray-500"><?php echo htmlspecialchars($complaint['bahagian']); ?></div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
-                                    Unit IT
+                                <span class="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-800">
+                                    Unit Pentadbiran
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <?php
                                 $status_colors = [
                                     'dimajukan_unit_it' => 'bg-yellow-100 text-yellow-800',
-                                    'selesai' => 'bg-green-100 text-green-800'
+                                    'selesai' => 'bg-orange-100 text-orange-800'
                                 ];
                                 $status_labels = [
                                     'dimajukan_unit_it' => 'Perlu Tindakan',
@@ -196,7 +196,7 @@ $user = getUser();
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <a href="view_complaint.php?id=<?php echo $complaint['id']; ?>"
-                                   class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                                   class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
                                     <i class="fas fa-eye mr-1"></i>Lihat
                                 </a>
                             </td>
